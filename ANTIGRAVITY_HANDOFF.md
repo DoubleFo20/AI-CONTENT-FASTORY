@@ -56,3 +56,17 @@ Return approved DESIGN_SYSTEM.md, responsive UX/page specifications and componen
 Codex continues backend/auth/data/queue during design. After implementing the approved
 design, Codex returns the UI for Antigravity VISUAL QA. This file is a prepared handoff;
 it does not claim that an external Antigravity session has received or completed work.
+
+## Functional shell available for design review
+
+The independently verified Phase1 shell is now runnable using [README.md](README.md).
+Existing implementation: [App.tsx](src/App.tsx), [Workspace.tsx](src/Workspace.tsx),
+[components.tsx](src/components.tsx), [styles.css](src/styles.css), [i18n.ts](src/i18n.ts).
+Use these flows/contracts as implementation context; visual tokens and layout remain yours
+to specify and approve. Both locales passed360/768/1440px browser checks. Local screenshots
+are in ignored output/playwright/story-{th,en}-{360,768,1440}.png, with offline/logout captures.
+These contain synthetic QA stories, are local review evidence, and are not required assets.
+
+The real API key currently returns insufficient_quota for text generation, so a design
+review must use isolated labelled fixtures or wait for Owner credit resolution. Do not seed
+the real first-owner database or suggest the fixture is successful live AI/Flow production.

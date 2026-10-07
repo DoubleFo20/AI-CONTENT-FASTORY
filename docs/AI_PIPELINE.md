@@ -19,6 +19,12 @@ Environment overrides are explicit; never silently escalate price or automatical
 Use bounded token budgets and request timeout. Tests inject a deterministic provider and
 never consume live credits; record any live smoke request separately.
 
+The outbound brief is explicitly projected to name, brief, genre, audience and aspectRatio;
+expansion adds only the stored selected idea. Alternative ideas, existing packages, clips,
+owner/session metadata and unrelated project state are never included. Quota, rate-limit
+and access failures map to safe shared AI_QUOTA_EXCEEDED, AI_RATE_LIMITED and AI_ACCESS_DENIED
+codes with localized UI messages. Provider response bodies and keys are not returned/logged.
+
 ## Four bibles and prompt content
 
 Story Bible contains premise, arc, tone and ending. Character Bible contains stable names,

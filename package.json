@@ -11,12 +11,13 @@
     "dev": "node scripts/dev.mjs",
     "dev:server": "tsx watch server/index.ts",
     "dev:web": "vite --host 127.0.0.1",
-    "build": "npm run typecheck && tsc -p tsconfig.server.json && vite build",
+    "build": "npm run typecheck && tsc -p tsconfig.server.json && vite build && node scripts/finalize-pwa.mjs",
     "start": "node dist/api/server/index.js",
-    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.server.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.server.json && tsc --noEmit -p tsconfig.tests.json",
     "lint": "eslint src server shared tests scripts vite.config.ts --max-warnings 0",
     "test": "node --import tsx --test tests/*.test.ts",
     "validate:docs": "node scripts/validate-docs.mjs",
+    "validate:pwa": "node scripts/check-pwa.mjs",
     "validate:secrets": "node scripts/verify-secrets.mjs"
   },
   "dependencies": {

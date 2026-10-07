@@ -3,6 +3,9 @@ dist/
 coverage/
 .worktrees/
 .tmp/
+output/playwright/
+.playwright/
+.playwright-cli/
 storage/
 .env
 .env.*

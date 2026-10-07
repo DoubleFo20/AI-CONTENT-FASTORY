@@ -36,6 +36,12 @@ authenticated JSON or credentials. Logout clears client state. Offline mode cann
 enqueue paid operations. XSS prevention uses React plain-text rendering, no raw HTML.
 Avoid secrets in dev logs/test fixtures. Git ignores env files, credentials, media and DBs.
 
+The current repository is inside XAMPP's Apache DocumentRoot. A root .htaccess with
+Require all denied blocks Apache from exposing the entire workspace, including private
+runtime and test files; the installed configuration enables AllowOverride All and
+authz_core. Node serves only dist/web on a separate loopback port. Keep this guard and
+verify any web-server override policy if the workspace location/configuration changes.
+
 ## Deployment and review
 
 This checkpoint targets local loopback use. Production requires HTTPS, reviewed CSP,

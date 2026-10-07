@@ -1,0 +1,3 @@
+# This workspace lives under XAMPP's document root. The Node application serves
+# dist/web on its own loopback port; Apache must not expose source or private data.
+Require all denied

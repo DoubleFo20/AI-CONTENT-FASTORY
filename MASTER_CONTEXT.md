@@ -37,3 +37,11 @@ account access block only their dependent work.
 
 Source of truth: docs/PRD.md, docs/SYSTEM_ARCHITECTURE.md, docs/API_CONTRACT.md,
 shared/contracts.ts, ROADMAP.md and TASKS.md. Status files record evidence, not inferred success.
+
+## Checkpoint state
+
+Phase1 local code/tests and independent security review are complete. The authorized
+environment key passes model discovery but generation returns insufficient_quota. An Owner
+billing/key decision is pending; no automatic retries or credential replacements are allowed.
+Approved Antigravity design and real Flow creative acceptance remain external gates.
+See PROJECT_STATUS.md and HANDOFF.md for actual checks and next actions.
