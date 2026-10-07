@@ -7,10 +7,10 @@
 | P0-03 | System, AI, security, i18n and API/data contracts | P0-02 | Root | DONE |
 | P0-04 | Antigravity handoff READY_FOR_DESIGN | P0-02,P0-03 | Root | DONE |
 | P0-05 | Artifact validation and checkpoint commit | P0-04 | Root | DONE |
-| P1-01 | npm/TypeScript scaffold and tooling | P0-05 | Root | IN_PROGRESS |
+| P1-01 | npm/TypeScript scaffold and tooling | P0-05 | Root | DONE |
 | P1-02 | Backend auth, project state/ownership, persistent queue | P1-01 | Core agent | TODO |
 | P1-03 | TH/EN functional client shell, setup, dashboard/workspace | P1-01 | Web agent | TODO |
-| P1-04 | OpenAI provider and selected-story structured pipeline | P1-01 | Root | TODO |
+| P1-04 | OpenAI provider and selected-story structured pipeline | P1-01 | Root | IMPLEMENTED_PENDING_QA |
 | P1-05 | Clip validation, FFmpeg assembly and authenticated media | P1-02 | Core agent | TODO |
 | P1-06 | API regressions and independent security review | P1-02,P1-04,P1-05 | QA agent | TODO |
 | P1-07 | Integration/typecheck/lint/build/browser/mobile/PWA QA | P1-03,P1-06 | Root + QA | TODO |

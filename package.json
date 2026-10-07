@@ -1,0 +1,44 @@
+{
+  "name": "ai-content-factory",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.12.0 <25",
+    "npm": ">=11"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:server": "tsx watch server/index.ts",
+    "dev:web": "vite --host 127.0.0.1",
+    "build": "npm run typecheck && tsc -p tsconfig.server.json && vite build",
+    "start": "node dist/api/server/index.js",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.server.json",
+    "lint": "eslint src server shared tests scripts vite.config.ts --max-warnings 0",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "validate:docs": "node scripts/validate-docs.mjs",
+    "validate:secrets": "node scripts/verify-secrets.mjs"
+  },
+  "dependencies": {
+    "express": "5.2.1",
+    "multer": "2.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/express": "5.0.6",
+    "@types/multer": "2.3.0",
+    "@types/node": "^24.10.0",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "eslint": "10.12.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "tsx": "4.23.15",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "8.71.1",
+    "vite": "8.3.3"
+  }
+}

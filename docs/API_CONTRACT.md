@@ -2,7 +2,8 @@
 
 All endpoints are same-origin under /api; success is JSON unless stated; errors are
 `{error:{code:string}}`. Protected mutations require `X-CSRF-Token` from AuthState.
-Shared source: shared/contracts.ts. Timestamps are ISO UTC. IDs are UUID strings.
+Shared source: shared/contracts.ts. Timestamps are ISO UTC. User/project/job/media IDs
+are UUID strings; idea/character/location/scene IDs are unique bounded package-local codes.
 
 | Method/path | Input | Output |
 | --- | --- | --- |
