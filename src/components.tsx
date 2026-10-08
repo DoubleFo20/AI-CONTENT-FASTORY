@@ -4,10 +4,18 @@ import { errorMessages, jobLabels, jobStatusLabels, stageLabels, type Messages }
 import { knownError } from './api';
 
 export function ProjectCards({ projects, locale, m }: { projects: ProjectSummary[]; locale: Locale; m: Messages }) {
-  return projects.length === 0 ? <p className="empty">{m.emptyProjects}</p> : <div className="card-grid">{projects.map((project) => <article className="card" key={project.id}>
-    <span className="badge">{stageLabels[locale][project.status]}</span><h3><a href={`#story/${encodeURIComponent(project.id)}`}>{project.name}</a></h3>
-    <p>{project.genre} · {project.aspectRatio}</p><p className="muted">{m.updated}: {formatDate(project.updatedAt, locale)}</p>
-  </article>)}</div>;
+  return projects.length === 0 ? <div className="empty"><p>{m.emptyProjects}</p></div> : <div className="card-grid">{projects.map((project) => {
+    let badgeClass = 'badge';
+    if (project.status === 'ideas_ready' || project.status === 'clips_ready' || project.status === 'exported') badgeClass += ' success';
+    else if (project.status === 'draft') badgeClass += ' warning';
+    else badgeClass += ' active';
+    return <article className="card" key={project.id}>
+      <div style={{marginBottom: '16px'}}><span className={badgeClass}>{stageLabels[locale][project.status]}</span></div>
+      <h3><a href={`#story/${encodeURIComponent(project.id)}`}>{project.name}</a></h3>
+      <p className="muted">{project.genre} · {project.aspectRatio}</p>
+      <p className="subdued">{m.updated}: {formatDate(project.updatedAt, locale)}</p>
+    </article>;
+  })}</div>;
 }
 export function formatDate(date: string, locale: Locale): string {
   const parsed = new Date(date);
@@ -16,15 +24,23 @@ export function formatDate(date: string, locale: Locale): string {
 export function isActive(job: Job): boolean { return job.status === 'queued' || job.status === 'running'; }
 
 export function Jobs({ jobs, locale, m, disabled, retry }: { jobs: Job[]; locale: Locale; m: Messages; disabled: boolean; retry: (id: string) => void }) {
-  return jobs.length === 0 ? <p className="empty">{m.queueEmpty}</p> : <div className="stack">{jobs.map((job) => {
+  return jobs.length === 0 ? <div className="empty"><p>{m.queueEmpty}</p></div> : <div className="stack">{jobs.map((job) => {
     const error = knownError(job.errorCode);
     const progress = Math.min(100, Math.max(0, Number.isFinite(job.progress) ? job.progress : 0));
+    let statusClass = 'badge';
+    if (job.status === 'running') statusClass += ' active';
+    else if (job.status === 'completed') statusClass += ' success';
+    else if (job.status === 'failed') statusClass += ' error';
     return <article className="card" key={job.id}>
       <h3><a href={`#story/${encodeURIComponent(job.projectId)}`}>{job.projectName}</a></h3>
-      <p>{jobLabels[locale][job.type]} · <strong>{jobStatusLabels[locale][job.status]}</strong></p>
-      <label className="progress-label">{m.progress}: {new Intl.NumberFormat(locale).format(progress)}%<progress value={progress} max={100} /></label>
-      {job.status === 'failed' && <><p className="error">{error ? errorMessages[locale][error] : m.unexpectedError}</p><p className="muted">{m.retryInfo}</p>
-        <button disabled={disabled || jobs.some((other) => other.projectId === job.projectId && isActive(other))} onClick={() => retry(job.id)}>{m.retry}</button></>}
+      <p className="muted" style={{marginBottom: '16px'}}>{jobLabels[locale][job.type]} · <span className={statusClass}>{jobStatusLabels[locale][job.status]}</span></p>
+      <label className="progress-label"><span>{m.progress}</span> <span>{new Intl.NumberFormat(locale).format(progress)}%</span></label>
+      <progress value={progress} max={100} />
+      {job.status === 'failed' && <div style={{marginTop: '16px'}}>
+        <p className="alert" role="alert">{error ? errorMessages[locale][error] : m.unexpectedError}</p>
+        <p className="muted">{m.retryInfo}</p>
+        <div className="actions"><button disabled={disabled || jobs.some((other) => other.projectId === job.projectId && isActive(other))} onClick={() => retry(job.id)}>{m.retry}</button></div>
+      </div>}
     </article>;
   })}</div>;
 }
@@ -39,12 +55,12 @@ export function AuthForm({ setup, m, disabled, submit }: { setup: boolean; m: Me
     setInvalid(!valid);
     if (valid) submit(username, password);
   }
-  return <section className="auth card"><h1>{setup ? m.setup : m.login}</h1><p>{setup ? m.setupInfo : m.loginInfo}</p>
+  return <section className="auth card"><h1>{setup ? m.setup : m.login}</h1><p className="muted">{setup ? m.setupInfo : m.loginInfo}</p>
     <form onSubmit={onSubmit} className="stack">
       <label>{m.username}<input name="username" required value={username} maxLength={32} minLength={setup ? 3 : 1} autoComplete="username" autoCapitalize="none" spellCheck={false} onChange={(event) => setUsername(event.target.value)} /></label>
       <label>{m.password}<input name="password" type="password" required value={password} minLength={setup ? 12 : 1} maxLength={128} autoComplete={setup ? 'new-password' : 'current-password'} onChange={(event) => setPassword(event.target.value)} /></label>
       {invalid && <p className="error" role="alert">{m.invalidForm}</p>}
-      <button disabled={disabled}>{disabled ? m.working : setup ? m.setup : m.login}</button>
+      <div className="actions"><button disabled={disabled}>{disabled ? m.working : setup ? m.setup : m.login}</button></div>
     </form>
   </section>;
 }
@@ -58,14 +74,14 @@ export function ProjectForm({ m, disabled, submit }: { m: Messages; disabled: bo
     setInvalid(!result.success);
     if (result.success) submit(result.data);
   }
-  return <section className="card"><h2>{m.createStory}</h2><form className="form-grid" onSubmit={onSubmit}>
+  return <section className="card"><h2>{m.createContent}</h2><form className="form-grid" onSubmit={onSubmit}>
     <label>{m.name}<input required maxLength={120} value={input.name} onChange={(event) => setInput({ ...input, name: event.target.value })} /></label>
     <label>{m.genre}<input required maxLength={100} value={input.genre} onChange={(event) => setInput({ ...input, genre: event.target.value })} /></label>
     <label>{m.audience}<input required maxLength={120} value={input.audience} onChange={(event) => setInput({ ...input, audience: event.target.value })} /></label>
     <label>{m.aspectRatio}<select value={input.aspectRatio} onChange={(event) => setInput({ ...input, aspectRatio: event.target.value as ProjectInput['aspectRatio'] })}><option>9:16</option><option>16:9</option><option>1:1</option></select></label>
     <label className="full">{m.brief}<textarea required minLength={10} maxLength={4000} rows={5} value={input.brief} aria-describedby="brief-help" onChange={(event) => setInput({ ...input, brief: event.target.value })} /><span id="brief-help" className="muted">{m.briefHelp}</span></label>
     {invalid && <p className="full error" role="alert">{m.invalidForm}</p>}
-    <div className="full"><button disabled={disabled}>{disabled ? m.working : m.create}</button></div>
+    <div className="full actions"><button disabled={disabled}>{disabled ? m.working : m.create}</button></div>
   </form></section>;
 }
 
@@ -76,13 +92,15 @@ export function CopyButton({ text, m }: { text: string; m: Messages }) {
       if (!navigator.clipboard) throw new Error('unavailable');
       await navigator.clipboard.writeText(text);
       setState('copied');
+      setTimeout(() => setState('ready'), 2000);
     } catch {
       const previous = document.activeElement;
       const area = document.createElement('textarea');
       area.value = text; area.setAttribute('aria-hidden', 'true'); area.className = 'copy-fallback'; document.body.append(area); area.select();
       try { setState(document.execCommand('copy') ? 'copied' : 'failed'); } catch { setState('failed'); }
       area.remove(); if (previous instanceof window.HTMLElement) previous.focus();
+      if (state !== 'failed') setTimeout(() => setState('ready'), 2000);
     }
   }
-  return <div><button type="button" className="secondary" onClick={() => void copy()}>{state === 'copied' ? m.copied : m.copy}</button><span role="status" className={state === 'failed' ? 'error' : 'sr-only'}>{state === 'failed' ? m.copyFailed : state === 'copied' ? m.copied : ''}</span></div>;
+  return <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><button type="button" className="secondary" onClick={() => void copy()}>{m.copyEnglishPrompt}</button><span role="status" className={state === 'failed' ? 'error' : state === 'copied' ? 'success' : 'sr-only'} style={state === 'copied' ? {color: 'var(--accent)'} : {}}>{state === 'failed' ? m.copyFailed : state === 'copied' ? m.promptCopied : ''}</span></div>;
 }

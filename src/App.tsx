@@ -20,6 +20,9 @@ type UiError = RequestError['code'] | 'VIDEO_ERROR' | null;
 
 export default function App() {
   const [locale, setLocale] = useState<Locale>(readLocale);
+  const [contentMode, setContentMode] = useState<'th'|'en'|'th+en'>(() => {
+    try { return (window.localStorage.getItem('acf-content-mode') as 'th'|'en'|'th+en') || 'th'; } catch { return 'th'; }
+  });
   const [route, setRoute] = useState<Route>(readRoute);
   const [online, setOnline] = useState(navigator.onLine);
   const [auth, setAuth] = useState<AuthState | null>(null);
@@ -32,7 +35,7 @@ export default function App() {
   const [projectLoading, setProjectLoading] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<UiError>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const session = useRef(new AbortController());
   const m = dictionaries[locale];
   const userId = auth?.user?.id;
@@ -43,7 +46,7 @@ export default function App() {
   const clearPrivate = useCallback(() => {
     session.current.abort(); session.current = new AbortController();
     setDashboard(null); setProjects([]); setJobs([]); setProject(null); setBusy(null);
-    setBaseLoading(false); setProjectLoading(false); setMenuOpen(false);
+    setBaseLoading(false); setProjectLoading(false); setDrawerOpen(false);
   }, []);
   const handleError = useCallback((cause: unknown) => {
     const code = cause instanceof RequestError ? cause.code : 'INTERNAL_ERROR';
@@ -70,7 +73,10 @@ export default function App() {
     try { window.localStorage.setItem('acf-locale', locale); } catch { /* Locale still works without browser storage. */ }
   }, [locale]);
   useEffect(() => {
-    const onHash = () => { setRoute(readRoute()); setMenuOpen(false); };
+    try { window.localStorage.setItem('acf-content-mode', contentMode); } catch { /* Ignore */ }
+  }, [contentMode]);
+  useEffect(() => {
+    const onHash = () => { setRoute(readRoute()); setDrawerOpen(false); };
     const onOnline = () => setOnline(true);
     const onOffline = () => setOnline(false);
     window.addEventListener('hashchange', onHash); window.addEventListener('online', onOnline); window.addEventListener('offline', onOffline);
@@ -206,31 +212,84 @@ export default function App() {
 
   return <div className={`app ${userId ? 'signed-in' : ''}`}>
     <a className="skip-link" href="#content" onClick={(event) => { event.preventDefault(); document.getElementById('content')?.focus(); }}>{m.skip}</a>
-    <header className="topbar"><a className="brand" href="#dashboard">{m.brand}</a><div className="top-actions">
-      <label className="locale"><span className="sr-only">{m.language}</span><select value={locale} onChange={(event) => setLocale(event.target.value as Locale)}><option value="th">ไทย</option><option value="en">English</option></select></label>
-      {userId && <><button className="secondary menu-toggle" aria-expanded={menuOpen} aria-controls="navigation" onClick={() => setMenuOpen(!menuOpen)}>{m.navigation}</button><button className="secondary" onClick={() => void logout()}>{m.logout}</button></>}
-    </div></header>
-    {userId && <nav id="navigation" className={`sidebar ${menuOpen ? 'open' : ''}`} aria-label={m.navigation}>
-      {(['dashboard', 'stories', 'queue'] as const).map((page) => <a key={page} href={`#${page}`} aria-current={route.page === page || page === 'stories' && route.page === 'story' ? 'page' : undefined}>{m[page]}</a>)}
-      <p className="muted">{m.validationShell}</p><p className="muted">{m.installInfo}</p>
-    </nav>}
+    <header className="topbar">
+      <a className="brand" href="#dashboard">{m.brand}</a>
+      <div className="top-actions">
+        <label className="locale"><span className="sr-only">{m.language}</span><select value={locale} onChange={(event) => setLocale(event.target.value as Locale)}><option value="th">ไทย</option><option value="en">English</option></select></label>
+        {userId && <label className="content-mode"><span className="sr-only">{m.contentMode}</span><select value={contentMode} onChange={(event) => setContentMode(event.target.value as 'th'|'en'|'th+en')}><option value="th">TH</option><option value="en">EN</option><option value="th+en">TH+EN</option></select></label>}
+        {userId && <button className="secondary menu-toggle" aria-expanded={drawerOpen} aria-controls="navigation-drawer" onClick={() => setDrawerOpen(true)}>{m.navigation}</button>}
+      </div>
+    </header>
+    
+    {userId && <>
+      {/* Desktop/Tablet Sidebar */}
+      <nav className="sidebar" aria-label={m.navigation}>
+        <a href="#dashboard" aria-current={route.page === 'dashboard' ? 'page' : undefined}><span>{m.dashboard}</span></a>
+        <a href="#stories" aria-current={route.page === 'stories' || route.page === 'story' ? 'page' : undefined}><span>{m.storyFactory}</span></a>
+        <a href="#queue" aria-current={route.page === 'queue' ? 'page' : undefined}><span>{m.queue}</span></a>
+        
+        <div className="sidebar-section">Tools</div>
+        <a href="#story/picker" onClick={(e) => { e.preventDefault(); window.location.hash = 'dashboard'; /* In a real app this would open a picker, for now link to dashboard */ }}><span>{m.autoEdit}</span></a>
+        
+        <div className="sidebar-section">Other</div>
+        <a href="#planned" className="planned" onClick={(e) => e.preventDefault()}><span>Product Review</span></a>
+        <a href="#planned" className="planned" onClick={(e) => e.preventDefault()}><span>Kids & Toy</span></a>
+      </nav>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="bottom-nav" aria-label={m.navigation}>
+        <a href="#dashboard" aria-current={route.page === 'dashboard' ? 'page' : undefined}>{m.dashboard}</a>
+        <a href="#stories" aria-current={route.page === 'stories' || route.page === 'story' ? 'page' : undefined}>{m.createContent}</a>
+        <a href="#queue" aria-current={route.page === 'queue' ? 'page' : undefined}>{m.queue}</a>
+        <button type="button" onClick={() => setDrawerOpen(true)}>{m.navigation}</button>
+      </nav>
+
+      {/* Mobile Drawer (More) */}
+      <div className={`drawer-overlay ${drawerOpen ? 'drawer-open' : ''}`} onClick={() => setDrawerOpen(false)} aria-hidden="true" />
+      <div id="navigation-drawer" className={`drawer-content ${drawerOpen ? 'drawer-open' : ''}`} role="dialog" aria-modal="true" aria-label={m.navigation}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+          <h2 style={{ marginBottom: 0 }}>{m.navigation}</h2>
+          <button className="secondary" onClick={() => setDrawerOpen(false)}>{m.close}</button>
+        </div>
+        <div className="stack">
+          <a href="#dashboard" onClick={() => setDrawerOpen(false)}>{m.dashboard}</a>
+          <a href="#stories" onClick={() => setDrawerOpen(false)}>{m.storyFactory}</a>
+          <a href="#queue" onClick={() => setDrawerOpen(false)}>{m.queue}</a>
+          <button className="secondary" onClick={() => { setDrawerOpen(false); void logout(); }} style={{ marginTop: '24px' }}>{m.logout}</button>
+        </div>
+      </div>
+    </>}
+
     <main id="content" tabIndex={-1}>
       {!online && <p className="notice" role="status">{m.offline}</p>}
       {error && <div className="alert" role="alert"><p>{errorText}</p><div className="actions"><button className="secondary" disabled={!online || !!busy} onClick={reload}>{m.refresh}</button><button className="secondary" onClick={() => setError(null)}>{m.close}</button></div></div>}
       <div role="status" aria-live="polite">{busy && <p className="notice">{m.working}</p>}</div>
       {authLoading ? <p role="status">{m.loading}</p> : !userId ? auth ? <AuthForm key={String(auth.setupRequired)} setup={auth.setupRequired} m={m} disabled={disabled} submit={signIn} /> : <button disabled={!online} onClick={reload}>{m.retry}</button> : <>
-        {route.page !== 'story' && <header className="page-heading"><h1>{m[route.page]}</h1><button className="secondary" disabled={disabled} onClick={reload}>{m.refresh}</button></header>}
+        
         {baseLoading && <p role="status">{m.loading}</p>}
         {route.page === 'dashboard' && <>
-          {dashboard && <div className="metrics">{(['projectsCount', 'completedCount', 'activeJobsCount'] as const).map((key) => <div className="card metric" key={key}><span>{m[key]}</span><strong>{new Intl.NumberFormat(locale).format(dashboard[key])}</strong></div>)}</div>}
-          <p><a className="button" href="#stories">{m.createStory}</a></p><h2>{m.recent}</h2>
+          <h1 className="hero-title">{m.dashboard}</h1>
+          <p><a className="button" href="#stories">{m.createContent}</a></p>
+          {dashboard && <div className="metrics" style={{ marginTop: '32px' }}>
+            <div className="card metric"><span>{m.projectsCount}</span><strong>{new Intl.NumberFormat(locale).format(dashboard.projectsCount)}</strong></div>
+            <div className="card metric"><span>{m.activeJobsCount}</span><strong>{new Intl.NumberFormat(locale).format(dashboard.activeJobsCount)}</strong></div>
+            <div className="card metric"><span>{m.completedCount}</span><strong>{new Intl.NumberFormat(locale).format(dashboard.completedCount)}</strong></div>
+          </div>}
+          <h2 style={{ marginTop: '32px' }}>{m.recent}</h2>
           {dashboard && <ProjectCards projects={dashboard.recentProjects} locale={locale} m={m} />}
         </>}
-        {route.page === 'stories' && <><ProjectForm m={m} disabled={disabled} submit={createProject} /><h2>{m.stories}</h2>{!baseLoading && dashboard && <ProjectCards projects={projects} locale={locale} m={m} />}</>}
-        {route.page === 'queue' && !baseLoading && dashboard && <Jobs jobs={jobs} locale={locale} m={m} disabled={disabled} retry={retryJob} />}
-        {route.page === 'story' && (projectLoading ? <p role="status">{m.loading}</p> : project && project.id === projectId ? <Workspace key={project.id} project={project} jobs={jobs.filter((job) => job.projectId === project.id)} locale={locale} m={m} disabled={disabled || !dashboard} operate={operate} select={selectIdea} upload={upload} download={downloadFile} retry={retryJob} videoError={videoError} /> : <button disabled={disabled} onClick={reload}>{m.refresh}</button>)}
+        {route.page === 'stories' && <>
+          <header className="page-heading"><h1>{m.storyFactory}</h1><button className="secondary" disabled={disabled} onClick={reload}>{m.refresh}</button></header>
+          <ProjectForm m={m} disabled={disabled} submit={createProject} />
+          <h2 style={{ marginTop: '32px' }}>{m.stories}</h2>
+          {!baseLoading && dashboard && <ProjectCards projects={projects} locale={locale} m={m} />}
+        </>}
+        {route.page === 'queue' && <>
+          <header className="page-heading"><h1>{m.queue}</h1><button className="secondary" disabled={disabled} onClick={reload}>{m.refresh}</button></header>
+          {!baseLoading && dashboard && <Jobs jobs={jobs} locale={locale} m={m} disabled={disabled} retry={retryJob} />}
+        </>}
+        {route.page === 'story' && (projectLoading ? <p role="status">{m.loading}</p> : project && project.id === projectId ? <Workspace key={project.id} project={project} contentMode={contentMode} section={route.section} jobs={jobs.filter((job) => job.projectId === project.id)} locale={locale} m={m} disabled={disabled || !dashboard} operate={operate} select={selectIdea} upload={upload} download={downloadFile} videoError={videoError} /> : <button disabled={disabled} onClick={reload}>{m.refresh}</button>)}
       </>}
-      <footer className="muted">{m.validationShell}</footer>
     </main>
   </div>;
 }
