@@ -28,10 +28,15 @@ IDs are opaque; URLs and UI labels never expose storage paths or credentials.
 
 ## Responsive navigation
 
-Desktop: persistent sidebar and roomy content panel. Tablet: compact navigation and stacked
-detail panels. Mobile: accessible collapsible navigation; single-column cards; horizontally
-scrollable step navigation; no essential action or information relies on hover. Buttons and
+Design target: desktop248px sidebar/32px gutters; tablet72px rail/24px gutters. Mobile:
+16px gutters, Studio/Create/Queue/More bottom navigation and modal More drawer; single-column
+cards and contained scrollable stage navigation. No essential action relies on hover. Buttons and
 selection cards are keyboard usable with explicit selected and disabled states.
+
+[UI_SPEC](UI_SPEC.md) maps15 design references onto these existing routes/workspace sections.
+Production review is a manual acknowledgment, Auto Editor first chooses a project, and
+reference-only `#design/...` hashes are not new app routes. A backed Settings presentation
+may expose public language preferences/sign-out; services remain separately gated.
 
 ## Secondary boundaries
 

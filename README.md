@@ -2,12 +2,18 @@
 
 A local TH/EN short-story production workspace. V1 moves from a brief to ten ideas,
 one selected story, bibles/scenes, English Google Flow prompts, imported clips and MP4.
-This repository starts with a functional validation shell; approved Antigravity design
-and creative acceptance of real Google Flow clips remain separate release gates.
+The running application is a functional validation shell. The reviewed studio design packet
+is now DESIGN_READY_FOR_CODEX; implementation visual QA and real Flow creative acceptance
+remain separate release gates.
 
 Current checkpoint: local verification passes. Live OpenAI generation with the authorized
 existing key is blocked by insufficient_quota until the Owner resolves the API project's
 credits/access. This does not prevent setup, project management or local clip editing.
+
+The [design packet](ANTIGRAVITY_HANDOFF.md) includes an interactive synthetic reference.
+Run `node scripts/preview-design.mjs` and open http://127.0.0.1:3003 to inspect its15 screens.
+See [reference screenshots and measured QA](docs/design/README.md). The real application
+on port3001 is unchanged until Codex implements the design specifications.
 
 ## Requirements
 

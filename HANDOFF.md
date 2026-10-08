@@ -1,10 +1,12 @@
 # Handoff
 
-STATUS: BLOCKED_FOR_HUMAN_INPUT
-Current phase: Phase 1 local checkpoint verified; Phase 2 pending external input.
+STATUS: DESIGN_HANDOFF_COMPLETE
+ANTIGRAVITY_STATUS: DESIGN_READY_FOR_CODEX
+Updated: 2026-10-09 (Asia/Bangkok)
+Current phase: Phase 2 design checkpoint; implementation visual QA pending.
 
 Stable decisions and Owner authorization are in MASTER_CONTEXT.md and AGENTS.md.
-ANTIGRAVITY_HANDOFF.md is ready for UX/UI design; approval has not been received.
+ANTIGRAVITY_HANDOFF.md contains the reviewed UX/UI design packet and Codex implementation order.
 All independent backend/core work is complete. Retained writer worktrees are inside ignored
 .worktrees/. Do not invent a remote, default account/password, Google Flow API or successful
 live generation. The Owner authorized existing environment-key reuse server-side.
@@ -21,7 +23,10 @@ live generation. The Owner authorized existing environment-key reuse server-side
 - .htaccess: deny Apache access to the repository and private data below XAMPP htdocs.
 - tests/: auth, isolation, state, provider and synthetic-media regressions.
 - README.md and docs/OPERATIONS.md: commands, environment defaults and recovery boundaries.
-- ANTIGRAVITY_HANDOFF.md: stable design input, page/component inventory and existing shell.
+- ANTIGRAVITY_HANDOFF.md and docs/DESIGN_SYSTEM, UX_FLOW, UI_SPEC, MOBILE_UX, MOTION_SPEC,
+  VISUAL_QA and I18N: reviewed premium studio target, component/capability map and QA gates.
+- docs/design/: labelled 15-screen synthetic interactive reference, captures and QA record.
+- scripts/preview-design.mjs: loopback3003 preview serving only the four reference assets.
 
 Root inspected and integrated each writer's owned paths. QA's independent security and final
 source reviews accepted the implementation after fixing successful-login throttling. Root
@@ -29,6 +34,19 @@ also enforced five-field AI brief projection and normalized usernames. No materi
 findings remain. A final fixture review improved aggregate scene-duration coverage.
 
 ## Actual verification
+
+Design reference: syntax and scoped ESLint passed; 270 rendered layout cases across15 screens,
+two UI locales, three content modes and360/768/1440px passed the documented DOM checks.
+Keyboard BibleTabs, modal focus wrap/Escape, sample selection and draft retention were exercised.
+Four screenshots and measured evidence are linked from [design README](docs/design/README.md).
+Final scoped ESLint and the22-document/link validation passed. Preview asset reads returned200,
+source/Git/storage probes404 and POST405; independent QA found no actionable issues.
+Staged secret/ignore validation passed78 tracked files and the staged whitespace check passed.
+Copy feedback was observed, but session clipboard read-back was empty: payload copy remains
+unverified. Physical IME, OS motion/transparency, assistive tech, zoom/full rendered contrast
+and implementation visual QA remain pending. This turn did not modify or retest backend/app code.
+
+Historical Phase1 verification:
 
 `npm.cmd test` passed 14/14; `npm.cmd run lint` and `npm.cmd run build` exited0 (build includes
 all three TypeScript checks). `npm.cmd run validate:pwa`, `validate:docs`, `validate:secrets`
@@ -48,9 +66,10 @@ Its syntax check passed and test process stopped. No global Apache configuration
    the Owner selects another secure path. Do not retry or change billing automatically.
    After access is resolved, run a deliberate live brief →10 ideas →one choice →expansion
    check and record real quality/error evidence separately.
-2. Receive approved Antigravity DESIGN_SYSTEM.md and responsive UX/component specifications.
-   Read and implement them, then return the completed UI for Antigravity visual QA. Current
-   design is a functional shell and the handoff has not been sent to an external session.
+2. Implement the delivered DESIGN_SYSTEM/UI_SPEC/UX_FLOW/MOBILE_UX/MOTION_SPEC in the existing
+   client. Keep contracts and server prerequisites; do not copy demo fixture behavior into
+   the app. Return the completed UI for Antigravity visual QA. This work is independent of
+   API quota. Drive, trusted credit data and durable approval require separate contracts.
 3. With Owner-produced Google Flow clips, check visual continuity and the final creative
    result. The app already supports prompt packs, imports, assembly, preview and export.
 4. Request a GitHub remote only when repository publication is required. Do not invent one.
@@ -62,7 +81,7 @@ or test login exists in the actual data folder. See [README.md](README.md).
 ## Git state
 
 Phase0 checkpoint: d0640b0. Scaffold checkpoint: debdffe. This handoff belongs to the Phase1
-commit `feat: deliver local Story Factory auth queue and media pipeline`; use `git log -1
---oneline` for its hash. No known remote/push, no unrelated dirty baseline, no tracked runtime,
-env file, private media, database or real secret. The final checkpoint records a clean main
-working tree; ignored worktrees/test artifacts are retained locally for review.
+commit 311e82e. The design checkpoint uses subject `docs: deliver cinematic studio UX design
+and verified reference`; use `git log -1 --oneline` after committing this packet. No known
+remote/push, tracked runtime/env/private media/database/real secret. Ignored worktrees and
+test artifacts are retained locally for review.

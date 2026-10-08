@@ -7,6 +7,8 @@ const required = [
   'docs/PRD.md', 'docs/INFORMATION_ARCHITECTURE.md', 'docs/SYSTEM_ARCHITECTURE.md',
   'docs/UX_FLOW.md', 'docs/DESIGN_SYSTEM.md', 'docs/AI_PIPELINE.md',
   'docs/I18N.md', 'docs/SECURITY.md', 'docs/API_CONTRACT.md',
+  'docs/UI_SPEC.md', 'docs/MOTION_SPEC.md', 'docs/MOBILE_UX.md', 'docs/VISUAL_QA.md',
+  'docs/design/README.md',
 ];
 const errors = [];
 for (const file of required) {
@@ -25,12 +27,12 @@ for (const file of required) {
   }
 }
 const handoff = readFileSync('ANTIGRAVITY_HANDOFF.md', 'utf8');
-for (const section of ['READY_FOR_DESIGN', 'target users', 'page inventory', 'TH/EN', 'mobile', 'Technical constraints']) {
+for (const section of ['DESIGN_READY_FOR_CODEX', 'target users', 'page inventory', 'TH/EN', 'mobile', 'Technical constraints']) {
   if (!handoff.includes(section)) errors.push(`Handoff missing ${section}`);
 }
 if (errors.length) {
   for (const error of errors) console.error(error);
   process.exitCode = 1;
 } else {
-  console.log(`Phase 0 document validation passed (${required.length} artifacts).`);
+  console.log(`Project document validation passed (${required.length} artifacts).`);
 }

@@ -59,6 +59,13 @@ Final creative quality and continuity require review of actual generated clips.
 
 ## Success measures and release gate
 
+Design amendment (Owner brief2026-10-08, handoff2026-10-09): use the cinematic dark studio
+specification, independent TH/EN/TH+EN content display and phone/tablet-first navigation.
+Google Drive is the requested primary-media target after verified integration. Credit
+estimate/durable approval/Drive sync require separate contracts; current local storage,
+unknown credit cost and manual Flow review remain honest interim states. The completed
+[design packet](../ANTIGRAVITY_HANDOFF.md) defines this target without changing core APIs.
+
 A new owner completes setup and a project survives restart. A regression test proves ten
 ideas/one selection/selected-only expansion. A synthetic-media test proves actual MP4
 assembly and access control. TH/EN and mobile browser checks pass. Live AI and Flow quality,

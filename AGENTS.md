@@ -45,8 +45,10 @@ All product UI supports TH/EN and 360px mobile through desktop; PWA stores publi
 
 After PRD, IA, V1 scope, page inventory, UX and mobile requirements are stable, create
 ANTIGRAVITY_HANDOFF.md and set ANTIGRAVITY_STATUS: READY_FOR_DESIGN.
-Continue independent backend/core tasks while design is pending. DESIGN_SYSTEM.md is a
-technical baseline, not an approved Antigravity design. Implement returned approved
+Continue independent backend/core tasks while design is pending. The original Phase0
+DESIGN_SYSTEM.md was a technical baseline. On2026-10-09 the Owner-assigned UX lead delivered
+the reviewed packet with ANTIGRAVITY_STATUS: DESIGN_READY_FOR_CODEX. Use its UI_SPEC,
+DESIGN_SYSTEM, UX_FLOW, MOBILE_UX and MOTION_SPEC as the implementation target. Implement returned
 specifications without arbitrary redesign and return completed UI for visual QA.
 
 ## Usage stop

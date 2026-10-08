@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-10-09 — UX/UI design handoff
+
+- Delivered a premium cinematic dark studio system and 15-screen synthetic interactive reference.
+- Defined exact UI/component/API mappings, 360/768/1440 layouts, lightweight motion and
+  independent TH/EN UI plus TH/EN/TH+EN content display.
+- Specified manual Flow plan review, unknown credits and Drive as the future primary-media
+  destination without fabricating integrations, approval records, worker health or paid jobs.
+- Reviewed isolated design/spec/mobile QA output and completed270 browser layout measurements.
+  Exercised keyboard tabs/modal focus and preserved sample selection/drafts across locale changes.
+- Added four design screenshots, recorded measurement boundaries, and the pending production
+  visual QA checklist. Clipboard feedback was observed; payload read-back remains unverified.
+- Set ANTIGRAVITY_STATUS: DESIGN_READY_FOR_CODEX and made client design implementation ready.
+- Passed scoped syntax/ESLint,22-document/link validation and preview allowlist HTTP probes;
+  independent final review reported no actionable issues.
+- Preserved production source, API/schema/contracts, packages/lockfile, environment and real data.
+  No live AI/Flow/Drive action occurred; API quota and creative acceptance remain separate gates.
+
 ## 2026-10-08 — Phase 1 local checkpoint
 
 - Integrated isolated Core/Web/QA output into a runnable React/Express/SQLite local app.

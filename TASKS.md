@@ -15,9 +15,10 @@
 | P1-06 | API regressions and independent security review | P1-02,P1-04,P1-05 | QA agent | DONE; 14/14 tests |
 | P1-07 | Integration/typecheck/lint/build/browser/mobile/PWA QA | P1-03,P1-06 | Root + QA | DONE |
 | P1-08 | Evidence, operations guide and checkpoint commit | P1-07 | Root | DONE_LOCAL |
-| D-01 | Approved design and UX specifications | P0-04 | Antigravity | AWAITING_EXTERNAL |
-| D-02 | Approved design implementation | D-01,P1-07 | Web agent | BLOCKED_BY_D-01 |
+| D-01 | Reviewed design system, UX specs and interactive reference | P0-04,P1-07 | UX lead + design/spec/QA agents + Root review | DONE; DESIGN_READY_FOR_CODEX |
+| D-02 | Design implementation in existing client | D-01,P1-07 | Codex engineering lead + Web agent | READY_FOR_CODEX; not performed in design request |
 | D-03 | Visual QA | D-02 | Antigravity | BLOCKED_BY_D-02 |
+| D-04 | Drive primary-media, trusted cost and durable approval contracts | D-01; separately reviewed integration scope | Codex engineering lead | SPECIFIED; implementation gated |
 | H-01 | Owner-controlled real Google Flow generation/clips and creative review | H-02,P1-05 | Owner | AWAITING_EXTERNAL |
 | H-02 | OpenAI project credits/access and live ideas/expansion acceptance | P1-04 | Owner + Root | AWAITING_HUMAN; insufficient_quota |
 
@@ -32,3 +33,9 @@ server/ai/ and Root-owned schema/contracts. Web writer: src/, public/ except Roo
 service worker assets. QA: tests/ only; server and client are read-only review targets.
 All writers use isolated worktrees within ignored .worktrees/. Git operations remain Root-only.
 Root reviews and copies owned paths into main after writers finish, then runs combined checks.
+
+For the completed design request, Root owned DESIGN_SYSTEM/UX_FLOW/I18N, handoff/progress,
+preview server and integration. Design-prototype agent owned docs/design/index.html/studio.css/
+studio.js/README.md; specs agent owned UI_SPEC/MOTION_SPEC; QA agent owned MOBILE_UX/VISUAL_QA
+and performed independent read-only review. Each writer used an isolated design worktree.
+Root added final corrections and measured the browser; production src/server/shared stayed untouched.
