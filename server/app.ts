@@ -12,6 +12,8 @@ import { Worker } from './worker.js';
 import { Auth, hashPassword, verifyPassword } from './auth.js';
 import { AppError } from './errors.js';
 import { managedPath, probeMedia } from './media.js';
+import { registerDriveCallback, registerIntegrations, type IntegrationOptions } from './integrations.js';
+import { CloudAiWorker } from './cloud/service.js';
 
 export interface ApplicationOptions {
   dataDir: string;
@@ -19,6 +21,8 @@ export interface ApplicationOptions {
   allowedOrigins?: string[];
   secureCookies?: boolean;
   startWorker?: boolean;
+  integrations?: IntegrationOptions;
+  startCloudWorker?: boolean;
 }
 const defaultOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3001', 'http://127.0.0.1:3001'];
 const EmptySchema = z.strictObject({});
@@ -30,12 +34,14 @@ const empty = (req: Request) => EmptySchema.parse(req.body ?? {});
 export function createApplication(options: ApplicationOptions) {
   const store = new Store(options.dataDir);
   const worker = new Worker(store, options.provider);
+  const cloudWorker = options.integrations?.cloudRepository ? new CloudAiWorker(options.integrations.cloudRepository, options.provider) : null;
   const auth = new Auth(store, options.secureCookies ?? false);
   const app = express();
   app.disable('x-powered-by');
   app.set('trust proxy', false);
   const origins = new Set(options.allowedOrigins ?? defaultOrigins);
   mkdirSync(join(store.dataDir, 'clips'), { recursive: true });
+  mkdirSync(join(store.dataDir, 'exports'), { recursive: true });
   const upload = multer({
     storage: multer.diskStorage({
       destination: join(store.dataDir, 'clips'),
@@ -54,7 +60,7 @@ export function createApplication(options: ApplicationOptions) {
     if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
       if (!origins.has(req.get('Origin') ?? '')) return next(new AppError('ORIGIN_FORBIDDEN', 403));
       const multipart = /^\/projects\/[^/]+\/clips\/?$/.test(req.path);
-      const noInput = /^\/(auth\/logout|projects\/[^/]+\/(ideas|expand|export)|jobs\/[^/]+\/retry)\/?$/.test(req.path);
+      const noInput = /^\/(auth\/logout|projects\/[^/]+\/(ideas|expand|export)|jobs\/[^/]+\/retry|integrations\/drive\/authorize|cloud\/projects\/[^/]+\/(ideas|expand|export|jobs\/[^/]+\/retry))\/?$/.test(req.path);
       const emptyBody = !req.get('Transfer-Encoding') && Number(req.get('Content-Length') ?? 0) === 0;
       if (!(noInput && emptyBody) && !req.is(multipart ? 'multipart/form-data' : 'application/json')) return next(new AppError('INVALID_INPUT', 415));
     }
@@ -80,6 +86,7 @@ export function createApplication(options: ApplicationOptions) {
     auth.loginSucceeded(req.socket.remoteAddress ?? 'unknown');
     res.json(auth.issue(res, account.user));
   });
+  registerDriveCallback(app, store, options.integrations ?? {});
   app.use('/api', (req, res, next) => {
     try {
       const session = auth.require(req);
@@ -89,6 +96,7 @@ export function createApplication(options: ApplicationOptions) {
     } catch (error) { next(error); }
   });
   const owner = (res: Response) => String(res.locals.ownerId);
+  registerIntegrations(app, store, auth, options.integrations ?? {});
   app.post('/api/auth/logout', (req, res) => { empty(req); auth.logout(req, res); res.json({ ok: true }); });
   app.get('/api/dashboard', (_req, res) => {
     const projects = store.listProjects(owner(res));
@@ -152,5 +160,6 @@ export function createApplication(options: ApplicationOptions) {
     res.status(failure.status).json({ error: { code: failure.code } });
   });
   if (options.startWorker !== false) worker.start();
-  return { app, store, worker, async close(): Promise<void> { await worker.stop(); store.close(); } };
+  if (options.startCloudWorker === true) cloudWorker?.start();
+  return { app, store, worker, cloudWorker, async close(): Promise<void> { await cloudWorker?.stop(); await worker.stop(); store.close(); } };
 }

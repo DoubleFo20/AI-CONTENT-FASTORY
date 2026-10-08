@@ -2,8 +2,10 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 
 const files = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' }).split('\0').filter(Boolean);
-const patterns = [/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/, /sk-proj-[A-Za-z0-9_-]{24,}/];
-const knownKey = process.env.OPENAI_API_KEY;
+const patterns = [/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/, /sk-proj-[A-Za-z0-9_-]{24,}/,
+  /sb_secret_[A-Za-z0-9_-]{24,}/, /GOCSPX-[A-Za-z0-9_-]{16,}/];
+const knownKeys = ['OPENAI_API_KEY', 'SUPABASE_SECRET_KEY', 'SUPABASE_SERVICE_ROLE_KEY',
+  'GOOGLE_CLIENT_SECRET', 'ACF_TOKEN_ENCRYPTION_KEY'].map(name => process.env[name]).filter(value => value && value.length > 16);
 const failures = [];
 for (const file of files) {
   if (/(^|\/)\.env(?:\.|$)|\.(?:pem|key|p12|pfx|sqlite|db)$/.test(file)) {
@@ -11,7 +13,7 @@ for (const file of files) {
     continue;
   }
   const text = readFileSync(file, 'utf8');
-  if (patterns.some((pattern) => pattern.test(text)) || (knownKey && knownKey.length > 16 && text.includes(knownKey))) {
+  if (patterns.some((pattern) => pattern.test(text)) || knownKeys.some(value => text.includes(value))) {
     failures.push(file);
   }
 }

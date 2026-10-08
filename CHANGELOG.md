@@ -1,5 +1,30 @@
 # Changelog
 
+## 2026-10-09 — Parallel backend/core integration checkpoint
+
+- Preserved the existing React/Express/SQLite/auth/queue/FFmpeg stack and Antigravity's UX/UI ownership.
+- Added labelled TH/EN Mock AI, selected-only expansion, controlled explicit auto fallback,
+  safe error boundaries and fail-closed malformed provider modes without new live API calls.
+- Added private Drive OAuth PKCE/session state, encrypted owner token vault,128MiB multipart/
+  resumable backups, private owner-marker downloads, exact endpoints and bounded errors.
+- Added opt-in Supabase snapshot/queue gateway with preferred secret-key support, owner/revision
+  checks, fenced leased runner and review-only private-schema SQL; no real migration/deployment.
+- Wired compatible authenticated capability/Drive/cloud APIs, cloud AI worker and explicit
+  cloud export gate while media indexing/Local Worker pairing remain pending.
+- Reviewed isolated Sol High core/cloud and Luna provider/test/documentation worktrees.
+  Independent QA findings were fixed before integration; no frontend/design/lock/env edits.
+- Integrated tests passed57, skipped1 POSIX-only test on Windows; build/typecheck, lint and PWA
+  passed. Temporary PostgreSQL verified6 SQL groups, compiled mock HTTP smoke passed. Hosted
+  PostgREST/multi-host concurrency, actual OAuth/Drive and host permissions remain separate gates.
+- Updated architecture, stable API contract and core/Drive/cloud operations handoff. App-specific
+  Supabase credentials, Google owner consent, approved cutover/hosting and API credits are pending.
+- Anchored runtime storage ignore to /storage/ so server/storage source is committed; extended
+  staged secret checks to Supabase/Google/vault keys without printing values.
+- Passed25-document/link validation and100-file secret/ignore validation. Cloud fixture
+  adjustment passed14/14 focused tests; compiled backend health was checked on3001.
+- Found the existing GitHub origin during final inspection; preserved its separate Antigravity
+  design branch and prepared the completed main checkpoint for a normal push.
+
 ## 2026-10-09 — UX/UI design handoff
 
 - Delivered a premium cinematic dark studio system and 15-screen synthetic interactive reference.

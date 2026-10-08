@@ -1,25 +1,28 @@
 # AI Content Factory
 
-A local TH/EN short-story production workspace. V1 moves from a brief to ten ideas,
+A TH/EN short-story production workspace with a working local lane and prepared cloud adapters. V1 moves from a brief to ten ideas,
 one selected story, bibles/scenes, English Google Flow prompts, imported clips and MP4.
 The running application is a functional validation shell. The reviewed studio design packet
 is now DESIGN_READY_FOR_CODEX; implementation visual QA and real Flow creative acceptance
 remain separate release gates.
 
-Current checkpoint: local verification passes. Live OpenAI generation with the authorized
+Current backend checkpoint adds labelled Mock AI, private Drive/OAuth preparation and an
+opt-in Supabase cloud project/queue API. Antigravity owns UX/UI in a separate worktree.
+See [core integration handoff](docs/CORE_INTEGRATION_HANDOFF.md). Live OpenAI generation with the authorized
 existing key is blocked by insufficient_quota until the Owner resolves the API project's
 credits/access. This does not prevent setup, project management or local clip editing.
 
 The [design packet](ANTIGRAVITY_HANDOFF.md) includes an interactive synthetic reference.
 Run `node scripts/preview-design.mjs` and open http://127.0.0.1:3003 to inspect its15 screens.
 See [reference screenshots and measured QA](docs/design/README.md). The real application
-on port3001 is unchanged until Codex implements the design specifications.
+on port3001 retains its Phase1 visual shell until Antigravity's implementation is safely integrated.
 
 ## Requirements
 
 - Node.js 24.12+ (24.x) and npm 11+.
 - FFmpeg and FFprobe on PATH for clip import/editing. Both already exist on this machine.
 - OPENAI_API_KEY in the server process environment for live text generation.
+- Set ACF_AI_MODE=mock for labelled synthetic generation without API credits.
 - The creator's own Google Flow access for video generation. No Flow API/account automation.
 
 ## Run locally
@@ -64,9 +67,13 @@ live smoke checks and remaining limits; a command shown here is not proof it has
 ## Configuration
 
 Server-only environment: ACF_DATA_DIR, ACF_HOST, ACF_PORT, ACF_ALLOWED_ORIGINS,
-ACF_SECURE_COOKIES, OPENAI_API_KEY, OPENAI_IDEAS_MODEL, OPENAI_EXPAND_MODEL.
+ACF_SECURE_COOKIES, ACF_AI_MODE, OPENAI_API_KEY, OPENAI_IDEAS_MODEL, OPENAI_EXPAND_MODEL.
 Defaults and operation boundaries are in docs/OPERATIONS.md. No env file is required or
 created. Never put keys in VITE_* variables or tracked files. Do not print the environment.
+Optional Drive/Supabase settings and verification gates are documented in
+[Drive storage](docs/DRIVE_STORAGE.md) and [Cloud Control Plane](docs/CLOUD_CONTROL_PLANE.md).
+Credentials alone do not establish deployment: laptop-offline cloud execution remains
+unverified until an approved always-on host, database and worker pairing are tested.
 
 ## Project documents
 

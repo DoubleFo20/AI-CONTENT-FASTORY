@@ -9,6 +9,7 @@ const required = [
   'docs/I18N.md', 'docs/SECURITY.md', 'docs/API_CONTRACT.md',
   'docs/UI_SPEC.md', 'docs/MOTION_SPEC.md', 'docs/MOBILE_UX.md', 'docs/VISUAL_QA.md',
   'docs/design/README.md',
+  'docs/CORE_INTEGRATION_HANDOFF.md', 'docs/DRIVE_STORAGE.md', 'docs/CLOUD_CONTROL_PLANE.md',
 ];
 const errors = [];
 for (const file of required) {

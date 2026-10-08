@@ -16,15 +16,29 @@ RUN VALIDATION. COMMIT CHECKPOINTS." Continue Phase 0 into Phase 1 autonomously.
 Local Git initialization, dependency installation, isolated worktrees inside this workspace,
 local application implementation, tests, and safe checkpoint commits are authorized.
 No remote URL was supplied. Do not invent one or create external resources.
+At the 2026-10-09 core checkpoint an existing GitHub origin was discovered in the workspace.
+Use only that known remote for normal authorized checkpoint pushes; preserve Antigravity's
+separate design branch and never force push.
 The Owner explicitly chose to reuse the existing environment OPENAI_API_KEY.
 Keep it server-side; never write it into source, client bundles, logs, commits or messages.
 
 ## Delivery and orchestration
 
+On 2026-10-09 the Owner assigned Codex backend/core/integration and Antigravity UX/UI
+in a separate worktree. Do not concurrently edit src/, public/, docs/design/ or approved
+UX/UI specifications. Continue independent core work and maintain compatible API contracts.
+The updated target is Supabase PostgreSQL for structured cloud data, Google Drive for
+primary media and an always-on Cloud Control Plane with a separately paired Local Worker.
+Preserve the working SQLite/auth/FFmpeg lane until credentials, schema/deployment verification
+and an Owner-approved populated-data migration allow cutover. Prepare missing services with
+safe injected mocks. Flow is primary; Meta AI is supporting and currently unavailable.
+
 Root owns architecture, task dependencies, integration, review and final acceptance.
 Use independent subagents with disjoint ownership and isolated branches/worktrees when
 modifying code in parallel. Root alone controls Git, shared contracts, dependencies,
-lockfiles, global configuration, progress documents and database schema. Agents stop
+lockfiles, global configuration, progress documents and schema acceptance/application.
+An isolated agent may author a review-only SQL draft under explicit Root ownership delegation.
+Agents stop
 and report when they need an unowned file. Root reviews every agent's output before integration.
 Prefer GPT-6.1 Sol High for complex implementation and GPT-6 Luna Medium for scoped
 implementation, i18n, tests and docs. Escalate Luna after two failures on the same issue.

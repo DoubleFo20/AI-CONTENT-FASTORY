@@ -1,17 +1,38 @@
 # Handoff
 
-STATUS: DESIGN_HANDOFF_COMPLETE
+STATUS: CORE_CHECKPOINT_COMPLETE_EXTERNAL_GATES
 ANTIGRAVITY_STATUS: DESIGN_READY_FOR_CODEX
 Updated: 2026-10-09 (Asia/Bangkok)
-Current phase: Phase 2 design checkpoint; implementation visual QA pending.
+Current phase: Phase 2 core integrations; Antigravity implementation visual QA pending.
 
 Stable decisions and Owner authorization are in MASTER_CONTEXT.md and AGENTS.md.
 ANTIGRAVITY_HANDOFF.md contains the reviewed UX/UI design packet and Codex implementation order.
-All independent backend/core work is complete. Retained writer worktrees are inside ignored
+The current independent backend/core checkpoint is ready; live credential/host/migration
+gates remain. Retained writer worktrees are inside ignored
 .worktrees/. Do not invent a remote, default account/password, Google Flow API or successful
 live generation. The Owner authorized existing environment-key reuse server-side.
 
 ## Delivered files and requirement evidence
+
+Current engineering additions (no src/public/design/lock/env edits):
+
+- server/ai/mock.ts,router.ts: labelled bilingual ten-idea/selected-only mock, openai/mock/auto
+  mode, sticky safe fallback and fail-closed malformed mode. Existing environment key retained.
+- server/storage/: exact owner/session-bound one-time OAuth PKCE, encrypted token vault,
+  private My Drive backups up to128MiB, owner-marker downloads and bounded safe errors.
+- server/cloud/: optional Supabase snapshot/leased queue adapter, injected memory test repo,
+  fenced bounded runner and cloud AI composition. Review-only docs/sql/supabase-core.sql was
+  verified only in empty in-memory PostgreSQL, not applied to any existing/hosted database.
+- server/integrations.ts + app/index wiring: compatible authenticated capabilities/Drive/
+  cloud routes. Owner comes from cookie auth, mutations require CSRF/Origin; revision CAS,
+  selected-only jobs and deliberate failed-only retry. Cloud export remains CLIPS_REQUIRED
+  until actual private scene media and Local Worker pairing exist.
+- tests/mock-provider,drive,cloud,integrations-api: new mock/security/persistence regressions.
+  scripts/check-cloud-sql.mjs and smoke-core.mjs verify prepared SQL and compiled startup.
+- [CORE_INTEGRATION_HANDOFF](docs/CORE_INTEGRATION_HANDOFF.md), [DRIVE_STORAGE](docs/DRIVE_STORAGE.md),
+  [CLOUD_CONTROL_PLANE](docs/CLOUD_CONTROL_PLANE.md) and updated architecture/API/operations.
+
+Historical Phase1/design delivery:
 
 - server/app.ts, auth.ts, store.ts, worker.ts, schema.ts: first owner/session/CSRF,
   resource ownership, persistence, prerequisites, queue and interrupted-job recovery.
@@ -34,6 +55,29 @@ also enforced five-field AI brief projection and normalized usernames. No materi
 findings remain. A final fixture review improved aggregate scene-duration coverage.
 
 ## Actual verification
+
+Current integrated core: npm.cmd test exit0,58 total:57 passed,0 failed,1 POSIX-only test
+skipped on Windows. npm.cmd run build (all three typechecks), lint and validate:pwa exit0.
+Real FFmpeg again assembled a synthetic12-second MP4; no live AI/OAuth/Drive call occurred.
+Optional SQL check passed6 groups on the final draft in PGlite:DDL/grants/actual denied roles,
+owner/revision, exclusive target/token proof, selected-only atomic content and expired lease
+retention without replay. PGlite is one connection; hosted PostgREST/advisors and real
+multi-host lock contention are not accepted by this evidence.
+
+Compiled HTTP smoke passed in an isolated temporary owner/data directory with mock mode:
+setup/session, ten labelled ideas, one saved selection, expansion, prompt pack, unavailable
+capabilities, logout401. Its process/data were cleaned up; actual owner storage was not seeded.
+Independent QA reviewed auth/media/provider/OAuth/vault/cloud/SQL. POSIX permission repair,
+shared/Shared Drive rejection, descriptor cleanup and malformed-mode safety findings are fixed.
+Windows ACL operation and actual POSIX permission-test execution remain host verification.
+Final document/link validation passed25 artifacts; secret/ignore validation passed100 tracked
+files without printing values. Staged whitespace and scoped ESLint passed. The synthetic
+Supabase fixture adjustment passed the affected14/14 cloud tests. Protected UI/design/package/
+lockfile/local-schema paths are unchanged. The compiled backend is running on3001 and its
+health/first-run auth status were checked. Checkpoint subject is recorded below.
+Authoritative Codex usage read46% /81% remaining; the <=7% stop rule did not trigger.
+
+Historical design/Phase1 verification follows:
 
 Design reference: syntax and scoped ESLint passed; 270 rendered layout cases across15 screens,
 two UI locales, three content modes and360/768/1440px passed the documented DOM checks.
@@ -66,13 +110,21 @@ Its syntax check passed and test process stopped. No global Apache configuration
    the Owner selects another secure path. Do not retry or change billing automatically.
    After access is resolved, run a deliberate live brief →10 ideas →one choice →expansion
    check and record real quality/error evidence separately.
-2. Implement the delivered DESIGN_SYSTEM/UI_SPEC/UX_FLOW/MOBILE_UX/MOTION_SPEC in the existing
-   client. Keep contracts and server prerequisites; do not copy demo fixture behavior into
-   the app. Return the completed UI for Antigravity visual QA. This work is independent of
-   API quota. Drive, trusted credit data and durable approval require separate contracts.
+2. Antigravity owns implementation of DESIGN_SYSTEM/UI_SPEC/UX_FLOW/MOBILE_UX/MOTION_SPEC
+   and visual QA in its separate worktree. Codex preserves compatible backend contracts.
+   New API/worker/gate information is in CORE_INTEGRATION_HANDOFF; do not copy demo behavior.
 3. With Owner-produced Google Flow clips, check visual continuity and the final creative
    result. The app already supports prompt packs, imports, assembly, preview and export.
-4. Request a GitHub remote only when repository publication is required. Do not invent one.
+4. Use the existing GitHub origin for a normal main checkpoint push. Preserve its separate
+   design/antigravity-ui branch. Do not invent a remote or force push.
+5. Owner must select the intended AI Content Factory Supabase project (a question is pending)
+   and privately configure its server secret plus Google OAuth/encryption settings. The two
+   connected unrelated Supabase projects were only listed and left untouched. Follow the
+   concrete guides for owner consent and controlled private service verification. Review the
+   prepared SQL/host permission/concurrency results before requesting live migration approval.
+   Existing accounts/sessions/projects/media stay local until approved cutover. Cloud tasks
+   while the laptop is offline need verified always-on hosting; a cached PWA shell is insufficient.
+   Do not distribute service keys/refresh tokens to a Local Worker or claim pairing exists.
 
 To inspect the local application, run `npm.cmd start` from this workspace after the verified
 build, then open http://127.0.0.1:3001. Choose the first username/password yourself; no shipped
@@ -80,8 +132,10 @@ or test login exists in the actual data folder. See [README.md](README.md).
 
 ## Git state
 
-Phase0 checkpoint: d0640b0. Scaffold checkpoint: debdffe. This handoff belongs to the Phase1
-commit 311e82e. The design checkpoint uses subject `docs: deliver cinematic studio UX design
-and verified reference`; use `git log -1 --oneline` after committing this packet. No known
-remote/push, tracked runtime/env/private media/database/real secret. Ignored worktrees and
-test artifacts are retained locally for review.
+Phase0 checkpoint: d0640b0. Scaffold checkpoint: debdffe. Phase1 checkpoint:311e82e.
+Design checkpoint:9e389d4. The core checkpoint uses subject
+`feat: prepare authenticated Drive and Supabase core integrations`; resolve via git log.
+The final inspection found origin at DoubleFo20/AI-CONTENT-FASTORY with the separate
+design/antigravity-ui branch and no main branch yet. A normal main checkpoint push is eligible;
+verify delivery from origin/main. No runtime/env/private media/database/real secret is tracked.
+Ignored writer worktrees and test artifacts remain locally for review.

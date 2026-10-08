@@ -16,9 +16,20 @@
 | P1-07 | Integration/typecheck/lint/build/browser/mobile/PWA QA | P1-03,P1-06 | Root + QA | DONE |
 | P1-08 | Evidence, operations guide and checkpoint commit | P1-07 | Root | DONE_LOCAL |
 | D-01 | Reviewed design system, UX specs and interactive reference | P0-04,P1-07 | UX lead + design/spec/QA agents + Root review | DONE; DESIGN_READY_FOR_CODEX |
-| D-02 | Design implementation in existing client | D-01,P1-07 | Codex engineering lead + Web agent | READY_FOR_CODEX; not performed in design request |
+| D-02 | Design implementation in existing client | D-01,P1-07 | Antigravity in separate worktree | OWNED_BY_ANTIGRAVITY; Codex does not concurrently edit UX/UI |
 | D-03 | Visual QA | D-02 | Antigravity | BLOCKED_BY_D-02 |
-| D-04 | Drive primary-media, trusted cost and durable approval contracts | D-01; separately reviewed integration scope | Codex engineering lead | SPECIFIED; implementation gated |
+| D-04 | Drive primary-media, trusted cost and durable approval contracts | D-01,C-03; approved external integration | Codex engineering lead | BACKUP_API_PREPARED; primary media index/cutover and cost/approval pending |
+| C-01 | Updated Supabase/Drive/Cloud+Local architecture without rewriting local stack | P1-08 | Root | DONE; no migration applied |
+| C-02 | Labelled Mock AI, bounded auto fallback and safe invalid-mode handling | C-01 | Luna agent + Root/QA | DONE; injected provider checks |
+| C-03 | Drive OAuth/encrypted vault/private128MiB media adapter | C-01 | Sol High core + independent QA | PREPARED; real credentials/grant H-03 |
+| C-04 | Supabase snapshot/queue adapter, CAS/fencing and review-only SQL | C-01 | Sol High cloud + Root/QA | PREPARED; isolated SQL6 groups passed; real host H-04,H-05 |
+| C-05 | Authenticated integration/cloud APIs and safe export gate | C-02,C-03,C-04 | Root + QA | DONE; compiled mock smoke passed |
+| C-06 | Cloud AI executor and Local Worker target/lease architecture | C-04,C-05 | Sol High + Root | FOUNDATION_DONE; actual local pairing/media bridge H-05 |
+| C-07 | Combined regressions, typecheck/build/lint/PWA and independent security review | C-05,C-06 | Luna QA + Root | DONE;57 passed,1 POSIX skip Windows |
+| C-08 | Core/API/Drive/cloud operations handoff and Git checkpoint | C-07 | Root + Luna docs | DONE_LOCAL; docs/secrets/whitespace passed |
+| H-03 | App Google OAuth configuration, owner consent and real private round trip | C-03 | Owner + Root | AWAITING_EXTERNAL |
+| H-04 | App-specific Supabase project/secret and hosted SQL/RLS/PostgREST verification | C-04 | Owner + Root | AWAITING_PROJECT_SELECTION; unrelated projects untouched |
+| H-05 | Approved data/auth/media migration, always-on host and Local Worker pairing | H-03,H-04,C-06 | Owner + Root | AWAITING_DEPENDENCIES_AND_MIGRATION_APPROVAL |
 | H-01 | Owner-controlled real Google Flow generation/clips and creative review | H-02,P1-05 | Owner | AWAITING_EXTERNAL |
 | H-02 | OpenAI project credits/access and live ideas/expansion acceptance | P1-04 | Owner + Root | AWAITING_HUMAN; insufficient_quota |
 
@@ -26,6 +37,18 @@ Verification evidence and the separate live/design/creative gates are recorded i
 [PROJECT_STATUS.md](PROJECT_STATUS.md). No secondary factory work is scheduled in V1.
 
 ## Parallel ownership contract
+
+Current Backend/Core assignment: Root owns shared contracts, server/app/index/integrations,
+cloud service composition, architecture/progress/config/Git and final schema acceptance.
+Core writer owns new server/storage files and Drive tests in core-drive; cloud writer owns
+new server/cloud adapters/runner, cloud tests and review-only SQL in core-cloud. Scoped Luna
+writer owns new mock/router/provider tests and Drive guide in core-provider. Independent QA
+owns only new integration API tests in core-security and reviews high-risk code read-only.
+Antigravity owns src/, public/, docs/design/ and UX/UI specs. No concurrent edits to those paths.
+Root reviewed and copied finished owned paths into main, then ran combined checks. Existing
+package/lockfile/environment/local schema remained compatible and untouched.
+
+The following describes historical Phase1/design ownership:
 
 Root: all governance/progress docs, shared/, server/ai/, package manifests/lockfiles,
 configs, schema definitions, tooling, Git and integration. Core writer: server/ except

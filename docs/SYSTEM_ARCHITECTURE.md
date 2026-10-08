@@ -2,6 +2,52 @@
 
 STATUS: STABLE_FOR_PHASE_0A
 
+## Engineering amendment — 2026-10-09
+
+The Owner now requests a cloud control plane with Supabase PostgreSQL structured data,
+Google Drive primary media, and a local editing worker. This supersedes the local-only
+deployment target while retaining the verified Express/TypeScript stack and existing APIs.
+Antigravity exclusively owns src/, public/, design references and UX/UI specifications in
+its separate worktree; engineering owns backend, additive contracts, tests and core docs.
+
+Implementation is incremental. Existing SQLite/auth/session/queue/FFmpeg remains the
+working local lane; no populated schema is migrated or copied automatically. New Drive,
+provider-selection and Supabase/cloud queue adapters are dependency-injected and opt-in.
+Absent credentials use explicitly labelled mock AI/test repositories, never a fake connected
+Drive or real cloud success. No Supabase project for this app is configured at this checkpoint.
+
+The cloud target is an always-on same-origin Express host plus Supabase structured project/
+job records and Google Drive private media. Cloud AI jobs may run while a laptop is offline;
+local FFmpeg jobs must remain queued until an authorized laptop worker is online. A public
+PWA shell alone cannot execute cloud work offline without that deployed control plane.
+No private data or offline submissions enter the public service-worker cache.
+
+This checkpoint prepares adapters and contracts before remote activation. PostgreSQL DDL
+is reviewable SQL only, never applied to an existing project. Production cutover requires
+chosen project, owner-approved schema application, verified persistence/session migration,
+Drive OAuth authorization, HTTPS/origins and worker credential enrollment. Cloud deployment
+and billing are external gates, not simulated acceptance.
+
+Provider policy: retain OpenAI structured output and one paid request. Mock mode produces
+visible TH/EN fixtures. Explicit auto mode may fall back only on missing configuration or
+quota/access failure, never refusals, malformed output, timeouts or ambiguous paid requests.
+Mock titles/explanations/prompts identify sample provenance even in the unchanged frontend.
+Google Flow remains user-operated primary video generation; Meta AI supporting work is
+manual/unconfigured until an official supported integration is selected. Remotion is an
+optional future editing adapter; the verified FFmpeg implementation stays active.
+
+Cloud queue: service-side owner filtering, validated project snapshots and atomic enqueue;
+leases use worker identity plus an unguessable fencing token. Heartbeat/progress/completion
+require the current token and unexpired lease. Expired work fails interrupted; paid jobs
+are not replayed automatically. Local jobs never execute on the cloud worker. Schema/adapter
+and mocked concurrency tests must precede any deployment or existing-data migration.
+
+OAuth preparation uses exact redirect URIs, one-time owner/session-bound state, PKCE,
+minimal drive.file scope, fixed Google HTTPS endpoints and encrypted server-side tokens.
+No browser/response/log contains OAuth credentials or refresh tokens; invalid callbacks,
+missing credentials and unconnected storage fail closed. Remote Drive writes require an
+owner-authorized import/export operation, never automatic sharing or publishing.
+
 ## Local V1 architecture
 
 ```mermaid

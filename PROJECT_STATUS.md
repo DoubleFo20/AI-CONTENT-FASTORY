@@ -1,15 +1,15 @@
 # Project status
 
-STATUS: DESIGN_HANDOFF_COMPLETE
-CURRENT_PHASE: PHASE_2_DESIGN_CHECKPOINT
-NEXT_ACTION: CODEX_UI_IMPLEMENTATION
+STATUS: CORE_CHECKPOINT_COMPLETE_EXTERNAL_GATES
+CURRENT_PHASE: PHASE_2_CORE_INTEGRATIONS
+NEXT_ACTION: OWNER_SUPABASE_PROJECT_AND_GOOGLE_OAUTH_CONFIGURATION
 ANTIGRAVITY_STATUS: DESIGN_READY_FOR_CODEX
 Updated: 2026-10-09 (Asia/Bangkok)
 
 ## Completed
 
 - Inspected the empty workspace, available runtimes and authoritative account usage.
-- Initialized Git on main. No remote configured; commit identity is already configured.
+- Initialized Git on main without a remote; commit identity was already configured.
 - Defined stable V1 scope, page inventory, responsive requirements, architecture and contracts.
 - Created governance, Phase 0 documents and Antigravity handoff.
 - Owner approved existing OPENAI_API_KEY reuse; the key stays in the server environment
@@ -27,6 +27,71 @@ Updated: 2026-10-09 (Asia/Bangkok)
   root. Apache cannot expose source, Git metadata or private runtime/test data.
 
 ## Current checkpoint
+
+The Owner's current assignment splits Backend/Core/Integration (Codex) from UX/UI and visual
+QA (Antigravity in a separate worktree). Root read the required context, inspected clean main
+at 9e389d4 and reused existing auth, database, queue, story schemas and FFmpeg. No frontend,
+design specification, package/lockfile or environment file was changed.
+
+Reviewed and integrated isolated engineering packets:
+
+- Labelled bilingual Mock AI and configurable openai/mock/auto routing. Exactly ten unique
+  ideas and selected-only expansion. Auto fallback is limited to missing configuration,
+  quota/access rejection and stays mock afterward; ambiguous/refusal/rate/invalid/timeout
+  failures do not replay. Invalid explicit mode settings fail before provider calls.
+- Private Google Drive adapter, owner/session-bound one-time OAuth PKCE, exact redirect
+  allowlist and AES-GCM token vault. Private uploads up to128MiB use verified4MiB resumable
+  chunks; private owner-marker download, bounded endpoints/responses and safe errors.
+- Supabase snapshot/queue adapter using preferred server secret or legacy service key,
+  owner/revision checks, private-schema review-only SQL, RLS/grants and atomic fenced leases.
+  Injected memory repository is test-only, not production durable storage.
+- Compatible owner-authenticated capability/Drive/cloud APIs, CSRF/Origin checks, versioned
+  selection, explicit failed-job retry and opt-in CloudAiWorker. Cloud export remains gated
+  until a private media catalog and authenticated Local Worker bridge exist.
+- Architecture amendment and concrete API/operations handoff before any migration. Existing
+  SQLite accounts/sessions/projects/media and local FFmpeg lane remain active. No real schema,
+  account, project, media or credential was migrated; no content was published.
+
+Actual combined verification of the integrated code:
+
+- `npm.cmd test`: exit0,58 tests:57 passed,0 failed,1 POSIX-only permission test skipped on
+  Windows. Includes auth/CSRF/owner isolation, mock/provider boundaries, Drive OAuth/encryption/
+  paths/private uploads, Supabase gateway limits, concurrent memory claims, stale leases,
+  selected-only cloud workflow and real synthetic12-second FFmpeg MP4 assembly.
+- `npm.cmd run build`: exit0, includes client/server/tests typechecks, server compilation,
+  Vite and9 public PWA assets. `npm.cmd run validate:pwa`: exit0.
+- `npm.cmd run lint`: exit0 after fixing the SQL verification script's global reference.
+- `node --import tsx scripts/check-cloud-sql.mjs`: exit0,6 groups on the final SQL in a new
+  in-memory PGlite PostgreSQL engine: DDL, actual grants/denials+RLS, owner/CAS, active uniqueness/
+  targets/token fencing, selected-only atomic results and expiry/retained content. Runtime
+  installed only beneath ignored.tmp; no app dependency/lockfile was added.
+- `node scripts/smoke-core.mjs`: exit0 against compiled startup with isolated synthetic
+  owner/data and mock mode. Real HTTP login/session, ten labelled ideas, saved selection,
+  expansion, prompt pack, safe unavailable capabilities and logout passed. Test server/data
+  stopped/removed. The actual storage was not seeded; read-only inspection found0 owners/0
+  active jobs at inspection time.
+- Independent QA reviewed auth/media/provider and new OAuth/vault/cloud/SQL boundaries.
+  Findings addressed: pre-existing POSIX vault permissions, shared/Shared Drive rejection,
+  descriptor cleanup and invalid mode fail-closed behavior. Final reviewer found no open
+  concrete security defect. Windows ACL verification and POSIX execution remain host gates.
+- `npm.cmd run validate:docs`: exit0,25 required documents and their local links.
+- `npm.cmd run validate:secrets`: exit0,100 tracked files; runtime/env files remain ignored.
+  Scoped ESLint and `git diff --cached --check` passed. A synthetic Supabase key fixture was
+  made explicit; the affected cloud tests passed14/14 afterward. Protected UI/design,
+  package/lockfile/environment/local schema paths remain unchanged.
+- Compiled backend restarted successfully on3001; health and first-run auth status passed.
+  The checkpoint subject is recorded below. Synthetic checks do not accept live creative quality.
+
+Authoritative Codex account usage at this core checkpoint:46% /81% remaining; ordinary usage
+allowed. The <=7% stop rule did not trigger. This is separate from OpenAI project quota.
+
+Current external gates: app-specific Supabase project/secret selection, Google OAuth settings
+and owner consent, real service verification, Owner-approved schema/data migration and
+always-on hosting/worker pairing. OpenAI credits remain insufficient_quota. The final Git
+inspection found an existing GitHub origin; its design/antigravity-ui branch is preserved.
+See [CORE_INTEGRATION_HANDOFF](docs/CORE_INTEGRATION_HANDOFF.md).
+
+## Prior design checkpoint (historical)
 
 Phase 0 and Phase 1 remain stable. The Owner's UX/UI lead request is now fulfilled with
 the reviewed dark studio design system, 15-screen interactive reference, mobile/motion/
@@ -67,7 +132,7 @@ Codex can implement presentation independently of the unresolved API credit gate
   not a measured pass. Physical mobile IME, OS reduced motion/transparency, assistive tech,
   zoom and production visual acceptance remain in [VISUAL_QA](docs/VISUAL_QA.md).
 
-The current request produces a design/specification checkpoint. It does not implement the
+The prior request produced a design/specification checkpoint. It did not implement the
 new production theme or accept live AI/Flow/Drive quality. No backend tests/build were rerun
 for these document/reference-only changes; historical Phase 1 results are below.
 
@@ -110,13 +175,16 @@ for these document/reference-only changes; historical Phase 1 results are below.
   Provider/UI now distinguish quota, rate-limit and access errors safely. A pending Owner
   question asks whether to manage the existing project's credits or securely change the
   key/project. No live ideas or expansion succeeded; no further paid retry was attempted.
-- **Design integration:** DESIGN_READY_FOR_CODEX packet is complete in this chat. Applying
-  it to the app and returning implemented screens for visual QA are next engineering tasks.
-- **Drive/cost/durable approval:** design requirements are documented; these services have
-  no current contracts. Keep disconnected/unknown/manual-review states until implemented.
+- **Design integration:** DESIGN_READY_FOR_CODEX packet is complete. Antigravity owns applying
+  it and implementation visual QA in its separate worktree; Codex keeps backend contracts stable.
+- **Drive/Supabase/cloud:** prepared adapters/APIs/SQL are tested with safe mocks and isolated
+  PostgreSQL. Credentials, real authorization, media index/cutover, account/session migration,
+  hosted verification and Local Worker pairing remain gates. Cost/durable production approval
+  remain future contracts; use factual disconnected/unknown/manual-review states.
 - **Real creative acceptance:** Google Flow access and actual scene clips remain Owner-run.
   No Google Flow generation or account interaction was performed.
-- **Publication only:** no GitHub remote is configured, so checkpoints remain local.
+- **Git checkpoint:** the existing GitHub origin is available for a normal main push;
+  its Antigravity design branch is preserved. No remote or external resource was created here.
 
 Authoritative Codex usage at the design checkpoint: 98% / 89% remaining in the two windows.
 The <=7% usage stop rule did not trigger. This is separate from OpenAI API project quota.
@@ -126,5 +194,7 @@ The <=7% usage stop rule did not trigger. This is separate from OpenAI API proje
 - d0640b0: stable Phase 0 documents and governance.
 - debdffe: tooling, contracts, schema and AI provider scaffold.
 - 311e82e: Phase 1 auth, queue, media and functional client checkpoint.
-- Design: subject `docs: deliver cinematic studio UX design and verified reference`;
-  resolve its hash with `git log -1 --oneline` after committing this packet. No remote exists.
+- 9e389d4: reviewed design checkpoint. Core checkpoint subject is
+  `feat: prepare authenticated Drive and Supabase core integrations`; resolve with git log.
+  The configured origin is DoubleFo20/AI-CONTENT-FASTORY. Verify checkpoint delivery from
+  origin/main; no force push or Antigravity branch update is permitted.

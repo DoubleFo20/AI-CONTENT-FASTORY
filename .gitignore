@@ -6,7 +6,7 @@ coverage/
 output/playwright/
 .playwright/
 .playwright-cli/
-storage/
+/storage/
 .env
 .env.*
 *.local
