@@ -74,8 +74,9 @@ Final document/link validation passed25 artifacts; secret/ignore validation pass
 files without printing values. Staged whitespace and scoped ESLint passed. The synthetic
 Supabase fixture adjustment passed the affected14/14 cloud tests. Protected UI/design/package/
 lockfile/local-schema paths are unchanged. The compiled backend is running on3001 and its
-health/first-run auth status were checked. Checkpoint subject is recorded below.
-Authoritative Codex usage read46% /81% remaining; the <=7% stop rule did not trigger.
+health/first-run auth status were checked. Core commit2d112dc was pushed to origin/main and
+its remote SHA verified; the Antigravity branch stayed unchanged.
+Authoritative Codex usage after push read37% /80% remaining; the <=7% stop rule did not trigger.
 
 Historical design/Phase1 verification follows:
 
@@ -115,8 +116,8 @@ Its syntax check passed and test process stopped. No global Apache configuration
    New API/worker/gate information is in CORE_INTEGRATION_HANDOFF; do not copy demo behavior.
 3. With Owner-produced Google Flow clips, check visual continuity and the final creative
    result. The app already supports prompt packs, imports, assembly, preview and export.
-4. Use the existing GitHub origin for a normal main checkpoint push. Preserve its separate
-   design/antigravity-ui branch. Do not invent a remote or force push.
+4. Core commit2d112dc is pushed and verified at the existing GitHub origin/main. Preserve
+   its separate design/antigravity-ui branch. Do not invent a remote or force push.
 5. Owner must select the intended AI Content Factory Supabase project (a question is pending)
    and privately configure its server secret plus Google OAuth/encryption settings. The two
    connected unrelated Supabase projects were only listed and left untouched. Follow the
@@ -133,9 +134,10 @@ or test login exists in the actual data folder. See [README.md](README.md).
 ## Git state
 
 Phase0 checkpoint: d0640b0. Scaffold checkpoint: debdffe. Phase1 checkpoint:311e82e.
-Design checkpoint:9e389d4. The core checkpoint uses subject
-`feat: prepare authenticated Drive and Supabase core integrations`; resolve via git log.
-The final inspection found origin at DoubleFo20/AI-CONTENT-FASTORY with the separate
-design/antigravity-ui branch and no main branch yet. A normal main checkpoint push is eligible;
-verify delivery from origin/main. No runtime/env/private media/database/real secret is tracked.
-Ignored writer worktrees and test artifacts remain locally for review.
+Design checkpoint:9e389d4. Core checkpoint:2d112dc,
+`feat: prepare authenticated Drive and Supabase core integrations`.
+Pushed normally to the existing DoubleFo20/AI-CONTENT-FASTORY origin/main; remote SHA verified.
+The separate design/antigravity-ui branch retained cad482e906f2dcc6db172c085196643a75f70c4f.
+This documentation checkpoint records the successful delivery; no force push occurred.
+No runtime/env/private media/database/real secret is tracked. Ignored writer worktrees and
+test artifacts remain locally for review.

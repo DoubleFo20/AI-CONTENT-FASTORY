@@ -80,10 +80,13 @@ Actual combined verification of the integrated code:
   made explicit; the affected cloud tests passed14/14 afterward. Protected UI/design,
   package/lockfile/environment/local schema paths remain unchanged.
 - Compiled backend restarted successfully on3001; health and first-run auth status passed.
-  The checkpoint subject is recorded below. Synthetic checks do not accept live creative quality.
+  Core commit2d112dc was pushed to origin/main and its remote SHA was verified. The Antigravity
+  branch retained cad482e906f2dcc6db172c085196643a75f70c4f. Synthetic checks do not accept live
+  creative quality.
 
-Authoritative Codex account usage at this core checkpoint:46% /81% remaining; ordinary usage
-allowed. The <=7% stop rule did not trigger. This is separate from OpenAI project quota.
+Authoritative Codex account usage after the pushed core checkpoint:37% /80% remaining;
+ordinary usage allowed. The <=7% stop rule did not trigger. This is separate from OpenAI
+project quota.
 
 Current external gates: app-specific Supabase project/secret selection, Google OAuth settings
 and owner consent, real service verification, Owner-approved schema/data migration and
@@ -183,8 +186,8 @@ for these document/reference-only changes; historical Phase 1 results are below.
   remain future contracts; use factual disconnected/unknown/manual-review states.
 - **Real creative acceptance:** Google Flow access and actual scene clips remain Owner-run.
   No Google Flow generation or account interaction was performed.
-- **Git checkpoint:** the existing GitHub origin is available for a normal main push;
-  its Antigravity design branch is preserved. No remote or external resource was created here.
+- **Git checkpoint:** core commit2d112dc was pushed to the existing GitHub origin/main;
+  its Antigravity design branch is unchanged. No remote or external resource was created here.
 
 Authoritative Codex usage at the design checkpoint: 98% / 89% remaining in the two windows.
 The <=7% usage stop rule did not trigger. This is separate from OpenAI API project quota.
@@ -194,7 +197,7 @@ The <=7% usage stop rule did not trigger. This is separate from OpenAI API proje
 - d0640b0: stable Phase 0 documents and governance.
 - debdffe: tooling, contracts, schema and AI provider scaffold.
 - 311e82e: Phase 1 auth, queue, media and functional client checkpoint.
-- 9e389d4: reviewed design checkpoint. Core checkpoint subject is
-  `feat: prepare authenticated Drive and Supabase core integrations`; resolve with git log.
-  The configured origin is DoubleFo20/AI-CONTENT-FASTORY. Verify checkpoint delivery from
-  origin/main; no force push or Antigravity branch update is permitted.
+- 9e389d4: reviewed design checkpoint.
+- 2d112dc: `feat: prepare authenticated Drive and Supabase core integrations`, pushed and
+  verified at origin/main in DoubleFo20/AI-CONTENT-FASTORY. No force push or Antigravity branch
+  update occurred. The following documentation checkpoint records this delivery evidence.
