@@ -1,15 +1,21 @@
 # Antigravity handoff — AI Content Factory
 
-ANTIGRAVITY_STATUS: DESIGN_READY_FOR_CODEX
+ANTIGRAVITY_STATUS: READY_FOR_IMPLEMENTATION_VISUAL_QA
+DESIGN_DELIVERY_STATUS: DESIGN_READY_FOR_CODEX
 PHASE_0A_STATUS: STABLE
 DESIGN_REFERENCE_QA: PASS_WITH_DOCUMENTED_LIMITS
-APP_IMPLEMENTATION_VISUAL_QA: PENDING
+APP_IMPLEMENTATION_VISUAL_QA: PENDING_INTEGRATED_APPLICATION_REVIEW
 Updated: 2026-10-09 (Asia/Bangkok)
 
+The approved design branch has been brought into `integration/v1-ui-core` from the latest
+backend/core main. Its earlier PASS marker does not accept this combined candidate. Review
+the actual integrated application using [visual QA handoff](docs/ANTIGRAVITY_VISUAL_QA_HANDOFF.md)
+and [integration review](docs/INTEGRATION_REVIEW.md); final implementation visual QA is pending.
+
 The Phase 0 checkpoint was READY_FOR_DESIGN. The Owner then assigned the UX/UI lead
-role in this chat. Root reviewed and integrated isolated design/prototype/spec/QA agent
-output. This packet is now ready for Codex implementation; it does not claim an external
-Antigravity session received the packet or that the production app has adopted the design.
+role in this chat. Root reviewed the design/specification packet and has now integrated its
+committed implementation with current core in a dedicated candidate. The actual app is ready
+for visual review; no external Antigravity message or main merge is claimed.
 
 ## Completed design and implementation source
 

@@ -10,6 +10,7 @@ const required = [
   'docs/UI_SPEC.md', 'docs/MOTION_SPEC.md', 'docs/MOBILE_UX.md', 'docs/VISUAL_QA.md',
   'docs/design/README.md',
   'docs/CORE_INTEGRATION_HANDOFF.md', 'docs/DRIVE_STORAGE.md', 'docs/CLOUD_CONTROL_PLANE.md',
+  'docs/INTEGRATION_REVIEW.md', 'docs/ANTIGRAVITY_VISUAL_QA_HANDOFF.md',
 ];
 const errors = [];
 for (const file of required) {

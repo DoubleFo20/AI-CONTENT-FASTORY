@@ -16,8 +16,8 @@
 | P1-07 | Integration/typecheck/lint/build/browser/mobile/PWA QA | P1-03,P1-06 | Root + QA | DONE |
 | P1-08 | Evidence, operations guide and checkpoint commit | P1-07 | Root | DONE_LOCAL |
 | D-01 | Reviewed design system, UX specs and interactive reference | P0-04,P1-07 | UX lead + design/spec/QA agents + Root review | DONE; DESIGN_READY_FOR_CODEX |
-| D-02 | Design implementation in existing client | D-01,P1-07 | Antigravity in separate worktree | OWNED_BY_ANTIGRAVITY; Codex does not concurrently edit UX/UI |
-| D-03 | Visual QA | D-02 | Antigravity | BLOCKED_BY_D-02 |
+| D-02 | Design implementation in existing client | D-01,P1-07 | Antigravity in separate worktree | DELIVERED_ON_DESIGN_BRANCH; integrated by I-02/I-03 |
+| D-03 | Actual integrated application visual QA | I-04 | Antigravity | READY_FOR_REVIEW; PENDING |
 | D-04 | Drive primary-media, trusted cost and durable approval contracts | D-01,C-03; approved external integration | Codex engineering lead | BACKUP_API_PREPARED; primary media index/cutover and cost/approval pending |
 | C-01 | Updated Supabase/Drive/Cloud+Local architecture without rewriting local stack | P1-08 | Root | DONE; no migration applied |
 | C-02 | Labelled Mock AI, bounded auto fallback and safe invalid-mode handling | C-01 | Luna agent + Root/QA | DONE; injected provider checks |
@@ -27,6 +27,13 @@
 | C-06 | Cloud AI executor and Local Worker target/lease architecture | C-04,C-05 | Sol High + Root | FOUNDATION_DONE; actual local pairing/media bridge H-05 |
 | C-07 | Combined regressions, typecheck/build/lint/PWA and independent security review | C-05,C-06 | Luna QA + Root | DONE;57 passed,1 POSIX skip Windows |
 | C-08 | Core/API/Drive/cloud operations handoff and Git checkpoint | C-07 | Root + Luna docs | DONE;2d112dc pushed/verified; docs/secrets/whitespace passed |
+| I-01 | Fetch/compare branches, inspect worktrees and preserve uncommitted work | C-08,D-02 | Root | DONE; main dfe2b2c, design cad482e |
+| I-02 | Dedicated integration/v1-ui-core worktree and safe design merge | I-01 | Root | DONE; no conflicts; core unchanged |
+| I-03 | Connect approved UI to actual APIs and fix functional/accessibility regressions | I-02 | Sol High UI + Root review | DONE; picker, saved choice, TH/EN, honest capabilities, focus and44px targets |
+| I-04 | Combined automated/browser/auth/offline/media verification | I-03 | Luna QA + Root | DONE;63 passes,1 POSIX skip;216 layout+6 login cases; real synthetic24-second MP4 |
+| I-05 | Evidence, normal commit/push and PR to main | I-04 | Root + Luna docs | ENGINEERING_VERIFIED; Git publication recorded after delivery |
+| I-06 | Visual QA handoff for actual combined app | I-04 | Root | READY; external visual review PENDING |
+| I-07 | Final integration review before main merge | I-05,D-03 | Owner + reviewers | PENDING; main not merged |
 | H-03 | App Google OAuth configuration, owner consent and real private round trip | C-03 | Owner + Root | AWAITING_EXTERNAL |
 | H-04 | App-specific Supabase project/secret and hosted SQL/RLS/PostgREST verification | C-04 | Owner + Root | AWAITING_PROJECT_SELECTION; unrelated projects untouched |
 | H-05 | Approved data/auth/media migration, always-on host and Local Worker pairing | H-03,H-04,C-06 | Owner + Root | AWAITING_DEPENDENCIES_AND_MIGRATION_APPROVAL |
@@ -38,7 +45,13 @@ Verification evidence and the separate live/design/creative gates are recorded i
 
 ## Parallel ownership contract
 
-Current Backend/Core assignment: Root owns shared contracts, server/app/index/integrations,
+Current integration assignment: Root owns the dedicated integration branch, Git, progress and
+final acceptance. UI, QA and docs writers used separate worktrees with disjoint paths. Root
+reviewed their output before copying it to the candidate. Antigravity's original branch/worktree
+and UX specifications remain untouched; Antigravity owns actual-app visual QA. Core/shared/public/
+package paths stay identical to main. No concurrent writer edits occurred in the candidate.
+
+Historical Backend/Core assignment: Root owns shared contracts, server/app/index/integrations,
 cloud service composition, architecture/progress/config/Git and final schema acceptance.
 Core writer owns new server/storage files and Drive tests in core-drive; cloud writer owns
 new server/cloud adapters/runner, cloud tests and review-only SQL in core-cloud. Scoped Luna

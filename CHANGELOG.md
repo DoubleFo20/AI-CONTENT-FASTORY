@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-10-09 — Verified UI/core integration candidate
+
+- Integrated approved Antigravity studio UI in a dedicated branch from latest main; preserved
+  original worktrees, uncommitted writer work and backend/shared/public/package files.
+- Connected real project/editor/queue/selection/clip/export APIs and truthful capabilities.
+  Preserved TH/EN/PWA/Mock; Flow stays the manual primary engine and planned modules stay disabled.
+- Fixed modal keyboard focus/Escape/return and44px brand/project/review links. Added six
+  client API regressions and a guarded isolated Mock QA launcher.
+- Verified63 automated passes/1 POSIX Windows skip, typechecks/lint/build/PWA/mock HTTP smoke,
+  216 responsive+6 login cases, clipboard, offline/cache/auth and a real synthetic24-second MP4.
+- Recorded actual-app captures/evidence and Antigravity handoff; visual/final integration
+  review and live provider/storage/cloud acceptance remain pending.
+
 ## 2026-10-09 — Parallel backend/core integration checkpoint
 
 - Preserved the existing React/Express/SQLite/auth/queue/FFmpeg stack and Antigravity's UX/UI ownership.
