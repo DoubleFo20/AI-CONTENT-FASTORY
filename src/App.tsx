@@ -257,7 +257,12 @@ export default function App() {
         <a href="#queue" aria-current={route.page === 'queue' ? 'page' : undefined}>{m.queue}</a>
         <button type="button" aria-haspopup="dialog" aria-expanded={drawerOpen} onClick={() => setDrawerOpen(true)}>{m.more}</button>
       </nav>
-      {drawerOpen && <Modal title={m.navigation} closeLabel={m.closeDialog} className="navigation-drawer" onClose={() => setDrawerOpen(false)}>
+      <div className={`drawer-overlay ${drawerOpen ? 'drawer-open' : ''}`} onClick={() => setDrawerOpen(false)} aria-hidden="true" />
+      <div id="navigation-drawer" className={`drawer-content ${drawerOpen ? 'drawer-open' : ''}`} role="dialog" aria-modal="true" aria-label={m.navigation}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+          <h2 style={{ marginBottom: 0 }}>{m.navigation}</h2>
+          <button className="secondary" onClick={() => setDrawerOpen(false)}>{m.closeDialog}</button>
+        </div>
         <nav className="stack" aria-label={m.navigation}>
           <a className="button secondary" href="#dashboard" onClick={() => setDrawerOpen(false)}>{m.dashboard}</a>
           <a className="button secondary" href="#stories" onClick={() => setDrawerOpen(false)}>{m.storyFactory}</a>
@@ -266,9 +271,9 @@ export default function App() {
           <button className="secondary" onClick={() => { setDrawerOpen(false); setPickerOpen(true); }}>{m.editorTool}</button>
           <h3>{m.other}</h3>
           {FACTORY_MODULES.filter((module) => module.state === 'planned').map((module) => <button key={module.id} className="secondary" disabled>{module.name[locale]} · {m.planned}</button>)}
-          <button className="secondary" disabled={disabled} onClick={() => { setDrawerOpen(false); void logout(); }}>{m.logout}</button>
+          <button className="secondary" disabled={disabled} onClick={() => { setDrawerOpen(false); void logout(); }} style={{ marginTop: 'auto' }}>{m.logout}</button>
         </nav>
-      </Modal>}
+      </div>
       {pickerOpen && <Modal title={m.projectPicker} closeLabel={m.closeDialog} onClose={() => setPickerOpen(false)}>
         <p>{m.editorPickerInfo}</p>
         {baseLoading ? <p role="status">{m.loading}</p> : projects.length ? <div className="stack">{projects.map((item) => <a key={item.id} className="button secondary picker-project" href={`#story/${encodeURIComponent(item.id)}/clips`} onClick={() => setPickerOpen(false)}><span>{item.name}</span><span className="badge">{stageLabels[locale][item.status]}</span></a>)}</div> : <><p>{m.noProjectsForEditor}</p><a className="button" href="#stories" onClick={() => setPickerOpen(false)}>{m.createStory}</a></>}

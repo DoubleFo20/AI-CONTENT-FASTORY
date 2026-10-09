@@ -15,10 +15,10 @@ interface Props {
 
 function DisplayText({ content, mode }: { content: Record<'th'|'en', string>; mode: 'th'|'en'|'th+en' }) {
   if (mode === 'th+en') {
-    return <span className="th-en-group">
-      <span lang="th"><span className="lang-label">TH</span><span className="preserve">{content.th}</span></span>
-      <span lang="en"><span className="lang-label">EN</span><span className="preserve">{content.en}</span></span>
-    </span>;
+    return <div className="th-en-group">
+      <div lang="th"><div className="lang-label">TH</div><span className="preserve">{content.th}</span></div>
+      <div lang="en"><div className="lang-label">EN</div><span className="preserve">{content.en}</span></div>
+    </div>;
   }
   return <span lang={mode} className="preserve">{content[mode]}</span>;
 }
