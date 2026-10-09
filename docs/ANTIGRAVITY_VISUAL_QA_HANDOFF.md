@@ -4,6 +4,11 @@ ANTIGRAVITY_STATUS: READY_FOR_IMPLEMENTATION_VISUAL_QA
 APP_IMPLEMENTATION_VISUAL_QA: PENDING
 Updated: 2026-10-09 (Asia/Bangkok)
 
+[Draft PR#1](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/1) targets main and remains unmerged.
+Verified UI/core implementation checkpoint: `fda96d6377eb9895ab606bfdb01f758adb623e1c`.
+Subsequent publication-record commits contain documentation only; record actual branch HEAD
+with your review. Please return actual-app findings and screenshots before main integration review.
+
 Please visually review the **actual integrated candidate application** in Root's
 `integration/v1-ui-core` worktree against [UI_SPEC](UI_SPEC.md), [DESIGN_SYSTEM](DESIGN_SYSTEM.md),
 [MOBILE_UX](MOBILE_UX.md), [MOTION_SPEC](MOTION_SPEC.md), and [VISUAL_QA](VISUAL_QA.md).
@@ -56,7 +61,7 @@ deployment and worker pairing gates.
 
 | Item | Result |
 | --- | --- |
-| Candidate commit / launch invocation | See integrated SHA inputs and loopback 3004 instructions above; confirm latest candidate SHA with Root |
+| Candidate commit / launch invocation | Implementation fda96d6377eb9895ab606bfdb01f758adb623e1c; launch steps above; record current HEAD |
 | Browsers and viewport/locale matrix covered | PENDING |
 | Screenshots or observations | PENDING |
 | Findings with severity and reproduction | PENDING |

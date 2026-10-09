@@ -31,7 +31,7 @@
 | I-02 | Dedicated integration/v1-ui-core worktree and safe design merge | I-01 | Root | DONE; no conflicts; core unchanged |
 | I-03 | Connect approved UI to actual APIs and fix functional/accessibility regressions | I-02 | Sol High UI + Root review | DONE; picker, saved choice, TH/EN, honest capabilities, focus and44px targets |
 | I-04 | Combined automated/browser/auth/offline/media verification | I-03 | Luna QA + Root | DONE;63 passes,1 POSIX skip;216 layout+6 login cases; real synthetic24-second MP4 |
-| I-05 | Evidence, normal commit/push and PR to main | I-04 | Root + Luna docs | ENGINEERING_VERIFIED; Git publication recorded after delivery |
+| I-05 | Evidence, normal commit/push and PR to main | I-04 | Root + Luna docs | DONE; fda96d6 pushed/remote verified; Draft PR#1 targets main; unmerged |
 | I-06 | Visual QA handoff for actual combined app | I-04 | Root | READY; external visual review PENDING |
 | I-07 | Final integration review before main merge | I-05,D-03 | Owner + reviewers | PENDING; main not merged |
 | H-03 | App Google OAuth configuration, owner consent and real private round trip | C-03 | Owner + Root | AWAITING_EXTERNAL |

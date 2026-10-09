@@ -14,6 +14,12 @@ main and merged the design without conflicts. Original worktrees and retained un
 writer work were preserved. Comparing changes from the common ancestor avoided replacing
 the newer backend with the design branch's older backend.
 
+Published implementation checkpoint fda96d6377eb9895ab606bfdb01f758adb623e1c normally to
+`origin/integration/v1-ui-core`; remote SHA verified. [Draft PR#1](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/1)
+targets main and is open/mergeable. GitHub reports no configured PR status checks; verification
+below was executed locally. Main and design remote SHAs remain the inputs above. No force push
+or main merge occurred. Later publication-record commits do not change verified source.
+
 Root reviewed isolated UI, QA and documentation output. The approved studio UI uses actual
 owner auth, projects, jobs, clips and exports. Auto Editor selects a persisted project;
 planned factories remain disabled; Mock/local/Drive capabilities are truthful. Saved selection

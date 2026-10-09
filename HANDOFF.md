@@ -13,6 +13,11 @@ Inputs: main dfe2b2c89599fec84472840b4934e5e1604a0805 and design
 cad482e906f2dcc6db172c085196643a75f70c4f; merged without conflicts. Original branches/worktrees
 and pre-existing uncommitted writer work remain preserved. Do not merge main before final review.
 
+[Draft PR#1](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/1) is open against main.
+Verified implementation commit fda96d6377eb9895ab606bfdb01f758adb623e1c was pushed normally;
+main/design remote SHAs remain the inputs above. Later publication-record commits change docs
+only. No configured GitHub PR checks are reported; the checks below were executed locally.
+
 Approved studio UI now connects to cookie/CSRF auth, persisted projects, selected-only Story
 Factory, actual queue, private clip import, local FFmpeg/preview/MP4, TH/EN/content modes and
 the existing PWA. The real editor project picker replaces its placeholder; planned modules

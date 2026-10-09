@@ -12,6 +12,8 @@
   216 responsive+6 login cases, clipboard, offline/cache/auth and a real synthetic24-second MP4.
 - Recorded actual-app captures/evidence and Antigravity handoff; visual/final integration
   review and live provider/storage/cloud acceptance remain pending.
+- Pushed fda96d6 normally to integration/v1-ui-core and created Draft PR#1 against main;
+  verified original main/design remote SHAs unchanged. No force push or merge occurred.
 
 ## 2026-10-09 — Parallel backend/core integration checkpoint
 
