@@ -185,6 +185,6 @@ each failure; do not mark a row pass from source inspection alone.
   statement covers prior implementation checks only.
 - **New design prototype:** PASS_WITH_DOCUMENTED_LIMITS;270 layout cases, key captures and
   exercised keyboard/state behavior. This is design evidence, not production acceptance.
-- **New app implementation visual QA:** PASS (Visual QA of integrated application completed and validated).
+- **New app implementation visual QA:** AWAITING_OWNER_VISUAL_APPROVAL (Visual correction implemented, awaiting owner review).
 - **Live AI, Google Flow, Drive integration and credit estimate:** NOT ACCEPTED by this visual
   review. Each needs its own supported integration and Owner-controlled acceptance evidence.
