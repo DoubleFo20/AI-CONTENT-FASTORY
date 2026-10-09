@@ -1,18 +1,20 @@
 # Project status
 
-STATUS: VISUAL_QA_PASSED
+STATUS: DESIGN_RESTORED_PREMIUM_V2
 CURRENT_PHASE: V1_UI_CORE_INTEGRATION
-NEXT_ACTION: PENDING_MERGE_TO_MAIN
-ANTIGRAVITY_STATUS: VISUAL_QA_PASSED
-Updated: 2026-10-09 (Asia/Bangkok)
+NEXT_ACTION: READY_FOR_OWNER_REVIEW
+ANTIGRAVITY_STATUS: DESIGN_COMPLETED
 
-## Current UI/core integration checkpoint
-
-Fetched main dfe2b2c89599fec84472840b4934e5e1604a0805 and design
-cad482e906f2dcc6db172c085196643a75f70c4f. Dedicated `integration/v1-ui-core` was based on
-main and merged the design without conflicts. Original worktrees and retained uncommitted
-writer work were preserved. Comparing changes from the common ancestor avoided replacing
-the newer backend with the design branch's older backend.
+## Premium Cinematic V2 update
+The early prototype's "Premium Cinematic UI" has been completely restored and improved.
+- Preserved deep navy/cinematic dark backgrounds and mint-green accents.
+- Re-implemented the cinematic hero section (`.hero`, `.film-window`) in Dashboard.
+- Replaced generic metric cards with visual `.module.story` cards.
+- Added Split layout and glass cards for Story Factory brief creation.
+- Enhanced Idea Cards with radio selectors and sticky actions for saving.
+- Transformed Storyboard Scenes into `.scene-art` illustrated blocks.
+- Fixed layout structures and spacing issues without removing Codex's mock/live backend hooks.
+- All strings added to TH/EN `i18n.ts`.
 
 Published implementation checkpoint fda96d6377eb9895ab606bfdb01f758adb623e1c normally to
 `origin/integration/v1-ui-core`; remote SHA verified. [Draft PR#1](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/1)

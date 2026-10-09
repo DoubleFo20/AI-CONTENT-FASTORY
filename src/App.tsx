@@ -294,9 +294,38 @@ export default function App() {
           <p>{m.storageLocal} · {drive ? drive.state === 'connected' && drive.connected ? m.driveGrantConnected : drive.state === 'failed' ? m.driveFailed : m.noDriveConnection : m.driveUnknown}</p>
         </aside>
         {route.page === 'dashboard' && <>
-          <h1 className="hero-title">{m.dashboard}</h1>
-          <p><a className="button" href="#stories">{m.createContent}</a></p>
-          {dashboard && <div className="metrics" style={{ marginTop: '32px' }}>
+          <section className="hero">
+            <div className="hero-copy">
+              <span className="eyebrow">{m.creativeSpace}</span>
+              <h1>{m.brand}<br/>{m.heroTitle}</h1>
+              <p>{m.heroSubtitle}</p>
+              <div className="actions">
+                <a className="button primary" href="#stories">{m.createContent}</a>
+                <a className="button quiet" href="#stories">{m.continueSample}</a>
+              </div>
+            </div>
+            <div className="film-window" aria-hidden="true">
+              <div className="orb"></div>
+              <div className="skyline"></div>
+              <div className="rails"></div>
+              <div className="floating-note">✦ Scene 1 · The arrival</div>
+            </div>
+          </section>
+          
+          <div className="studio-grid">
+            <div className="section-heading" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h2 style={{ marginBottom: 0 }}>Choose your creative space</h2>
+            </div>
+            <div className="module-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px', marginBottom: '32px' }}>
+              <button className="module story" onClick={() => { window.location.hash = 'stories'; }} style={{ textAlign: 'left', padding: '24px' }}>
+                <h3>AI Story Factory</h3>
+                <p className="muted">{m.storyFactoryHero}</p>
+                <span className="chip">{m.startStory} →</span>
+              </button>
+            </div>
+          </div>
+          
+          {dashboard && <div className="metrics" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
             <div className="card metric"><span>{m.projectsCount}</span><strong>{new Intl.NumberFormat(locale).format(dashboard.projectsCount)}</strong></div>
             <div className="card metric"><span>{m.activeJobsCount}</span><strong>{new Intl.NumberFormat(locale).format(dashboard.activeJobsCount)}</strong></div>
             <div className="card metric"><span>{m.completedCount}</span><strong>{new Intl.NumberFormat(locale).format(dashboard.completedCount)}</strong></div>

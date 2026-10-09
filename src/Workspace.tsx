@@ -88,7 +88,7 @@ export default function Workspace({ project, jobs, locale, contentMode, section,
 
     {active && <p className="notice" role="status">{m.activeJob} <a href="#queue">{m.queue}</a></p>}
 
-    {activeSection === 'brief' && <section tabIndex={-1} id="workspace-brief" className="card">
+    {activeSection === 'brief' && <section tabIndex={-1} id="workspace-brief" className="card glass">
       <h2>{m.brief}</h2><p className="preserve">{project.brief}</p>
       <dl className="details">
         <div><dt>{m.genre}</dt><dd>{project.genre}</dd></div>
@@ -103,17 +103,26 @@ export default function Workspace({ project, jobs, locale, contentMode, section,
       <h2>{m.ideas}</h2><p className="muted">{m.ideasInfo}</p>
       {project.ideas.length === 0 ? <><div className="empty"><p>{m.emptyIdeas}</p></div><div className="actions"><button disabled={blocked} onClick={() => operate('ideas')}>{m.generateIdeas}</button></div></> : project.ideas.length !== 10 ? <p className="alert" role="alert">{m.tenIdeasError}</p> : <>
         <fieldset disabled={blocked || !!pack}>
-          <legend>{m.ideaChoice}</legend>
-          <div className="card-grid ideas">{project.ideas.map((idea, index) => <label className={`card idea ${displayedChoice === idea.id ? 'chosen' : ''}`} key={idea.id}>
-            <div className="idea-title"><input type="radio" name="idea" value={idea.id} checked={displayedChoice === idea.id} onChange={() => setChoice(idea.id)} /><strong>{index + 1}. <DisplayText content={idea.title} mode={contentMode} /></strong></div>
-            <div><DisplayText content={idea.logline} mode={contentMode} /></div>
-            <div><strong>{m.hook}:</strong> <DisplayText content={idea.hook} mode={contentMode} /></div>
-            {project.selectedIdeaId === idea.id && <div><span className="badge success">{m.savedSelection}</span></div>}
+          <legend className="sr-only">{m.ideaChoice}</legend>
+          <div className="card-grid ideas">{project.ideas.map((idea, index) => <label className="idea-card" key={idea.id}>
+            <div className="idea-title" style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
+              <input type="radio" name="idea" value={idea.id} checked={displayedChoice === idea.id} onChange={() => setChoice(idea.id)} style={{ marginTop: '4px' }} />
+              <div>
+                <strong><span className="subdued" style={{ marginRight: '8px' }}>{String(index + 1).padStart(2, '0')} / 10</span><DisplayText content={idea.title} mode={contentMode} /></strong>
+              </div>
+            </div>
+            <div style={{ paddingLeft: '34px', marginBottom: '8px' }}><DisplayText content={idea.logline} mode={contentMode} /></div>
+            <div className="small" style={{ paddingLeft: '34px' }}><span className="subdued">{m.hook}: </span> <DisplayText content={idea.hook} mode={contentMode} /></div>
+            {project.selectedIdeaId === idea.id && <div style={{ paddingLeft: '34px', marginTop: '12px' }}><span className="chip">{m.savedSelection}</span></div>}
           </label>)}</div>
         </fieldset>
-        {!pack && <div className="actions">
-          <button disabled={blocked || !choice || choice === project.selectedIdeaId} onClick={() => select(choice)}>{m.saveSelection}</button>
-          {choice && choice !== project.selectedIdeaId && <span className="muted">{m.unsavedSelection}</span>}
+        {!pack && <div className="sticky-actions">
+          <div>
+            {project.selectedIdeaId === choice ? <p style={{ marginBottom: 0 }}><strong>{m.savedSelection}:</strong> <DisplayText content={selected!.title} mode={contentMode} /></p> : <p style={{ marginBottom: 0 }} className="muted">{m.unsavedSelection}</p>}
+          </div>
+          <div className="actions" style={{ display: 'flex', gap: '12px', marginTop: 0 }}>
+            <button className="secondary" disabled={blocked || !choice || choice === project.selectedIdeaId} onClick={() => select(choice!)}>{m.saveSelection}</button>
+          </div>
         </div>}
       </>}
       {selected && <div className="card" style={{marginTop: '24px'}}>
@@ -130,7 +139,7 @@ export default function Workspace({ project, jobs, locale, contentMode, section,
 
     {activeSection === 'bibles' && <section tabIndex={-1} id="workspace-bibles">
       <h2>{m.bibles}</h2>
-      {!pack ? <div className="empty"><p>{m.emptyPackage}</p><a className="button secondary" href={`#story/${encodeURIComponent(project.id)}/ideas`}>{m.ideas}</a></div> : <div className="card">
+      {!pack ? <div className="empty"><p>{m.emptyPackage}</p><a className="button secondary" href={`#story/${encodeURIComponent(project.id)}/ideas`}>{m.ideas}</a></div> : <div className="card glass">
         <div className="bible-tabs" role="tablist" aria-label={m.bibles}>
           {bibleTabs.map((tab, index) => <button key={tab} id={`bible-tab-${tab}`} type="button" role="tab" aria-controls="bible-panel" aria-selected={bibleTab === tab} tabIndex={bibleTab === tab ? 0 : -1} className="bible-tab" onClick={() => setBibleTab(tab)} onKeyDown={(event) => navigateBible(event, index)}>{tab === 'story' ? m.storyBible : m[tab]}</button>)}
         </div>
@@ -177,21 +186,26 @@ export default function Workspace({ project, jobs, locale, contentMode, section,
             <button className="secondary" disabled={disabled} onClick={() => download(`/projects/${encodeURIComponent(project.id)}/prompt-pack`, 'flow-prompt-pack.json')}>{m.downloadPack}</button>
           </div>
         </div>
-        <div className="stack">{pack.scenes.map((scene) => <article className="card" key={scene.id}>
-          <h3>{scene.order}. <DisplayText content={scene.title} mode={contentMode} /> · {scene.durationSeconds} {m.seconds}</h3>
-          <p className="muted"><strong>{m.characters}:</strong> {scene.characterIds.map((id) => pack.characters.find((character) => character.id === id)?.name ?? id).join(', ')}</p>
-          <p className="muted"><strong>{m.locations}:</strong> <DisplayText content={pack.locations.find((location) => location.id === scene.locationId)?.name ?? { th: scene.locationId, en: scene.locationId }} mode={contentMode} /></p>
+        <div className="stack" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>{pack.scenes.map((scene, i) => <article className="card" key={scene.id} style={{ padding: 0, overflow: 'hidden' }}>
+          <div className={`scene-art ${i % 3 === 1 ? 'amber' : i % 3 === 2 ? 'violet' : ''}`}></div>
+          <div style={{ padding: '24px' }}>
+            <h3>{String(scene.order).padStart(2, '0')}. <DisplayText content={scene.title} mode={contentMode} /> · {scene.durationSeconds} {m.seconds}</h3>
+            <p className="muted"><strong>{m.characters}:</strong> {scene.characterIds.map((id) => pack.characters.find((character) => character.id === id)?.name ?? id).join(', ')}</p>
+            <p className="muted"><strong>{m.locations}:</strong> <DisplayText content={pack.locations.find((location) => location.id === scene.locationId)?.name ?? { th: scene.locationId, en: scene.locationId }} mode={contentMode} /></p>
 
-          <h4 style={{marginTop: '16px'}}>{m.explanationTh}</h4>
-          <p lang="th" className="preserve">{scene.explanationTh}</p>
+            <div style={{ background: 'var(--surface-raised)', margin: '16px -24px -24px -24px', padding: '24px', borderTop: '1px solid var(--border)' }}>
+              <h4>{m.explanationTh}</h4>
+              <p lang="th" className="preserve muted">{scene.explanationTh}</p>
 
-          <h4 style={{marginTop: '16px'}}>{m.narration}</h4>
-          <p><DisplayText content={scene.narration} mode={contentMode} /></p>
+              <h4 style={{marginTop: '16px'}}>{m.narration}</h4>
+              <p className="muted"><DisplayText content={scene.narration} mode={contentMode} /></p>
 
-          <h4 style={{marginTop: '16px'}}>{m.flowPromptEn}</h4>
-          <div className="prompt-panel">
-            <p lang="en" className="preserve" style={{marginBottom: '16px'}}>{scene.flowPromptEn}</p>
-            <CopyButton text={scene.flowPromptEn} m={m} />
+              <h4 style={{marginTop: '16px'}}>{m.flowPromptEn}</h4>
+              <div className="prompt-panel">
+                <p lang="en" className="preserve muted" style={{marginBottom: '16px'}}>{scene.flowPromptEn}</p>
+                <CopyButton text={scene.flowPromptEn} m={m} />
+              </div>
+            </div>
           </div>
         </article>)}</div>
       </>}

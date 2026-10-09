@@ -76,15 +76,41 @@ export function ProjectForm({ m, disabled, submit }: { m: Messages; disabled: bo
     setInvalid(!result.success);
     if (result.success) submit(result.data);
   }
-  return <section className="card"><h2>{m.createContent}</h2><form className="form-grid" onSubmit={onSubmit}>
-    <label>{m.name}<input required maxLength={120} value={input.name} onChange={(event) => setInput({ ...input, name: event.target.value })} /></label>
-    <label>{m.genre}<input required maxLength={100} value={input.genre} onChange={(event) => setInput({ ...input, genre: event.target.value })} /></label>
-    <label>{m.audience}<input required maxLength={120} value={input.audience} onChange={(event) => setInput({ ...input, audience: event.target.value })} /></label>
-    <label>{m.aspectRatio}<select value={input.aspectRatio} onChange={(event) => setInput({ ...input, aspectRatio: event.target.value as ProjectInput['aspectRatio'] })}><option>9:16</option><option>16:9</option><option>1:1</option></select></label>
-    <label className="full">{m.brief}<textarea required minLength={10} maxLength={4000} rows={5} value={input.brief} aria-describedby="brief-help" onChange={(event) => setInput({ ...input, brief: event.target.value })} /><span id="brief-help" className="muted">{m.briefHelp}</span></label>
-    {invalid && <p className="full error" role="alert">{m.invalidForm}</p>}
-    <div className="full actions"><button disabled={disabled}>{m.create}</button></div>
-  </form></section>;
+  return <div className="split" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 0.8fr)', gap: '24px' }}>
+    <section className="card">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+        <h2 style={{ marginBottom: 0 }}>Story direction</h2>
+        <span className="chip">AI Story Factory</span>
+      </div>
+      <form className="form-grid" onSubmit={onSubmit}>
+        <label className="full">{m.name}<input required maxLength={120} value={input.name} onChange={(event) => setInput({ ...input, name: event.target.value })} /></label>
+        <label className="full">{m.brief}<textarea required minLength={10} maxLength={4000} rows={5} value={input.brief} aria-describedby="brief-help" onChange={(event) => setInput({ ...input, brief: event.target.value })} /><span id="brief-help" className="muted">{m.briefHelp}</span></label>
+        <label>{m.genre}<input required maxLength={100} value={input.genre} onChange={(event) => setInput({ ...input, genre: event.target.value })} /></label>
+        <label>{m.audience}<input required maxLength={120} value={input.audience} onChange={(event) => setInput({ ...input, audience: event.target.value })} /></label>
+        <label className="full">{m.aspectRatio}<select value={input.aspectRatio} onChange={(event) => setInput({ ...input, aspectRatio: event.target.value as ProjectInput['aspectRatio'] })}><option>9:16</option><option>16:9</option><option>1:1</option></select></label>
+        
+        <div className="full notice" style={{ display: 'flex', gap: '12px', background: 'rgba(138,239,203,0.1)', padding: '16px', borderRadius: '8px', color: 'var(--text)' }}>
+          <span style={{ fontSize: '20px' }}>✦</span>
+          <p style={{ margin: 0 }}>{m.fixtureIdeasNotice}</p>
+        </div>
+        
+        {invalid && <p className="full error" role="alert">{m.invalidForm}</p>}
+        <div className="full actions"><button className="primary" disabled={disabled}>{m.tenShortIdeas}</button></div>
+      </form>
+    </section>
+    
+    <aside className="stack" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <section className="card glass">
+        <span className="eyebrow">{m.oneStoryYourChoice}</span>
+        <h2>{m.youChoose}</h2>
+        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <li style={{ display: 'flex', alignItems: 'center', gap: '12px' }}><span style={{ color: 'var(--accent)' }}>✓</span> {m.tenShortIdeas}</li>
+          <li style={{ display: 'flex', alignItems: 'center', gap: '12px' }}><span style={{ color: 'var(--accent)' }}>✓</span> {m.saveExactlyOne}</li>
+          <li style={{ display: 'flex', alignItems: 'center', gap: '12px' }}><span style={{ color: 'var(--accent)' }}>✓</span> {m.expandOnlySelected}</li>
+        </ul>
+      </section>
+    </aside>
+  </div>;
 }
 
 export function CopyButton({ text, m }: { text: string; m: Messages }) {
