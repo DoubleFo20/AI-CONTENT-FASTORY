@@ -1,9 +1,53 @@
 # Handoff
 
-STATUS: CORE_CHECKPOINT_COMPLETE_EXTERNAL_GATES
-ANTIGRAVITY_STATUS: DESIGN_READY_FOR_CODEX
+STATUS: INTEGRATION_ENGINEERING_VERIFIED_REVIEW_PENDING
+ANTIGRAVITY_STATUS: READY_FOR_IMPLEMENTATION_VISUAL_QA
 Updated: 2026-10-09 (Asia/Bangkok)
-Current phase: Phase 2 core integrations; Antigravity implementation visual QA pending.
+Current phase: V1 UI/core integration; actual-app visual QA and final integration review pending.
+
+## Current integration handoff
+
+Branch `integration/v1-ui-core`, worktree
+`D:\xampp\htdocs\Ai-content-factory\.worktrees\integration-v1-ui-core`.
+Inputs: main dfe2b2c89599fec84472840b4934e5e1604a0805 and design
+cad482e906f2dcc6db172c085196643a75f70c4f; merged without conflicts. Original branches/worktrees
+and pre-existing uncommitted writer work remain preserved. Do not merge main before final review.
+
+[Draft PR#1](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/1) is open against main.
+Verified implementation commit fda96d6377eb9895ab606bfdb01f758adb623e1c was pushed normally;
+main/design remote SHAs remain the inputs above. Later publication-record commits change docs
+only. No configured GitHub PR checks are reported; the checks below were executed locally.
+
+Approved studio UI now connects to cookie/CSRF auth, persisted projects, selected-only Story
+Factory, actual queue, private clip import, local FFmpeg/preview/MP4, TH/EN/content modes and
+the existing PWA. The real editor project picker replaces its placeholder; planned modules
+remain disabled. Native Modal retains keyboard focus. Backend/shared/public/schema/packages/
+lockfile/environment were preserved. No migration or real service/publishing action occurred.
+
+Verification:64 automated unit/integration tests,63 passed,0 failed,1 POSIX Windows skip;
+lint/build/all3 typechecks/PWA/compiled mock smoke passed. Chrome154 CLI exercised216 layout
+cases plus6 auth layouts. Saved idea10 prevailed over unsaved9; English clipboard read-back
+passed in3 modes. Actual imports/queue/preview/play/download and ffprobe24.021333-second
+H.2641080×1080+AAC MP4 passed. Offline/cache/reconnect, failed/valid login, logout401 files and
+missing-session clearing passed. Only public preferences and nine shell assets persisted.
+Final staged hygiene passed:27 document/link checks,109-file secret/ignore check and whitespace.
+See [integration review](docs/INTEGRATION_REVIEW.md) and [QA results](docs/integration/QA_RESULTS.json).
+
+For Antigravity follow [actual-app visual QA handoff](docs/ANTIGRAVITY_VISUAL_QA_HANDOFF.md).
+From the candidate run `npm.cmd run build`, then `node scripts/integration-qa-server.mjs`.
+Each launch creates a fresh ignored synthetic database, strips live provider credentials and
+forces Mock. Choose synthetic credentials yourself. Port3004 currently holds Root's completed
+fixture; for a fresh review use PowerShell `$env:ACF_QA_PORT='3005'` before launching.
+Fresh3005 startup/health/first-owner checks passed and that process was stopped. Never reuse
+the real owner database; original3001/3003 apps were untouched. Stop a review server after use.
+Record actual `git rev-parse HEAD` with visual findings.
+
+Antigravity visual QA and final integration review remain PENDING. The design branch's earlier
+PASS does not accept this combined app. Live provider/storage/cloud/worker, billing, OAuth and
+approved migration remain separate gates. Main merge, force push and publishing have not occurred.
+No external Antigravity message has been sent.
+
+## Prior backend/core handoff (historical)
 
 Stable decisions and Owner authorization are in MASTER_CONTEXT.md and AGENTS.md.
 ANTIGRAVITY_HANDOFF.md contains the reviewed UX/UI design packet and Codex implementation order.

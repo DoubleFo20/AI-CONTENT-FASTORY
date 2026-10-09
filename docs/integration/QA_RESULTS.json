@@ -1,0 +1,191 @@
+{
+  "date": "2026-10-09",
+  "branch": "integration/v1-ui-core",
+  "mainBase": "dfe2b2c89599fec84472840b4934e5e1604a0805",
+  "designInput": "cad482e906f2dcc6db172c085196643a75f70c4f",
+  "environment": {
+    "origin": "http://127.0.0.1:3004",
+    "browser": "Chrome 154 on Windows",
+    "aiMode": "mock",
+    "syntheticDataOnly": true,
+    "bundle": "index-D5ysk84x.js",
+    "css": "index-BhMJaiRa.css"
+  },
+  "automated": {
+    "unitAndIntegration": {
+      "command": "npm.cmd test",
+      "total": 64,
+      "passed": 63,
+      "failed": 0,
+      "skipped": 1,
+      "skipReason": "POSIX vault permissions are not exercised on Windows"
+    },
+    "typecheck": "PASS (client, server, tests)",
+    "lint": "PASS",
+    "build": "PASS",
+    "pwaValidation": "PASS",
+    "compiledMockHttpSmoke": "PASS"
+  },
+  "responsive": {
+    "totalCases": 216,
+    "dimensions": [
+      {
+        "width": 360,
+        "cases": 72,
+        "violations": 0
+      },
+      {
+        "width": 768,
+        "cases": 72,
+        "violations": 0
+      },
+      {
+        "width": 1440,
+        "cases": 72,
+        "violations": 0
+      }
+    ],
+    "uiLocales": [
+      "th",
+      "en"
+    ],
+    "contentModes": [
+      "th",
+      "en",
+      "th+en"
+    ],
+    "screens": [
+      "dashboard",
+      "stories",
+      "queue",
+      "brief",
+      "ideas",
+      "bibles/story",
+      "bibles/characters",
+      "bibles/locations",
+      "bibles/continuity",
+      "scenes",
+      "clips",
+      "preview"
+    ],
+    "checks": [
+      "no document overflow",
+      "heading present",
+      "visible enabled DOM buttons/selects/links at least 44px",
+      "Thai above English in paired content",
+      "ten ideas"
+    ]
+  },
+  "workflow": {
+    "ownerSetup": true,
+    "localeKeepsBriefDraft": true,
+    "tenIdeas": true,
+    "savedIdeaNumber": 10,
+    "unsavedIdeaNumber": 9,
+    "expansionUsesSavedSelection": true,
+    "fourBibleKeyboardTabs": true,
+    "englishPromptClipboardReadbackModes": 3,
+    "promptPackDownload": true,
+    "invalidClipRejected400": true,
+    "validEightSecondClips": 3,
+    "exportQueued202": true,
+    "queueShowsActualCompletedJobs": true,
+    "authenticatedPreviewAndDownload": true
+  },
+  "keyboard": {
+    "productionReview": {
+      "viewport": 360,
+      "locale": "en",
+      "forwardTabs": 12,
+      "reverseTabs": 12,
+      "escapedFocus": 0,
+      "escapeClose": true,
+      "focusReturn": true,
+      "touchTargets44": true
+    },
+    "mobileDrawerAndPicker": {
+      "viewport": 360,
+      "locale": "en",
+      "tabsEachDirectionPerDialog": 16,
+      "escapedFocus": 0,
+      "escapeCloseAndFocusReturn": true,
+      "disabledPlannedModules": 6,
+      "pickerUsesActualProject": true,
+      "pickerNavigatesToClips": true
+    }
+  },
+  "auth": {
+    "layoutCases": 6,
+    "widths": [
+      360,
+      768,
+      1440
+    ],
+    "locales": [
+      "th",
+      "en"
+    ],
+    "passwordToggle": true,
+    "draftRetainedAcrossLocale": true,
+    "invalidLogin401": true,
+    "genericError": true,
+    "validLogin200": true,
+    "persistedProjectRestored": true,
+    "logoutClearsPrivateDom": true,
+    "loggedOutProjectsClipAndMp4Statuses": [
+      401,
+      401,
+      401
+    ],
+    "missingSessionReloadClearsPrivateDom": true
+  },
+  "offlineAndPrivacy": {
+    "sevenClipControlsDisabled": true,
+    "mp4DownloadDisabled": true,
+    "publicShellReload": true,
+    "privateContentAfterOfflineReload": false,
+    "reconnectViaRefresh": true,
+    "privateCacheEntries": 0,
+    "localStorageKeys": [
+      "acf-content-mode",
+      "acf-locale"
+    ],
+    "sessionStorageKeys": []
+  },
+  "mp4": {
+    "synthetic": true,
+    "sourceDurationSeconds": 24,
+    "probedDurationSeconds": 24.021333,
+    "width": 1080,
+    "height": 1080,
+    "videoCodec": "h264",
+    "pixelFormat": "yuv420p",
+    "audioCodec": "aac",
+    "browserPlayback": true,
+    "download": "output/playwright/integration/story.mp4"
+  },
+  "protectedPathsUnchanged": [
+    "server/",
+    "shared/",
+    "public/",
+    "package.json",
+    "package-lock.json"
+  ],
+  "captures": [
+    "ideas-360-th.png",
+    "scenes-768-en.png",
+    "preview-1440-en.png"
+  ],
+  "approvalGates": {
+    "antigravityActualAppVisualQA": "PENDING",
+    "finalIntegrationReview": "PENDING",
+    "mainMerge": "NOT PERFORMED",
+    "liveOpenAIFlowDriveSupabaseCloudWorker": "NOT VERIFIED"
+  },
+  "limits": [
+    "Chrome desktop viewport tests do not prove physical mobile/IME/assistive technology behavior.",
+    "Dialog traversal was exercised at 360px in English; full visual QA remains Antigravity's responsibility.",
+    "Intentional invalid upload, offline request and unauthenticated request errors were expected; final page console had zero errors/warnings after reload.",
+    "No real provider calls, consent, migrations, hosting, billing or publishing were performed."
+  ]
+}

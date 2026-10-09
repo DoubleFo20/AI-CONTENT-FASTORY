@@ -50,7 +50,18 @@ shared/contracts.ts, ROADMAP.md and TASKS.md. Status files record evidence, not 
 
 ## Checkpoint state
 
-Codex's current assignment is backend/core/integration while Antigravity owns all UX/UI
+The Owner's latest assignment authorizes integrating committed main and Antigravity UI in
+`integration/v1-ui-core`, preserving uncommitted work and the existing architecture. Root
+reviewed isolated UI/QA/docs writers and verified63 automated passes/1 POSIX skip, build/
+typecheck/lint/PWA,216 actual-app layout cases,6 auth layouts and a real synthetic24-second MP4.
+Server/shared/public/package paths remain unchanged. Normal push and a PR targeting main are
+authorized; no force push or main merge before final review. Antigravity must visually review
+the actual combined app using the [new handoff](docs/ANTIGRAVITY_VISUAL_QA_HANDOFF.md).
+Original Antigravity worktree/specifications remain untouched. Live services, paid generation,
+hosting and approved migration remain separate gates; cached PWA shell cannot execute cloud jobs.
+
+The following records the prior backend/core checkpoint. Codex owned backend/core/integration
+while Antigravity owned all UX/UI
 implementation and visual QA in its separate worktree. The opt-in core checkpoint adds
 labelled Mock AI/controlled fallback, Drive OAuth/private backups, Supabase snapshot/queue
 adapter, fenced leases and cloud AI executor, compatible owner-only integration APIs and

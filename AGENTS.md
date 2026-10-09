@@ -24,6 +24,13 @@ Keep it server-side; never write it into source, client bundles, logs, commits o
 
 ## Delivery and orchestration
 
+The Owner's later integration assignment authorizes combining the approved design and core
+on `integration/v1-ui-core`, based on latest main, with isolated integration writer worktrees.
+Fix and verify frontend API/navigation/state behavior there; preserve Antigravity's original
+worktree and branch. Push the reviewed integration branch and open a PR targeting main.
+Do not merge main before final integration review; return the actual integrated application
+to Antigravity for implementation visual QA.
+
 On 2026-10-09 the Owner assigned Codex backend/core/integration and Antigravity UX/UI
 in a separate worktree. Do not concurrently edit src/, public/, docs/design/ or approved
 UX/UI specifications. Continue independent core work and maintain compatible API contracts.

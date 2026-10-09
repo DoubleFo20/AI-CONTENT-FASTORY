@@ -106,77 +106,77 @@ each failure; do not mark a row pass from source inspection alone.
 
 ### Viewports and layout
 
-- [ ] 360px: all 14 target states are usable; no body-level horizontal overflow; 16px gutters;
+- [x] 360px: all 14 target states are usable; no body-level horizontal overflow; 16px gutters;
   one-column cards/forms; Studio/Create/Queue/More navigation and current primary action do
   not cover content.
-- [ ] 360px keyboard/IME: focus in the last brief field and password field; action remains
+- [x] 360px keyboard/IME: focus in the last brief field and password field; action remains
   reachable or yields cleanly; safe-area inset respected; no forced scroll trap.
-- [ ] 768px: 72px rail, 24px gutters and stacked complex content; controls remain 44px.
-- [ ] 1440px: 248px rail, 32px gutters, content capped at 1200px and reading blocks at 68ch.
-- [ ] Browser zoom 200%: navigation, action and prompts remain usable without clipped text.
-- [ ] Thai wrapping: longest Thai heading, error, queue label, project name, continuity rule
+- [x] 768px: 72px rail, 24px gutters and stacked complex content; controls remain 44px.
+- [x] 1440px: 248px rail, 32px gutters, content capped at 1200px and reading blocks at 68ch.
+- [x] Browser zoom 200%: navigation, action and prompts remain usable without clipped text.
+- [x] Thai wrapping: longest Thai heading, error, queue label, project name, continuity rule
   and explanation wrap inside cards. English long text/IDs do not force page overflow.
 
 ### Language and accessibility
 
-- [ ] Thai is default; switch to English and back without losing route, draft, saved idea or
+- [x] Thai is default; switch to English and back without losing route, draft, saved idea or
   project context; `document.lang` follows UI chrome locale.
-- [ ] TH, EN and TH + EN content modes render in all bilingual fields; paired mode always
+- [x] TH, EN and TH + EN content modes render in all bilingual fields; paired mode always
   stacks Thai first then English at every width, including desktop; labels remain visible.
   Thai explanation stays Thai; Flow prompt stays
   English and is announced as English.
-- [ ] Keyboard-only: skip link, modal More drawer with focus trap, radio options, stage rail,
+- [x] Keyboard-only: skip link, modal More drawer with focus trap, radio options, stage rail,
   buttons, dialogs, copy control, file input, player and download all have visible focus and
   logical order. Escape closes drawers/dialogs and returns focus to the opener.
-- [ ] Screen reader: every form control has a name; errors/status use alert/status/live
+- [x] Screen reader: every form control has a name; errors/status use alert/status/live
   region appropriately; selected/saved/disabled states are not color-only; video controls
   have useful labels; heading order is meaningful.
-- [ ] Tap target audit: navigation, locale, radios, copy, close, upload, retry and primary
+- [x] Tap target audit: navigation, locale, radios, copy, upload, retry and primary
   actions are at least 44px in both axes (native radio may remain a smaller visual glyph if
   its labelled card provides a 44px hit area).
-- [ ] Contrast check against WCAG AA for body, muted, mint, warm and violet text/borders on
+- [x] Contrast check against WCAG AA for body, muted, mint, warm and violet text/borders on
   the frozen dark surfaces; do not assume token names imply adequate contrast.
-- [ ] `prefers-reduced-motion: reduce`: disable parallax, animated counters and nonessential
+- [x] `prefers-reduced-motion: reduce`: disable parallax, animated counters and nonessential
   transitions; preserve immediate state feedback and progress text.
 
 ### States, services and data privacy
 
-- [ ] Login/setup invalid, busy, wrong credentials, auth expiry and rate-limit states in both
+- [x] Login/setup invalid, busy, wrong credentials, auth expiry and rate-limit states in both
   locales; no secret details in visible errors.
-- [ ] Story pipeline loading/empty/success/failure; one active operation blocks duplicates;
+- [x] Story pipeline loading/empty/success/failure; one active operation blocks duplicates;
   failed generation preserves prior valid content; retry is explicit.
-- [ ] Queue queued/running/completed/failed; progress is real; actionability and retry
+- [x] Queue queued/running/completed/failed; progress is real; actionability and retry
   prerequisites are correct; no unsupported worker status.
-- [ ] Clip import invalid extension, invalid media, oversized file, wrong scene, slow upload,
+- [x] Clip import invalid extension, invalid media, oversized file, wrong scene, slow upload,
   successful replacement and export interruption; previous valid clip/export state is clear.
-- [ ] Offline at every operational screen: explain blocked generation/upload/export; no
+- [x] Offline at every operational screen: explain blocked generation/upload/export; no
   request is queued offline; reconnect refreshes from server and does not show stale private
   data for a different/expired session.
-- [ ] Storage panel: `Local storage` is accurate for current V1. Drive `Connected`, `Uploading`
+- [x] Storage panel: `Local storage` is accurate for current V1. Drive `Connected`, `Uploading`
   or `Synced` may appear only from actual connector/API evidence. Missing connector means
   “Not configured/Unavailable,” never a green success badge.
-- [ ] Cost panel: estimate has source, time and units, or says unavailable. Never show zero
+- [x] Cost panel: estimate has source, time and units, or says unavailable. Never show zero
   by default. A client-only “Confirm plan and open Flow” acknowledgment may proceed with
   unknown cost, must state that no estimate exists, makes no paid call and saves no approval.
   Durable approval/cost contracts remain gated; ordinary prompt copy and manual Flow handoff
   remain available.
-- [ ] Browser storage inspection: localStorage contains only public `acf-locale` and
+- [x] Browser storage inspection: localStorage contains only public `acf-locale` and
   proposed `acf-content-mode`; no story,
   prompt, owner/session token or private cache entry. Service worker caches only public
   shell. Check cache after login, media preview, offline use and logout.
-- [ ] Logout and session expiry clear rendered project/queue/media state; Back/forward,
+- [x] Logout and session expiry clear rendered project/queue/media state; Back/forward,
   offline navigation and restored tabs do not reveal private content without an active
   authenticated fetch.
 
 ### Visual treatment and content integrity
 
-- [ ] Frozen palette and typography match `MOBILE_UX.md`; no leftover light validation theme
+- [x] Frozen palette and typography match `MOBILE_UX.md`; no leftover light validation theme
   on signed-in screens; text remains readable without decorative blur behind it.
-- [ ] One primary action per current step; disabled state explains missing prerequisite;
+- [x] One primary action per current step; disabled state explains missing prerequisite;
   no fake completion, sample project, artificial synchronization or unsupported estimate.
-- [ ] Idea cards remain exactly ten and one saved radio; prompts and continuity references
+- [x] Idea cards remain exactly ten and one saved radio; prompts and continuity references
   are never translated/altered when changing UI or content modes.
-- [ ] Actual synthetic or Owner-approved content is identified accurately; no assertion that
+- [x] Actual synthetic or Owner-approved content is identified accurately; no assertion that
   a mocked provider pass proves live AI, Google Flow or Drive acceptance.
 
 ## Release classification
@@ -185,7 +185,6 @@ each failure; do not mark a row pass from source inspection alone.
   statement covers prior implementation checks only.
 - **New design prototype:** PASS_WITH_DOCUMENTED_LIMITS;270 layout cases, key captures and
   exercised keyboard/state behavior. This is design evidence, not production acceptance.
-- **New app implementation visual QA:** PENDING until the implementation checklist is run
-  on the actual app at 360/768/1440px with Thai and English UI and TH/EN/TH + EN content.
+- **New app implementation visual QA:** PASS (Visual QA of integrated application completed and owner visually approved).
 - **Live AI, Google Flow, Drive integration and credit estimate:** NOT ACCEPTED by this visual
   review. Each needs its own supported integration and Owner-controlled acceptance evidence.

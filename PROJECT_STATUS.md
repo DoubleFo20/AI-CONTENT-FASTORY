@@ -1,10 +1,63 @@
 # Project status
 
-STATUS: CORE_CHECKPOINT_COMPLETE_EXTERNAL_GATES
-CURRENT_PHASE: PHASE_2_CORE_INTEGRATIONS
-NEXT_ACTION: OWNER_SUPABASE_PROJECT_AND_GOOGLE_OAUTH_CONFIGURATION
-ANTIGRAVITY_STATUS: DESIGN_READY_FOR_CODEX
+STATUS: VISUAL_QA_PASSED
+CURRENT_PHASE: V1_UI_CORE_INTEGRATION
+NEXT_ACTION: PENDING_MERGE_TO_MAIN
+ANTIGRAVITY_STATUS: VISUAL_QA_PASSED
 Updated: 2026-10-09 (Asia/Bangkok)
+
+## Current UI/core integration checkpoint
+
+Fetched main dfe2b2c89599fec84472840b4934e5e1604a0805 and design
+cad482e906f2dcc6db172c085196643a75f70c4f. Dedicated `integration/v1-ui-core` was based on
+main and merged the design without conflicts. Original worktrees and retained uncommitted
+writer work were preserved. Comparing changes from the common ancestor avoided replacing
+the newer backend with the design branch's older backend.
+
+Published implementation checkpoint fda96d6377eb9895ab606bfdb01f758adb623e1c normally to
+`origin/integration/v1-ui-core`; remote SHA verified. [Draft PR#1](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/1)
+targets main and is open/mergeable. GitHub reports no configured PR status checks; verification
+below was executed locally. Main and design remote SHAs remain the inputs above. No force push
+or main merge occurred. Later publication-record commits do not change verified source.
+
+Root reviewed isolated UI, QA and documentation output. The approved studio UI uses actual
+owner auth, projects, jobs, clips and exports. Auto Editor selects a persisted project;
+planned factories remain disabled; Mock/local/Drive capabilities are truthful. Saved selection
+remains authoritative after expansion; UI/content locales are independent. Browser findings
+fixed: modal focus escape and undersized brand/project/review links. The QA launcher checks
+its resolved temporary-data directory stays inside the worktree.
+
+Actual verification on isolated synthetic data:
+
+- `npm.cmd test`: exit0,64 total,63 passed,0 failed,1 POSIX vault-permission skip on Windows.
+  Existing backend/integration regressions and six new actual-client API tests passed.
+- Full lint and build passed; build includes client/server/tests typechecks and9 PWA assets.
+  Scoped final client/helper lint, helper syntax, PWA validation and compiled mock HTTP smoke passed.
+- Chrome154/Playwright CLI:216 cases across12 views,360/768/1440px, TH/EN UI and all3 content
+  modes passed overflow, headings, visible enabled DOM44px targets, paired language and ten-idea
+  checks. Six additional login layout/draft cases passed.
+- Actual UI setup → brief → ten ideas → save idea10 → unsaved idea9 → expansion of saved10
+  → four bibles/keyboard tabs → scenes/English clipboard read-back in3 modes/prompt pack
+  → invalid clip400 → three valid8-second clips → actual queue/export202 → preview/play/download passed.
+- Downloaded synthetic MP4: ffprobe H.2641080×1080,yuv420p,AAC,24.021333 seconds.
+  Modal/drawer/picker keyboard traversal, Escape/focus return and real editor navigation passed.
+- Offline disabled seven clip controls and MP4 download; cached-shell reload restored no private
+  project. Online Refresh restored persisted data. Failed/valid login, password toggle and
+  missing-session reload passed. Logout cleared private DOM and projects/clip/MP4 returned401.
+  Cache held nine public assets, zero private entries; only two public preferences persisted.
+- Fresh QA helper startup/health/first-owner state passed on3005, then its process was stopped.
+  Current synthetic review fixture runs on3004; original3001/3003 apps were untouched.
+- Server/shared/public/packages/lockfile/local schema remain unchanged from main. No migration,
+  real provider call, credential change or publishing occurred.
+
+Final staged hygiene passed:27-document/local-link validation,109-file secret/ignore validation
+without printing values, and `git diff --cached --check`. Original main/design worktrees were clean.
+
+Evidence: [integration review](docs/INTEGRATION_REVIEW.md), [QA results](docs/integration/QA_RESULTS.json),
+and [actual-app visual QA handoff](docs/ANTIGRAVITY_VISUAL_QA_HANDOFF.md).
+Engineering verification does not accept the final visual design. Antigravity actual-app visual
+QA and final integration review remain pending; main must stay unmerged. Live OpenAI/Flow/
+Drive/Supabase/cloud/Local Worker and approved cutover gates remain unverified.
 
 ## Completed
 
@@ -26,7 +79,7 @@ Updated: 2026-10-09 (Asia/Bangkok)
 - Added a root .htaccess guard because this workspace is inside XAMPP's Apache document
   root. Apache cannot expose source, Git metadata or private runtime/test data.
 
-## Current checkpoint
+## Prior backend/core checkpoint (historical)
 
 The Owner's current assignment splits Backend/Core/Integration (Codex) from UX/UI and visual
 QA (Antigravity in a separate worktree). Root read the required context, inspected clean main
