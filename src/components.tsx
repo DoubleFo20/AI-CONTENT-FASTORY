@@ -79,8 +79,8 @@ export function ProjectForm({ m, disabled, submit }: { m: Messages; disabled: bo
   return <div className="split" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 0.8fr)', gap: '24px' }}>
     <section className="card">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h2 style={{ marginBottom: 0 }}>Story direction</h2>
-        <span className="chip">AI Story Factory</span>
+        <h2 style={{ marginBottom: 0 }}>{m.storyDirection}</h2>
+        <span className="chip">{m.aiStoryFactoryLabel}</span>
       </div>
       <form className="form-grid" onSubmit={onSubmit}>
         <label className="full">{m.name}<input required maxLength={120} value={input.name} onChange={(event) => setInput({ ...input, name: event.target.value })} /></label>
