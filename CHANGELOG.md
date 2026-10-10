@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-10 — Phase2 prepared integrations
+
+- Added official Gemini text adapter, explicit Owner provider choice, normalized reported usage and verified-rate cost estimates; no paid retries or live success claim.
+- Added explicit normal-auth tiny Drive canary verifier; preserves local media and reports restoration untested rather than evicting cache.
+- Fixed independent-review Cloud provider switching risk with fail-closed lock and localized UI/error; preserved local React/Vite/Express/SQLite/FFmpeg and PremiumV2.
+- Full regressions177total/176pass/0fail/1Windows skip, build/typechecks/lint/PWA passed. OAuth/key/cloud approvals remain external gates.
+
 ## 2026-10-10 — Final release review
 
 - Reran release3e9c1aa regressions:145total/144pass/0fail/1WindowsPOSIXskip, typecheck/lint/build/PWA passed.

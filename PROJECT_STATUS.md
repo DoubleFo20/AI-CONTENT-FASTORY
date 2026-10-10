@@ -1,9 +1,24 @@
 # Project status
 
-STATUS: LOCAL_V1_RC_VERIFIED_EXTERNAL_GATES_PENDING
-CURRENT_PHASE: LOCAL_V1_REAL_WORLD_RELEASE
+STATUS: PHASE2_PREPARED_LIVE_GATES_PENDING
+CURRENT_PHASE: REAL_AI_DRIVE_CLOUD_READINESS
 ANTIGRAVITY_STATUS: OWNER_REPORTED_READY_EVIDENCE_PENDING
 Updated: 2026-10-10 (Asia/Bangkok)
+
+Phase2 source `5559bbc4658b174d96b9d26023d449a26714a13c`, branch `codex/phase2-real-integrations`, base final-reviewed release `ba327e2`. เพิ่ม Gemini official adapter/Owner selection/explicitprovenance, reliableusage receipts+optionalverifiedcostrates และ manualDrivechecksumverifier โดยไม่ rewrite backend/UI/schema หรือเปลี่ยน Owner runtime3006. Independentreview พบ cloudmode race และแก้ fail-closed AI_MODE_LOCKED+THENcontrols; re-reviewยอมรับ. Full177tests/176pass/0fail/1POSIXskip190.041s,3typechecks/lint/build/PWA/docs/secretsผ่าน; focusedbrowserQAกำลังตรวจ. [Phase2 QA](docs/PHASE2_QA.json), [operations/Owner setup](docs/PHASE2_OPERATIONS.md).
+
+| Capability | Readiness | หลักฐาน/ข้อจำกัด |
+| --- | --- | --- |
+| Local auth/persistence/editor/MP4 | VERIFIED | Regression + actual synthetic playback; original Owner data preserved |
+| Story text in Mock Mode | MOCK_ONLY | Ten ideas/selected-only fullpipeline; ไม่ใช่liveAI |
+| Gemini/Ownerprovider/usage integration | PREPARED | Injectedtests; privateGeminikey/livecanaryยังไม่มี |
+| OpenAI live text | BLOCKED | Lastlive429insufficient_quota; ไม่ยิงซ้ำ |
+| Flow assisted production | PREPARED | Prompt/reference/status/import/editorพร้อม; realFlowclips/creativeacceptanceยังต้องOwner |
+| GoogleDrive storage | PREPARED | OAuth/encryptedvault/index/upload/restore+tests; missingconsent/liveroundtrip |
+| Cloud foundation | PREPARED | Review-onlySQL/repository/leases; approvedactiveproject+HTTPShostยังไม่มี |
+| Mobile notebook-offline / fullautomation | NOT_IMPLEMENTED | Pairing/media bridge/owner-scopedclaim/disconnecteddeviceproofยังไม่มี |
+
+NEXT_TASK_PHASE2: รับ private Gemini readiness หรือ OpenAI quota correction, Drive configuration+Owner consent และ Antigravity final evidence/SHA; runlivecanaryเมื่อauthorizedพร้อม. Cloudต้องOwnerเลือกproject/hostและอนุมัติschema/deploymentก่อนcutover. ไม่มีCodexscheduler/automaticresume.
 
 Final release review ซ้ำที่ `3e9c1aa`: 145 tests/144pass/0fail/1Windows skip (188.264s), typecheck/lint/build/PWA ผ่าน; MP4 smoke ใหม่4.021333s เล่นจริงใน Chrome/error=null. Owner data ตรวจ read-only ยังครบ. Owner รายงาน Antigravity READY FOR OWNER APPROVAL แต่ local QA branch ยังไม่มี final report/screenshots ที่ตรวจรับได้; ขอ evidence แล้วและคง Draft PR#2/main unmerged. ดู [FINAL_REVIEW](docs/release/FINAL_REVIEW.md). Phase 2 ดำเนินต่อในสาขาแยกโดยไม่เปลี่ยน release source/Owner runtime.
 

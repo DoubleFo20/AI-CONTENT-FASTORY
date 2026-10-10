@@ -1,7 +1,19 @@
 # Task dependency plan
 
-STATUS: LOCAL_V1_RC_VERIFIED_EXTERNAL_GATES_PENDING
+STATUS: PHASE2_PREPARED_LIVE_GATES_PENDING
 Updated: 2026-10-10 (Asia/Bangkok)
+
+| ID | Phase2 task | State |
+| --- | --- | --- |
+| P2-A | FinalRCreview/regressions/MP4/data preservation | VERIFIED; releaseba327e2/PR2Draft |
+| P2-B | Geminiadapter/explicitOwnerselection/provenance/usage/verifiedcost | PREPARED; code5559bbc; livekey/quotaBLOCKED |
+| P2-C | Drive normal-auth syntheticroundtrip verifier | PREPARED;10injectedtests; OAuth+restoreapprovalBLOCKED |
+| P2-D | Cloud/Supabaseinventory/HTTPS/workerprotocol assessment | PREPARED; noapprovedappactiveproject/host; pairingNOT_IMPLEMENTED |
+| P2-E | ExistingFlowassist/variablelength/creditbudget/editor | PRESERVED; realclipacceptanceOwner-operated |
+| P2-QA | Combined177tests/typechecks/lint/build/PWA/securityreview | 176PASS/0FAIL/1SKIP; focusedbrowserPENDING |
+| P2-REVIEW | Phase2DraftPR + privateexternalgates | Readyforcheckpoint; noRC/mainmerge |
+
+ExactnexttaskandOwnerconfiguration: [Phase2 operations](docs/PHASE2_OPERATIONS.md); [QA](docs/PHASE2_QA.json). HistoricallocalV1tasksbelowremainpreserved.
 
 | ID | Task | Depends on | State |
 | --- | --- | --- | --- |

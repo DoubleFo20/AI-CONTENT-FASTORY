@@ -1,8 +1,12 @@
 # Handoff
 
-STATUS: LOCAL_V1_RC_VERIFIED_EXTERNAL_GATES_PENDING
+STATUS: PHASE2_PREPARED_LIVE_GATES_PENDING
 ANTIGRAVITY_STATUS: OWNER_REPORTED_READY_EVIDENCE_PENDING
 Updated: 2026-10-10 (Asia/Bangkok)
+
+CURRENT_PHASE2: source5559bbc, worktree `.worktrees/phase2-real-integrations`, branch `codex/phase2-real-integrations`, base releaseba327e2. Gemini options/env exact in [operations](docs/PHASE2_OPERATIONS.md); Owner selection + usage/costprepared, no liveGemini. Drive explicit verifier newscript+10fakeHTTPtests, no local deletion/realOAuth. Cloudmode lock fixes independentreviewP2; pairingnotimplemented. Full177/176pass/0fail/1skip190.041s,build3typechecks/lint/PWA/docs/secrets passed; focusedbrowserQA pending at this checkpoint. No dependencies/lock/env/CI/schema/Owner runtime change.
+
+EXACT_NEXT_TASK: รับ providercredentials/quotareadinessส่วนตัวและGoogleOAuthconfiguration+Ownerconsent; ไม่ยิงOpenAIซ้ำจนquotaแก้. เมื่อพร้อมใช้isolatednewproject10concepts→Ownerselectone→expand; explicitDrive1×1canaryroundtripและseparateapprovedrestoretest. ตรวจAntigravityQAevidence/SHAและOwnerreleaseapprovalก่อนmainmerge. Cloudproject/host/schema/deployต้องapprovalก่อนpairedbroker/media. Missingcredentialscontinueindependentworkเฉพาะงานที่authorized; checkpointนี้ไม่มีconfiguredbackgroundexecution.
 
 FINAL_REVIEW: ทดสอบซ้ำที่ release `3e9c1aa` ใน `.worktrees/v1-final-qa`: npm test145/144pass/0fail/1POSIXskip188.264s; typecheck/lint/build/PWA ผ่าน; synthetic MP44.021333s/720×1280/AAC48k เล่นใน Chrome advanced=true/error=null. Original Owner storage ตรวจ read-only ไม่มีการเขียน. [Final review](docs/release/FINAL_REVIEW.md) supersedes test timing เดิมด้านล่าง. Owner รายงาน Antigravity ready แต่ยังไม่มี final evidence/source SHA ให้ตรวจรับ; PR2 ยัง Draft/main unmerged. งาน provider/Drive Phase2 แยกใน `.worktrees/phase2-real-integrations` ไม่เปลี่ยน Owner runtime3006.
 

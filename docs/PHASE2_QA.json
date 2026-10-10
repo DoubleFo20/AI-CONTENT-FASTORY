@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "5559bbc4658b174d96b9d26023d449a26714a13c",
+  "releaseBase": "ba327e2364e0a14f36629e4dc9376de6b827f10e",
+  "date": "2026-10-10",
+  "scope": "Local integration with injected Gemini/Drive only; no successful live provider claim",
+  "tests": {"command": "npm.cmd test", "exitCode": 0, "total": 177, "passed": 176, "failed": 0, "skipped": 1, "durationMs": 190040.9389, "skipReason": "POSIX vault permissions on Windows"},
+  "checks": {"buildIncludingThreeTypechecks": "PASS", "lint": "PASS", "pwa": "PASS_9_PUBLIC_ASSETS", "docs": "PASS_27_ARTIFACTS", "secrets": "PASS_149_TRACKED_FILES_NO_VALUES_PRINTED", "whitespace": "PASS"},
+  "independentReview": {"geminiDriveUsage": "ACCEPTED", "cloudModeSwitchFinding": "FIXED_FAIL_CLOSED_AI_MODE_LOCKED", "reReviewTests": "PASS_2_OF_2", "remainingP1P2": 0},
+  "browserPhase2": "PENDING_FOCUSED_TH_EN_360_768_1440",
+  "ownerData": {"inspection": "READ_ONLY", "baselinePreserved": true, "owners": 1, "projects": 1, "jobs": 4, "activeJobs": 0, "cachedIdeas": 10, "ownerRuntimeChanged": false},
+  "live": {"openai": "BLOCKED_PREVIOUS_INSUFFICIENT_QUOTA_NO_NEW_CALL", "gemini": "UNVERIFIED_KEY_MISSING", "drive": "UNVERIFIED_OAUTH_MISSING", "driveRestore": "UNVERIFIED_NO_CANARY_EVICTION_APPROVAL", "supabaseCloudMobile": "UNVERIFIED_APPROVED_PROJECT_HOST_REQUIRED"}
+}
