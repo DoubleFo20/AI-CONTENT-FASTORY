@@ -1,5 +1,24 @@
 # Project status
 
+STATUS: PAUSED_FOR_USAGE_RESET
+RELEASE_READINESS: READY_FOR_OWNER_APPROVAL
+ANTIGRAVITY_STATUS: QA_COMPLETED_PASS
+Updated: 2026-10-10 (Asia/Bangkok)
+
+หยุดตาม authoritative usage: เริ่ม checkpoint ที่เหลือ7%; ตรวจล่าสุด primary99% used (เหลือ1%), secondary59% used. ไม่เริ่ม feature/agent ใหม่ ไม่มี automatic resume หรือ scheduler.
+
+Antigravity evidence published qa/v1-visual-review ddccf9c, tested source3e9c1aa, PASS; release source ไม่เปลี่ยนจาก source ที่ผ่าน QA. รวมรายงานโดยรักษาเอกสารล่าสุด. Final release regression: npm.cmd test145total/144pass/0fail/1POSIXskip75.748s; typecheck/lint/build/PWA ผ่านก่อนหน้านี้จาก code เดียวกัน. MP4 smoke ใหม่4.021333s และ actual Chrome playback/error=null ผ่าน. Owner database/media read-only baseline preserved; original app3006/บัญชี/10Mockideasอยู่เดิม. Main ไม่ merge/deploy.
+
+Phase2 อยู่ใน codex/phase2-real-integrations แยกจาก RC; ไม่เปลี่ยน Owner runtime. Gemini PRIMARY: ideas/expansion gemini-3.5-flash-lite เท่านั้น, ต้องมี private key และ ACF_GEMINI_FREE_TIER_CONFIRMED=true หลัง Owner ยืนยัน API project ไม่มี billing. Quotaหมดหยุด/no paid fallback/no auto retry. OpenAI สำรองถูกปิดจนได้รับ explicit approval ใหม่; ACF_OPENAI_REQUESTS_APPROVED ต้องไม่เปิดก่อน approval. ไม่มี live Gemini/Drive/cloud verification หรือ billing action.
+
+Owner requests ที่ยังรอ: private Gemini key+Free Tier project confirmation; Google OAuth credentials/consent; app-specific Supabase+HTTPS host และ schema/deployment approval. ไม่ส่ง secrets ในแชต. Local V1 VERIFIED, Mock text MOCK_ONLY, Gemini/Drive/cloud foundation PREPARED, OpenAI BLOCKED, notebook-offline/full automation NOT_IMPLEMENTED.
+
+NEXT_TASK: หลัง usage reset และมี invocation ใหม่ ตรวจ usage/Git checkpoint ก่อน; Owner review PR#2 โดยยังไม่ merge main. เมื่อ Gemini private key+Free Tier confirmation พร้อม ทำ isolated10ideas→Ownerเลือกหนึ่ง→expand live canaryครั้งเดียว บันทึก usage และหยุดเมื่อ quotaหมด. จากนั้น Drive OAuth/verified upload-download-restore canary ที่ได้รับอนุมัติ. Cloud ต้องผ่าน host/schema approval และ disconnected-device proof ก่อนกล่าวว่าใช้งานได้.
+
+หลักฐาน: [Final review](docs/release/FINAL_REVIEW.md), [Visual QA](docs/release/QA_VISUAL_REPORT.md).
+
+## Historical checkpoints — superseded by the current status above
+
 STATUS: LOCAL_V1_RC_VERIFIED_EXTERNAL_GATES_PENDING
 CURRENT_PHASE: LOCAL_V1_REAL_WORLD_RELEASE
 ANTIGRAVITY_STATUS: OWNER_REPORTED_READY_EVIDENCE_PENDING

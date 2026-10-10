@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-10 — Usage safety checkpoint
+
+- STATUS: PAUSED_FOR_USAGE_RESET; authoritative remaining1% after checkpoint began at7%. No new features/agents or automatic resume.
+- Published Antigravity QA ddccf9c/PASS on source3e9c1aa integrated as evidence; RC ready for Owner approval, main/deploy unchanged.
+- Final regression 145total/144pass/0fail/1POSIXskip; Owner data preserved.
+- Exact NEXT_TASK and external credential/authorization gates recorded in HANDOFF; safe checkpoint only.
+
 ## 2026-10-10 — Final release review
 
 - Reran release3e9c1aa regressions:145total/144pass/0fail/1WindowsPOSIXskip, typecheck/lint/build/PWA passed.

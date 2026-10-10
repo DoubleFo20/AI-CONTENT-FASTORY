@@ -1,7 +1,8 @@
 # Final local V1 release review — 2026-10-10
 
-RELEASE_STATUS: ENGINEERING_VERIFIED_OWNER_REVIEW_PENDING
-ANTIGRAVITY_STATUS: OWNER_REPORTED_READY_EVIDENCE_PENDING
+RELEASE_STATUS: READY_FOR_OWNER_APPROVAL
+STATUS: PAUSED_FOR_USAGE_RESET
+ANTIGRAVITY_STATUS: QA_COMPLETED_PASS
 
 ตรวจ Draft PR #2 และ fetch แล้ว: main `dfe2b2c`, release `3e9c1aa`, integration `cfa6554`, Premium Cinematic V2 `be29e0a`. Source code ล่าสุดคือ `b271855`; commit หลังจากนั้นเปลี่ยนเฉพาะเอกสาร. ไม่มีการ merge main หรือเปลี่ยน runtime ของ Owner ในรอบนี้.
 
@@ -22,8 +23,8 @@ MP4 smoke ใช้ไฟล์สังเคราะห์ใหม่แล�
 
 ผล browser workflow/auth/TH/EN/48 responsive cases ที่360/768/1440 และ targeted layout/read-error retakes จาก code เดียวกันคงอยู่ใน [QA_RESULTS](QA_RESULTS.json). ไม่ได้อ้างว่า rerun 48 cases ในรอบ final review นี้. Premium Cinematic V2 source ไม่มีการแก้ใน Phase A.
 
-Owner แจ้งว่า Antigravity Final Visual QA พร้อมอนุมัติแล้ว. ตรวจ local `qa/v1-visual-review` แบบ read-only: HEAD ตรง `3e9c1aa`, clean, ไม่มี remote branch และไม่พบรายงานหรือ screenshot final ใหม่. จึงขอ path/published evidence พร้อม source SHA; ยังไม่ระบุว่า Root ได้ตรวจรับหลักฐานนั้น. PR #2 คง Draft จน evidence และ Owner review พร้อม.
+Owner ส่ง published evidence แล้ว: fetch `qa/v1-visual-review` commit `ddccf9ce18a13425b480f02313f8d0ccbe6261c0`; อ่าน [QA_VISUAL_REPORT](QA_VISUAL_REPORT.md) และ [handoff](../ANTIGRAVITY_VISUAL_QA_HANDOFF.md). QA PASS ที่ tested source `3e9c1aa`; ตรวจ diff กับ releaseba327e2 แล้ว source/server/client/shared/public/package ไม่เปลี่ยน. Root ตรวจภาพ TH360/EN768 ที่อ้างอิงใน report แล้ว; ไม่มี screenshot ใหม่ใน QA commit. รวมเฉพาะสองไฟล์ evidence และรักษา progress docs ล่าสุด. Local V1 READY_FOR_OWNER_APPROVAL; main/deploy ยังไม่อนุญาต. Final regression rerun หลังรับ evidence: npm.cmd test exit0,145total/144pass/0fail/1POSIXskip,75.7481601s; sourceเดิมไม่เปลี่ยน.
 
 Phase 2 แยกใน `codex/phase2-real-integrations`: Gemini/provider selection/usage และ explicit Drive live verifier. ไม่เปลี่ยน release source ที่ผ่านการทดสอบหรือเปิดบริการ paid/public. Real AI quota, Gemini key, Drive OAuth/round trip, Supabase/host/migration/paired worker/disconnected-device acceptance เป็น gates แยกตาม [readiness](V1_READINESS.md).
 
-NEXT_TASK: ตรวจ Antigravity evidence เมื่อได้รับและรอ Owner อนุมัติ release; ระหว่างนี้ทำ Phase 2 ที่ไม่ต้อง credentials ต่อ. main ต้องคงเดิมจนได้รับ explicit approval.
+NEXT_TASK: PAUSED_FOR_USAGE_RESET (latest remaining1%). หลัง reset/new invocation ตรวจ usage แล้วรับ Owner review/approval PR#2; Phase2 live Gemini ต้อง private key+Free Tier confirmation และ Drive ต้อง OAuth. ไม่มี automatic resume; main/deploy ต้องรอ explicit approval.

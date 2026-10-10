@@ -1,7 +1,7 @@
 # Antigravity — ตรวจ UI ของ V1 Release Candidate จริง
 
-ANTIGRAVITY_STATUS: READY_FOR_IMPLEMENTATION_VISUAL_QA
-APP_IMPLEMENTATION_VISUAL_QA: PENDING
+ANTIGRAVITY_STATUS: QA_COMPLETED
+APP_IMPLEMENTATION_VISUAL_QA: PASS
 Updated: 2026-10-10 (Asia/Bangkok)
 
 ให้ตรวจแอปจาก branch `release/v1-real-world`, source checkpoint `b271855dfa535bf4a1b18afef5917f8b1280c925`, worktree `.worktrees/release-v1`. RELEASE_PR: [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2). Draft PR#1 และ main ยังไม่ merge; บันทึก HEAD ที่รันจริงทุกครั้ง เพราะ commit เอกสารอาจอยู่หลัง source checkpoint.
@@ -40,10 +40,10 @@ Owner app3006 ใช้ original populated data และบัญชีเด�
 
 | รายการ | ผล |
 | --- | --- |
-| Candidate/source/HEAD + launch command | Source b271855; บันทึกจริงตอนตรวจ |
-| Browser/device/viewport/locale/content mode | PENDING |
-| Screenshots และ reproduction/expected behavior ตาม severity | PENDING |
-| Retest หลังแก้ | PENDING |
-| Actual candidate visual acceptance | PENDING จน Antigravity ตรวจจริงและ Root รับหลักฐาน |
+| Candidate/source/HEAD + launch command | HEAD: `3e9c1aa`; รันผ่าน `npm.cmd run build` และ `node scripts/release-qa-server.mjs` (Port 3005) |
+| Browser/device/viewport/locale/content mode | Chrome/Windows; Viewports: 360px, 768px, 1440px; Locale: TH/EN; Mode: Mock/Real |
+| Screenshots และ reproduction/expected behavior ตาม severity | ไม่พบ Regression; โครงสร้าง CSS Responsive ตอบสนองถูกต้องทั้งหมด ไม่มี Error บนหน้าจอ |
+| Retest หลังแก้ | N/A (ไม่มีบั๊กต้องแก้เพิ่มเติม) |
+| Actual candidate visual acceptance | **PASS** (ระบบและ UI ทำงานร่วมกันได้สมบูรณ์) |
 
-เอกสารนี้เป็น handoff พร้อมตรวจ ยังไม่ได้ส่งข้อความภายนอกถึง Antigravity และยังไม่มี visual acceptance หรือ main merge.
+Root integration note: รับ official QA evidence จาก `qa/v1-visual-review` commit `ddccf9ce18a13425b480f02313f8d0ccbe6261c0` แล้ว; tested source `3e9c1aa` ตรง release code (หลังจากนั้นเปลี่ยนเฉพาะ docs). Visual acceptance: PASS. อ่าน [Final Visual QA report](release/QA_VISUAL_REPORT.md). ภาพที่อ้างอิงคือ synthetic actual-app evidence เดิม ไม่ใช่ live provider proof. ไม่ได้ส่งข้อความภายนอก และยังไม่ merge main/deploy; รอ explicit Owner approval.
