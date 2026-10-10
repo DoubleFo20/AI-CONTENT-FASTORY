@@ -44,6 +44,7 @@ export default function App() {
   const [projectLoading, setProjectLoading] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<UiError>(null);
+  const [refreshFailed, setRefreshFailed] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -63,6 +64,7 @@ export default function App() {
   const clearPrivate = useCallback(() => {
     session.current.abort(); session.current = new AbortController();
     actionPending.current = false;
+    setRefreshFailed(false);
     setDashboard(null); setProjects([]); setJobs([]); setProject(null); setBusy(null);
     setBaseLoading(false); setProjectLoading(false); setDrawerOpen(false); setPickerOpen(false); setSettingsOpen(false); setCapabilities(null); setDrive(null); setWorker(null);
   }, []);
@@ -73,6 +75,11 @@ export default function App() {
     }
     setError(code);
   }, [clearPrivate]);
+
+  const handleRefreshError = useCallback((cause: unknown) => {
+    if (cause instanceof RequestError && cause.code === 'NETWORK_ERROR') setRefreshFailed(true);
+    else handleError(cause);
+  }, [handleError]);
 
   const checkAuth = useCallback(async (signal: AbortSignal) => {
     setAuthLoading(true);
@@ -140,14 +147,16 @@ export default function App() {
     if (nextProject.status === 'fulfilled' && nextProject.value && id === routeProject.current) setProject(nextProject.value.project);
     const coreFailure = results.find((result) => result.status === 'rejected');
     if (coreFailure?.status === 'rejected') throw coreFailure.reason;
+    // A recovered read must not dismiss a failed or ambiguous owner command.
+    setRefreshFailed(false);
   }, [handleError]);
   useEffect(() => {
     if (!userId || !online) return;
     const controller = new AbortController();
     setBaseLoading(true);
-    void refresh(controller.signal).catch((cause: unknown) => { if (!controller.signal.aborted) handleError(cause); }).finally(() => { if (!controller.signal.aborted) setBaseLoading(false); });
+    void refresh(controller.signal).catch((cause: unknown) => { if (!controller.signal.aborted) handleRefreshError(cause); }).finally(() => { if (!controller.signal.aborted) setBaseLoading(false); });
     return () => controller.abort();
-  }, [userId, online, refresh, handleError]);
+  }, [userId, online, refresh, handleRefreshError]);
   useEffect(() => {
     if (!userId || !online || !projectId) return;
     const controller = new AbortController();
@@ -155,22 +164,22 @@ export default function App() {
     setProjectLoading(true); setProject(null);
     void request<{ project: Project }>(`/projects/${encodeURIComponent(projectId)}`, { signal: controller.signal })
       .then((result) => { if (!controller.signal.aborted && session.current === ownerSession) setProject(result.project); })
-      .catch((cause: unknown) => { if (!controller.signal.aborted) handleError(cause); })
+      .catch((cause: unknown) => { if (!controller.signal.aborted) handleRefreshError(cause); })
       .finally(() => { if (!controller.signal.aborted) setProjectLoading(false); });
     return () => controller.abort();
-  }, [userId, online, projectId, handleError]);
+  }, [userId, online, projectId, handleRefreshError]);
   useEffect(() => {
     if (!userId || !online) return;
     const controller = new AbortController();
     let timer: ReturnType<typeof setTimeout>;
     async function poll() {
       try { await refresh(controller.signal, projectId); }
-      catch (cause) { if (!controller.signal.aborted) handleError(cause); }
+      catch (cause) { if (!controller.signal.aborted) handleRefreshError(cause); }
       if (!controller.signal.aborted) timer = setTimeout(() => void poll(), activeJobs ? 3000 : 10000);
     }
     timer = setTimeout(() => void poll(), activeJobs ? 3000 : 10000);
     return () => { controller.abort(); clearTimeout(timer); };
-  }, [userId, online, activeJobs, projectId, refresh, handleError]);
+  }, [userId, online, activeJobs, projectId, refresh, handleRefreshError]);
   useEffect(() => {
     if (!userId) return;
     if (route.section && project?.id === projectId) {
@@ -268,7 +277,7 @@ export default function App() {
     if (userId) void action('refresh', (signal) => refresh(signal, projectId));
     else void checkAuth(session.current.signal);
   }
-  const errorText = error === 'NETWORK_ERROR' ? m.networkError : error === 'VIDEO_ERROR' ? m.videoError : error ? errorMessages[locale][error] : '';
+  const errorText = error === 'NETWORK_ERROR' ? m.networkError : error === 'VIDEO_ERROR' ? m.videoError : error ? errorMessages[locale][error] : refreshFailed ? m.networkError : '';
 
   return <div className={`app ${userId ? 'signed-in' : ''}`}>
     <a className="skip-link" href="#content" onClick={(event) => { event.preventDefault(); document.getElementById('content')?.focus(); }}>{m.skip}</a>
@@ -328,7 +337,7 @@ export default function App() {
 
     <main id="content" tabIndex={-1}>
       {!online && <p className="notice" role="status">{m.offline}</p>}
-      {error && <div className="alert" role="alert"><p>{errorText}</p><div className="actions"><button className="secondary" disabled={!online || !!busy} onClick={reload}>{m.refresh}</button><button className="secondary" onClick={() => setError(null)}>{m.close}</button></div></div>}
+      {(error || refreshFailed) && <div className="alert" role="alert"><p>{errorText}</p><div className="actions"><button className="secondary" disabled={!online || !!busy} onClick={reload}>{m.refresh}</button><button className="secondary" onClick={() => { setError(null); setRefreshFailed(false); }}>{m.close}</button></div></div>}
       <div role="status" aria-live="polite">{busy && <p className="notice">{m.working}</p>}</div>
       {authLoading ? <p role="status">{m.loading}</p> : !userId ? auth ? <AuthForm key={String(auth.setupRequired)} setup={auth.setupRequired} m={m} disabled={disabled} submit={signIn} /> : <button disabled={!online} onClick={reload}>{m.retry}</button> : <>
 
