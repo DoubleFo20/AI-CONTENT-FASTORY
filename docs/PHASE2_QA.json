@@ -807,6 +807,8 @@
     "freeTier": "Model supports Standard Free Tier; actual API project tier/access requires Owner verification"
   },
   "geminiActivationPreparation": {
+    "historical": true,
+    "supersededBy": "geminiLiveCheckpoint",
     "date": "2026-10-10",
     "baseCommit": "574fe5d3c8f13fd1bf8497dce291d0eaa729a0cc",
     "status": "PAUSED_FOR_USAGE_RESET",
@@ -869,5 +871,104 @@
       "weekly": 26
     },
     "nextTask": "NEXT_TASK: หลังusage reset/Owner invocation ให้รัน pwsh -NoProfile -File tests/gemini-local-setup.ps1 เพื่อตรวจ PS7 th-TH หลัง timestamp DateTime/string และ bounded netstat fixes (WinPS5ล่าสุด14/14ผ่าน). เมื่อOwnerยืนยันprivateGEMINI_API_KEY+APIprojectFreeTier/Billingdisabledพร้อม จึงbuildPhase2/startfresh3013/normalcanaryaccount/verify-gemini-live --expand-first-ideaหนึ่งครั้ง (สูงสุดideas1+expand1 ไม่มีretry). ใช้UUIDเดิมอ่านสถานะหากtimeout;ไม่generateOwnerstoryเดิม. Owner3006activationต้องbackup/0active/schema check+preservesavedMock. Driveยังต้องOAuth+consent;Cloudต้องapprovedproject/HTTPS/schema/deploy. ห้ามmainmerge/publicdeploy/publish/billing."
+  },
+  "geminiLiveCheckpoint": {
+    "date": "2026-10-11",
+    "status": "LIVE_IDEAS_VERIFIED_EXPANSION_BLOCKED",
+    "baseSource": "74f5776cc0d80fb4f3a9b9b5ba92448056baf709",
+    "liveApplicationSource": "de462843a2847e850334730c004f8b1d8f01e0b6",
+    "freeTierAttestedByOwner": true,
+    "billingVerifiedByTool": false,
+    "provider": "gemini",
+    "model": "gemini-3.5-flash-lite",
+    "origin": "http://127.0.0.1:3013",
+    "pid": 7552,
+    "canaryProjectId": "cc629e54-668e-4ff1-82fe-c5904b4edbcc",
+    "ideasJobId": "3ddfc8e6-d53d-4472-8e0b-503aa2e1a57c",
+    "expansionJobId": "59245471-320e-4834-aa24-5e20ea1497a6",
+    "ideas": {
+      "status": "completed",
+      "count": 10,
+      "selectedCount": 1,
+      "usage": {
+        "inputTokens": 254,
+        "outputTokens": 1307,
+        "totalTokens": 1561
+      }
+    },
+    "expansion": {
+      "status": "failed",
+      "progress": 15,
+      "errorCode": "AI_REQUEST_FAILED",
+      "httpStatus": null,
+      "reason": null,
+      "usage": null,
+      "packagePresent": false,
+      "scenePromptsVerified": false
+    },
+    "maximumGenerationAttempts": 2,
+    "automaticRetries": 0,
+    "billingChanged": false,
+    "openaiRequests": 0,
+    "fallback": false,
+    "ownerDataTouched": false,
+    "fullRegression": {
+      "total": 217,
+      "passed": 216,
+      "failed": 0,
+      "skipped": 1,
+      "skippedReason": "POSIX vault permission test on Windows",
+      "durationMs": 92630.4809,
+      "kind": "INJECTED_SYNTHETIC_AND_REAL_LOCAL_FFMPEG",
+      "browserPlaybackRetested": false,
+      "responsiveRetested": false
+    },
+    "regression": {
+      "gemini": 42,
+      "aiIntegrationUsage": 10,
+      "driveCloudPresence": 34,
+      "totalPassed": 86,
+      "failed": 0,
+      "skipped": 0,
+      "kind": "INJECTED_SYNTHETIC"
+    },
+    "windows": {
+      "powerShell5": {
+        "passed": 14
+      },
+      "powerShell7": {
+        "passed": 14
+      },
+      "culture": "th-TH",
+      "liveRequests": 0
+    },
+    "commands": [
+      "node --import tsx --test --test-concurrency=1 tests/gemini-provider.test.ts tests/gemini-live-verifier.test.ts",
+      "node --import tsx --test --test-concurrency=1 tests/ai-integration.test.ts tests/ai-usage.test.ts",
+      "node --import tsx --test --test-concurrency=1 tests/drive-live-verifier.test.ts tests/cloud.test.ts tests/worker-presence.test.ts",
+      "powershell.exe -NoProfile -ExecutionPolicy Bypass -File tests/gemini-local-setup.ps1",
+      "pwsh -NoProfile -File tests/gemini-local-setup.ps1",
+      "npm run build",
+      "npm run lint",
+      "npm run validate:docs",
+      "npm run validate:pwa",
+      "npm run validate:secrets",
+      "npm test"
+    ],
+    "independentReview": "ACCEPTED_NO_P1_P2; Windows and private diagnostics; read-only review did not perform live requests",
+    "currentUsageRemaining": {
+      "primary": 77,
+      "secondary": 22
+    },
+    "report": "docs/GEMINI_LIVE_RESULT_20261011_TH.md",
+    "sourceHashes": {
+      "scripts/gemini-local.ps1": "098338cca5427bbee6a80f1fe1b0a3c4069164cbaa4a311745bd9260bb2a7c43",
+      "tests/gemini-local-setup.ps1": "bdcc743e950831fe2c8364e55dae02b0a23b984abedf88f74978e410922ac8ca",
+      "server/ai/gemini.ts": "d84780397b35679fadaa8684479f04ac10b7cd553f81ed622c03def15c18c3a9",
+      "server/ai/router.ts": "411da380f96a21f48edf28c158de54a1123f7110d5af7e1b7aa737bbc8d5b2d9",
+      "server/index.ts": "f27f38d84272a480234f5bf57a982479fd99593fac7513f98a4cb17969e3164d",
+      "tests/gemini-provider.test.ts": "a7087b34d2504a4acf146f9314dc7c210d05253555296fc6243eafbf26d66811"
+    },
+    "nextTask": "Owner approval for one Free Tier retry of existing canary expansion, no new ideas; activate updated diagnostics on same canary data after idle/backup/schema checks. Owner3006 activation only after complete isolated live proof."
   }
 }

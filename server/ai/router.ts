@@ -2,7 +2,7 @@ import { AiModeSchema, type AiMode, type AiRuntimeStatus } from '../../shared/in
 import type { Idea, ProjectInput } from '../../shared/contracts.js';
 import { AiProviderError, createOpenAiProvider } from './provider.js';
 import { createMockProvider } from './mock.js';
-import { createGeminiProvider } from './gemini.js';
+import { createGeminiProvider, type GeminiFailureDiagnostic } from './gemini.js';
 import { existsSync, readFileSync, mkdirSync, writeFileSync, renameSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { randomUUID } from 'node:crypto';
@@ -15,6 +15,7 @@ interface ConfiguredProviderOptions {
   openaiApproved?: boolean;
   geminiApiKey?: string;
   gemini?: AiProvider;
+  onGeminiDiagnostic?: (diagnostic: GeminiFailureDiagnostic) => void;
   stateFile?: string;
 }
 
@@ -77,7 +78,7 @@ export function createConfiguredAiProvider(options: ConfiguredProviderOptions = 
   const hasGeminiKey = Boolean((options.geminiApiKey ?? process.env.GEMINI_API_KEY)?.trim());
   const openaiApproved = options.openaiApproved ?? process.env.ACF_OPENAI_REQUESTS_APPROVED === 'true';
   const openai = options.openai ?? createOpenAiProvider({ apiKey: options.apiKey, requestsApproved: openaiApproved });
-  const gemini = options.gemini ?? createGeminiProvider({ apiKey: options.geminiApiKey });
+  const gemini = options.gemini ?? createGeminiProvider({ apiKey: options.geminiApiKey, onDiagnostic: options.onGeminiDiagnostic });
   const mock = createMockProvider();
   let active: AiRuntimeStatus['active'] = mode === 'mock' || mode === 'auto' && !hasApiKey ? 'mock' : mode === 'gemini' ? 'gemini' : 'openai';
   let fallbackReason: AiRuntimeStatus['fallbackReason'] = mode === 'auto' && !hasApiKey ? 'not_configured' : null;

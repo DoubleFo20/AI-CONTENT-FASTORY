@@ -1,6 +1,6 @@
 # AI Content Factory — master context
 
-Updated: 2026-10-10 (Asia/Bangkok). This is an existing local application with an opt-in cloud target in
+Updated: 2026-10-11 (Asia/Bangkok). This is an existing local application with an opt-in cloud target in
 `D:\xampp\htdocs\Ai-content-factory`, not a PHP application merely because XAMPP hosts
 the directory. Node 24.18.0, npm 11.16.0, Git 2.51.1 and FFmpeg 8.1.1 were discovered.
 
@@ -50,6 +50,8 @@ Source of truth: docs/PRD.md, docs/SYSTEM_ARCHITECTURE.md, docs/API_CONTRACT.md,
 shared/contracts.ts, ROADMAP.md and TASKS.md. Status files record evidence, not inferred success.
 
 ## Checkpoint state
+
+Latest Phase2 live checkpoint: isolated Gemini10ideas/one selection VERIFIED, selected expansion failed AI_REQUEST_FAILED and live scenes/prompts BLOCKED; no automatic retry. Owner3006 stays RC/Mock with original data. Private diagnostics and Windows PS5/PS7 readiness fixes reviewed/tested. See [current live result](docs/GEMINI_LIVE_RESULT_20261011_TH.md); no main merge/deployment/billing changes.
 
 Current release supersedes the historical integration checkpoint below. Branch
 `release/v1-real-world` combines reviewed integration cfa6554 with Premium Cinematic V2

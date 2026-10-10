@@ -16,7 +16,9 @@ const port = Number(process.env.ACF_PORT ?? 3001);
 if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Invalid local server port.');
 const host = process.env.ACF_HOST ?? '127.0.0.1';
 const dataDir = resolve(root, process.env.ACF_DATA_DIR ?? 'storage');
-const ai = createConfiguredAiProvider({ stateFile: join(dataDir, 'settings', 'ai-mode.json') });
+const ai = createConfiguredAiProvider({ stateFile: join(dataDir, 'settings', 'ai-mode.json'),
+  onGeminiDiagnostic: diagnostic => console.error(JSON.stringify({ event: 'GEMINI_REQUEST_FAILED', at: new Date().toISOString(), ...diagnostic })),
+});
 const drive = createDriveIntegrationFromEnv(join(dataDir, 'drive'), { allowedFileRoots: ['clips','exports','audio','images'].map(kind => join(dataDir, kind)) });
 const cloudRepository = createSupabaseRepository({ url: process.env.SUPABASE_URL, secretKey: process.env.SUPABASE_SECRET_KEY, serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY });
 const application = createApplication({

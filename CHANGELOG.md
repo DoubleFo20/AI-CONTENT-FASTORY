@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-11 — guarded live Gemini result and bounded Windows startup
+
+- Final full Node regression 217 total/216 passed/0 failed/1 Windows POSIX skip, including isolated FFmpeg/FFprobe exports; docs/PWA/secrets validation and staged diff check passed. Browser/responsive evidence remains the previous source-specific checkpoint.
+
+- Real isolated Gemini ten ideas/one selection verified; ideas usage254/1307/1561. Expansion failed AI_REQUEST_FAILED; package/prompts unverified. No retries/billing/fallback/Ownerdatawrites; exact IDs and next bounded approval in [live report](docs/GEMINI_LIVE_RESULT_20261011_TH.md).
+- Fixed EOF waits in Windows launcher/test capture and WinPS5 ExitCode handle; actual PS5/PS7 th-TH14/14 each, synthetic only.
+- Added allowlisted private Gemini failure diagnostics (HTTP/transport/body/validation) with privacy/no-retry/sink-failure regressions; independent review accepted. Node targeted86/86; build/typechecks/lint passed. No UI/schema/dependencies/env/CI changes; PR2/PR3 unmerged.
+
+
 ## 2026-10-10 — Gemini limited pipeline and private backend setup (usage paused)
 
 - เพิ่มexplicitselected-onlypipelinecanary/observation-onlyresume;25verifiertestsผ่าน. RoottargetedGemini/provider/Drive/cloud/presence74/74,three typechecks/full lintผ่าน;ทั้งหมดinjectedไม่live.

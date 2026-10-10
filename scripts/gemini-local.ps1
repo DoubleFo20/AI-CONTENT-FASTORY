@@ -169,11 +169,14 @@ try {
     $taskStart.EnvironmentVariables['ACF_GEMINI_FREE_TIER_CONFIRMED'] = 'true'
     $taskStart.EnvironmentVariables['ACF_PORT'] = [string]$Port
     $taskLaunch = [Diagnostics.Process]::Start($taskStart)
+    $taskOutputRead = $taskLaunch.StandardOutput.ReadLineAsync()
     $taskStart.EnvironmentVariables.Remove('GEMINI_API_KEY')
     $taskCredential.Key = $null
     if (-not $taskLaunch.WaitForExit(10000)) { throw 'STARTUP_TIMEOUT' }
-    $taskOutput = $taskLaunch.StandardOutput.ReadToEnd()
-    [void]$taskLaunch.StandardError.ReadToEnd()
+    # An exited launcher can leave a pipe handle inherited by its detached child.
+    # Read its single JSON line with a deadline instead of waiting for pipe EOF.
+    if (-not $taskOutputRead.Wait(2000)) { throw 'STARTUP_TIMEOUT' }
+    $taskOutput = $taskOutputRead.GetAwaiter().GetResult()
     $taskState = $taskOutput | ConvertFrom-Json
     if ($taskLaunch.ExitCode -ne 0 -or $taskState.spawned -ne $true) {
         if ($taskState.code -in @('OWNER_PORT_ALREADY_SERVING', 'BUILD_REQUIRED', 'PRIVATE_PATH_UNSAFE', 'PRIVATE_ACL_UNSAFE')) { throw [string]$taskState.code }
@@ -216,6 +219,11 @@ try {
     [Console]::Error.WriteLine("${taskFailureCode}: configuration stopped safely; no generation request or billing change.")
     exit 1
 } finally {
+    if ($null -ne $taskLaunch) {
+        try { $taskLaunch.StandardOutput.Dispose() } catch { }
+        try { $taskLaunch.StandardError.Dispose() } catch { }
+        $taskLaunch.Dispose()
+    }
     if ($null -ne $taskStart) { $taskStart.EnvironmentVariables.Remove('GEMINI_API_KEY') }
     if ($null -ne $taskCredential) { $taskCredential.Key = $null }
     if ($null -ne $taskSecure) { $taskSecure.Dispose() }

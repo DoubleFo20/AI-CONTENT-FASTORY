@@ -16,6 +16,25 @@ function Check([bool]$Condition) {
     if (-not $Condition) { throw 'SYNTHETIC_CHECK_FAILED' }
     $script:taskPassed++
 }
+function Invoke-TestWrapper([string]$WrapperAction, [int]$WrapperPort = 3013) {
+    $taskCaptureId = [Guid]::NewGuid().ToString('N')
+    $taskOutputFile = Join-Path $taskFixture ($taskCaptureId + '.stdout.txt')
+    $taskErrorFile = Join-Path $taskFixture ($taskCaptureId + '.stderr.txt')
+    $taskWrapperProcess = Start-Process -FilePath $taskShell -ArgumentList @('-NoProfile', '-ExecutionPolicy', 'Bypass',
+        '-File', ('"{0}"' -f $taskWrapper), '-Action', $WrapperAction, '-Port', [string]$WrapperPort) -PassThru -WindowStyle Hidden `
+        -RedirectStandardOutput $taskOutputFile -RedirectStandardError $taskErrorFile
+    try {
+        # Windows PowerShell 5 needs the process handle retained to expose ExitCode.
+        [void]$taskWrapperProcess.Handle
+        if (-not $taskWrapperProcess.WaitForExit(45000)) {
+            $taskWrapperProcess.Kill()
+            throw 'SYNTHETIC_WRAPPER_TIMEOUT'
+        }
+        $taskWrapperProcess.Refresh()
+        if ((Get-Item -LiteralPath $taskOutputFile).Length -gt 32768) { throw 'SYNTHETIC_OUTPUT_TOO_LARGE' }
+        return @{ ExitCode = $taskWrapperProcess.ExitCode; Output = (Get-Content -LiteralPath $taskOutputFile -Raw) }
+    } finally { $taskWrapperProcess.Dispose() }
+}
 try {
     [void][IO.Directory]::CreateDirectory((Join-Path $taskFixture 'scripts'))
     [void][IO.Directory]::CreateDirectory((Join-Path $taskFixture 'dist/api/server'))
@@ -50,8 +69,9 @@ exit $LASTEXITCODE
     $taskShell = (Get-Process -Id $PID).Path
     $taskWrapper = Join-Path $taskFixture 'wrapper.ps1'
     $taskStep = 'configure'
-    $taskConfigOutput = & $taskShell -NoProfile -ExecutionPolicy Bypass -File $taskWrapper -Action Configure 2>$null
-    Check ($LASTEXITCODE -eq 0)
+    $taskConfigureResult = Invoke-TestWrapper 'Configure'
+    $taskConfigOutput = $taskConfigureResult.Output
+    Check ($taskConfigureResult.ExitCode -eq 0)
     $taskConfigured = ($taskConfigOutput -join '') | ConvertFrom-Json
     Check ($taskConfigured.configured -eq $true -and $taskConfigured.liveRequests -eq 0 -and $taskConfigured.billingChanged -eq $false)
     $taskFile = Join-Path $taskFixture '.tmp/gemini-private/credentials.local'
@@ -68,24 +88,21 @@ exit $LASTEXITCODE
             @($taskAcl.GetAccessRules($true,$true,[Security.Principal.SecurityIdentifier]) | Where-Object { $_.AccessControlType -eq 'Allow' -and $_.IdentityReference.Value -ne $taskIdentity.Value }).Count -eq 0)
     }
     $taskStep = 'no-overwrite'
-    $ErrorActionPreference = 'Continue'
-    $null = & $taskShell -NoProfile -ExecutionPolicy Bypass -File $taskWrapper -Action Configure 2>$null
-    $ErrorActionPreference = 'Stop'
-    Check ($LASTEXITCODE -ne 0 -and (Get-FileHash -LiteralPath $taskFile).Hash -eq $taskHash)
+    $taskRepeatedConfigure = Invoke-TestWrapper 'Configure'
+    Check ($taskRepeatedConfigure.ExitCode -ne 0 -and (Get-FileHash -LiteralPath $taskFile).Hash -eq $taskHash)
     $taskReservation = [Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback, 0)
     $taskReservation.Start()
     $taskPort = $taskReservation.LocalEndpoint.Port
     try {
         $taskStep = 'occupied-port'
-        $ErrorActionPreference = 'Continue'
-        $null = & $taskShell -NoProfile -ExecutionPolicy Bypass -File $taskWrapper -Action Start -Port $taskPort 2>$null
-        $ErrorActionPreference = 'Stop'
-        Check ($LASTEXITCODE -ne 0 -and -not (Test-Path -LiteralPath (Join-Path $taskFixture 'storage')))
+        $taskOccupiedStart = Invoke-TestWrapper 'Start' $taskPort
+        Check ($taskOccupiedStart.ExitCode -ne 0 -and -not (Test-Path -LiteralPath (Join-Path $taskFixture 'storage')))
     } finally { $taskReservation.Stop() }
     # Repeated ACL validation and multiple installed Node paths must allow a real ready child.
     $taskStep = 'startup'
-    $taskStartOutput = & $taskShell -NoProfile -ExecutionPolicy Bypass -File $taskWrapper -Action Start -Port $taskPort 2>$null
-    Check ($LASTEXITCODE -eq 0)
+    $taskStartResult = Invoke-TestWrapper 'Start' $taskPort
+    $taskStartOutput = $taskStartResult.Output
+    Check ($taskStartResult.ExitCode -eq 0)
     $taskState = ($taskStartOutput -join '') | ConvertFrom-Json
     $taskChild = Get-Process -Id $taskState.pid
     Check ($taskState.ready -eq $true -and $taskState.isolatedCanary -eq $true -and $taskState.generationStarted -eq $false)

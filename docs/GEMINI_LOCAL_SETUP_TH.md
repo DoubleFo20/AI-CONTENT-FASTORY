@@ -1,6 +1,6 @@
 # ตั้ง Gemini Free Tier สำหรับ backend ในเครื่อง
 
-สถานะ: PAUSED_FOR_USAGE_RESET; backend configuration PREPARED — ยังไม่มี successful live Gemini test และยังไม่เปลี่ยน Owner app ที่พอร์ต 3006. ใช้ Premium Cinematic V2 และข้อมูลเดิมต่อได้ใน Mock Mode. PR #2 และ #3 ยังไม่ merge.
+สถานะ: LIVE_IDEAS_VERIFIED_EXPANSION_BLOCKED — backend key ตั้งแบบเข้ารหัสแล้ว; ทดสอบจริงสิบไอเดีย/หนึ่งselectionผ่าน แต่ expansion failed AI_REQUEST_FAILED. Owner3006คง RC/Mock; [ผลจริงและ next approval](GEMINI_LIVE_RESULT_20261011_TH.md). PR2/PR3ยังไม่merge.
 
 ## 1. ตรวจบัญชี API ด้วยตนเอง
 
@@ -54,7 +54,9 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File "D:\xampp\htdocs\Ai-cont
 
 หลังตั้งแล้วตอบ Codex ว่า **พร้อม และตรวจ API project Free Tier/Billing disabled แล้ว** โดยไม่ส่ง key.
 
-## 4. ทดสอบ live หนึ่งรอบหลังพร้อม
+## 4. ขั้นตอน first-run เดิม — ใช้ไปแล้วเมื่อ 2026-10-11
+
+**ห้ามรันคำสั่ง Start หรือสร้าง canary ใหม่ในส่วนนี้ซ้ำ.** Key ตั้งด้วย DPAPI แล้ว; canary เดิมมีสิบไอเดียจริงและเลือกหนึ่งเรื่องเรียบร้อย แต่ expansion failed `AI_REQUEST_FAILED` โดยไม่ทราบ HTTP status/reason. ส่วนนี้เก็บขั้นตอนเดิมเพื่ออ้างอิงเท่านั้น. [ผลล่าสุด](GEMINI_LIVE_RESULT_20261011_TH.md) กำหนดให้รอ Owner อนุมัติ retry expansion หนึ่งครั้งบน storage/canary เดิม หลังเตรียม diagnostics/idle/backup/schema checks; ไม่ generate ideas ใหม่.
 
 Checkpointนี้หยุดตามusage<=7%. ก่อน live ให้ sessionถัดไปตรวจ Windows PowerShell7 th-TH หลัง timestamp/native-probe fixes; WindowsPowerShell5 synthetic14checksผ่านแล้ว แต่ยังไม่ใช่ live API proof. Configure/Statusทำได้โดยไม่ส่งgenerationrequest.
 

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createGeminiProvider } from '../server/ai/gemini.js';
+import { createGeminiProvider, type GeminiFailureDiagnostic } from '../server/ai/gemini.js';
 import { AiProviderError } from '../server/ai/provider.js';
 import { createMockProvider } from '../server/ai/mock.js';
 import { ERROR_CODES, type Idea, type ProjectInput } from '../shared/contracts.js';
@@ -349,4 +349,57 @@ test('Gemini maps network and fetch abort errors safely and never retries', asyn
     await assert.rejects(provider.generateIdeas(input), safeError(expected));
     assert.equal(calls, 1);
   }
+});
+
+test('Gemini failure diagnostics distinguish HTTP, transport and body without recording private response fields', async () => {
+  const fixtures: Array<{ status?: number; reason?: string; phase: GeminiFailureDiagnostic['phase']; code: string; body?: boolean }> = [
+    { status: 400, reason: `private ${key}`, phase: 'http', code: 'AI_REQUEST_FAILED' },
+    { status: 400, reason: 'API_KEY_INVALID', phase: 'http', code: 'AI_ACCESS_DENIED' },
+    { status: 503, phase: 'http', code: 'AI_REQUEST_FAILED' },
+    { status: 429, reason: 'QUOTA_EXCEEDED', phase: 'http', code: 'AI_QUOTA_EXCEEDED' },
+    { phase: 'fetch', code: 'AI_REQUEST_FAILED' },
+    { status: 200, phase: 'body', code: 'AI_INVALID_OUTPUT', body: true },
+  ];
+  for (const fixture of fixtures) {
+    let calls = 0; const diagnostics: GeminiFailureDiagnostic[] = [];
+    const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, onDiagnostic: value => { diagnostics.push(value); }, fetch: async () => {
+      calls++;
+      if (fixture.status === undefined) throw new Error(`private ${key} ${input.brief}`);
+      if (fixture.body) return new Response(`private ${key}`, { status: fixture.status });
+      return jsonResponse({ error: { message: `private ${key}`, details: [{ '@type': 'type.googleapis.com/google.rpc.ErrorInfo',
+        domain: 'googleapis.com', reason: fixture.reason, metadata: { key, brief: input.brief } }] } }, fixture.status);
+    } });
+    await assert.rejects(provider.expandStory(input, selected), safeError(fixture.code));
+    assert.equal(calls, 1); assert.equal(diagnostics.length, 1);
+    const diagnostic = diagnostics[0];
+    assert.equal(diagnostic.provider, 'gemini'); assert.equal(diagnostic.model, 'gemini-3.5-flash-lite');
+    assert.equal(diagnostic.operation, 'expand'); assert.equal(diagnostic.phase, fixture.phase);
+    assert.equal(diagnostic.errorCode, fixture.code); assert.equal(diagnostic.httpStatus, fixture.status);
+    if (fixture.reason !== undefined) assert.equal(diagnostic.reason, fixture.reason.startsWith('private') ? 'UNKNOWN' : fixture.reason);
+    else assert(!('reason' in diagnostic));
+    assert(Object.isFrozen(diagnostic));
+    assert(Object.keys(diagnostic).every(name => ['provider','operation','model','phase','errorCode','httpStatus','reason'].includes(name)));
+    const output = JSON.stringify(diagnostics);
+    for (const privateValue of [key, input.brief, selected.logline.en, 'private', 'metadata']) assert(!output.includes(privateValue));
+  }
+});
+
+test('Gemini diagnostic sink failures cannot replace normalized errors, trigger retries or log successful content', async () => {
+  for (const onDiagnostic of [() => { throw new Error(`private ${key}`); }, async () => { throw new Error(`private ${key}`); }]) {
+    let calls = 0;
+    const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, onDiagnostic, fetch: async () => {
+      calls++; return jsonResponse({ error: { message: `private ${key}` } }, 500);
+    } });
+    await assert.rejects(provider.generateIdeas(input), safeError('AI_REQUEST_FAILED'));
+    await new Promise(resolve => setImmediate(resolve)); assert.equal(calls, 1);
+  }
+  const diagnostics: GeminiFailureDiagnostic[] = [];
+  const valid = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, onDiagnostic: value => { diagnostics.push(value); },
+    fetch: async () => jsonResponse(envelope({ ideas })) });
+  assert.deepEqual(await valid.generateIdeas(input), ideas); assert.equal(diagnostics.length, 0);
+  const invalid = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, onDiagnostic: value => { diagnostics.push(value); },
+    fetch: async () => jsonResponse(envelope({ ideas: ideas.slice(0,9) })) });
+  await assert.rejects(invalid.generateIdeas(input), safeError('AI_INVALID_OUTPUT'));
+  assert.deepEqual(diagnostics, [{ provider: 'gemini', operation: 'ideas', model: 'gemini-3.5-flash-lite',
+    phase: 'validation', errorCode: 'AI_INVALID_OUTPUT' }]);
 });

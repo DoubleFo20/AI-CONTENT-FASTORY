@@ -1,5 +1,24 @@
 # Handoff
 
+STATUS: LIVE_IDEAS_VERIFIED_EXPANSION_BLOCKED
+Updated: 2026-10-11 (Asia/Bangkok)
+
+Final regression ของโค้ด checkpoint นี้: `npm test` 217 total / 216 passed / 0 failed / 1 POSIX permission skip บน Windows (92.630s), รวม isolated FFmpeg/FFprobe MP4 tests. ไม่ได้ทดสอบ browser playback หรือ responsive ซ้ำใน checkpoint นี้ เพราะ UI ไม่เปลี่ยน; หลักฐานเดิมยังแยกตาม source SHA.
+
+Owner proceed หลัง usage reset. พบ backend configuration แบบ DPAPI + Free Tier attestation/ACL ที่ถูกต้อง; ไม่แสดง key และไม่เปลี่ยน Billing. Live isolated canary3013 สร้างสิบไอเดียจริงด้วย gemini-3.5-flash-lite และเลือกหนึ่งได้; input254/output1307/total1561 tokens. Expand หนึ่งครั้ง failed AI_REQUEST_FAILED/progress15; ไม่มี package/scenes/prompts live. HTTP status เดิมไม่ได้เก็บ จึงไม่สรุปสาเหตุว่า quota/network/HTTP400/500 และไม่มี retry/providerfallback. [รายงานจริง](docs/GEMINI_LIVE_RESULT_20261011_TH.md).
+
+แก้ unbounded pipe EOF ใน Windows helper/tests; PS5 และ PS7 th-TH ล่าสุดผ่าน14/14ต่อshell. เพิ่ม private server diagnostics แบบ allowlist/frozen primitives; ไม่บันทึก key/header/raw response/prompt/stack. Independent reviewยอมรับ ไม่มีP1/P2. Scoped Node regression86/86 injectedผ่าน (Gemini42 + integration/usage10 + Drive/cloud/presence34); build/three typechecks/lintผ่าน. Premium frontend bundles/SQLite schema/Owner3006และข้อมูลเดิมคงเดิม. Originalstorage baselineยังpreservedtrue; 1owner/1project/4jobs/10Mockideas/0active/0clips/0exports. PR2/PR3ยังDraft/unmerged.
+
+NEXT_TASK: ขอ Owner อนุมัติ retry expansion เพียงหนึ่งครั้งแบบ Free Tier ใน canary cc629e54-668e-4ff1-82fe-c5904b4edbcc (failed job59245471-320e-4834-aa24-5e20ea1497a6), ไม่generateideasใหม่. ก่อนretry เปิดruntime3013ด้วยdiagnostics source+storage/gemini-canary-4XXQbiเดิมหลังbackup/0active/schema check; ปัจจุบันPID7552ยังโหลดproviderก่อนdiagnostics. Normalcanaryauthเป็นDPAPIที่ .tmp/gemini-private/live-canary-20261011.auth.local; ห้ามprint/decryptไปlogsหรือใช้sessionDB. --project-id verifierอ่านสถานะเท่านั้น ไม่retryfailedjob. ถ้าทดสอบfullpipelineผ่านค่อยเตรียมOwner3006activationพร้อมbackup/schemaและpreservesavedMock. Driveต้องOAuth/consent/liveroundtrip; Cloudต้องapprovedproject/HTTPS/schema/deploy. ไม่mainmerge/publicdeploy/publish/billing/automaticpaidfallback.
+
+Usage authoritative ที่ตรวจใน checkpoint นี้เหลือ77%/22% (5hr/week), ยังสูงกว่า7%; ตรวจซ้ำก่อนงานใหม่/checkpoints. ไม่ใช้resetcreditหรือscheduler/automaticresume.
+
+Retry endpoint เดิม `POST /api/jobs/59245471-320e-4834-aa24-5e20ea1497a6/retry` ต้อง normal canary session/CSRF และ Owner approval สำหรับหนึ่ง attempt เพิ่ม. Endpoint สร้าง expand job ใหม่และรักษา failed job เก่า; verifier เดิมจะปฏิเสธหลาย expand jobs จึงต้องตรวจ job ใหม่/package ผ่าน normal GET + local contract validation แยก ไม่เรียก verifier สร้าง canary ใหม่และไม่ส่ง POST ซ้ำเมื่อ timeout/ambiguous. ไม่มีการแก้ schema/model จากการคาดเดา.
+
+---
+
+## Previous checkpoint — historical
+
 STATUS: PAUSED_FOR_USAGE_RESET
 
 ## Gemini activation preparation — 2026-10-10

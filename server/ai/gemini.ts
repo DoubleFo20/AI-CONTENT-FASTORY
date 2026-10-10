@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import {
   IdeaSchema, IdeasResultSchema, ProjectInputSchema, StoryPackageSchema, validateIdeas, validateStoryPackage,
-  type Idea, type ProjectInput, type StoryPackage,
+  type ErrorCode, type Idea, type ProjectInput, type StoryPackage,
 } from '../../shared/contracts.js';
 import { AiUsageSchema, type AiUsage } from '../../shared/ai.js';
 import { AiProviderError } from './provider.js';
@@ -14,7 +14,22 @@ interface GeminiProviderOptions {
   expansionModel?: string;
   fetch?: typeof fetch;
   timeoutMs?: number;
+  onDiagnostic?: (diagnostic: GeminiFailureDiagnostic) => void;
 }
+
+export interface GeminiFailureDiagnostic {
+  provider: 'gemini';
+  operation: AiUsage['operation'];
+  model: 'gemini-3.5-flash-lite';
+  phase: 'fetch' | 'http' | 'body' | 'validation';
+  errorCode: ErrorCode;
+  httpStatus?: number;
+  reason?: 'API_KEY_INVALID' | 'QUOTA_EXCEEDED' | 'RATE_LIMIT_EXCEEDED' | 'UNKNOWN';
+}
+
+const DiagnosticCodes = new Set<ErrorCode>(['AI_REQUEST_FAILED', 'AI_TIMEOUT', 'AI_ACCESS_DENIED', 'AI_QUOTA_EXCEEDED',
+  'AI_RATE_LIMITED', 'AI_INVALID_OUTPUT', 'AI_REFUSED']);
+const DiagnosticReasons = new Set(['API_KEY_INVALID', 'QUOTA_EXCEEDED', 'RATE_LIMIT_EXCEEDED']);
 
 const EnvelopeSchema = z.object({
   candidates: z.array(z.object({
@@ -100,6 +115,17 @@ export function createGeminiProvider(options: GeminiProviderOptions = {}): AiPro
   const requestFetch = options.fetch ?? fetch;
   const timeoutMs = options.timeoutMs ?? 120_000;
 
+  function diagnose(operation: AiUsage['operation'], phase: GeminiFailureDiagnostic['phase'], code: ErrorCode, status?: number, reason?: string): void {
+    const diagnostic: GeminiFailureDiagnostic = Object.freeze({ provider: 'gemini', operation, model: 'gemini-3.5-flash-lite', phase,
+      errorCode: DiagnosticCodes.has(code) ? code : 'AI_REQUEST_FAILED',
+      ...(typeof status === 'number' && Number.isInteger(status) && status >= 100 && status <= 599 ? { httpStatus: status } : {}),
+      ...(reason !== undefined ? { reason: DiagnosticReasons.has(reason) ? reason as GeminiFailureDiagnostic['reason'] : 'UNKNOWN' as const } : {}),
+    });
+    // A logging failure must not alter the provider result or trigger another call.
+    try { void Promise.resolve(options.onDiagnostic?.(diagnostic)).catch(() => {}); }
+    catch { /* Diagnostics never change request behavior. */ }
+  }
+
   async function request(operation: AiUsage['operation'], schema: z.ZodType, prompt: string, model: string, budget: number, requestOptions?: AiRequestOptions): Promise<unknown> {
     if (!freeTierConfirmed || !apiKey?.trim() || model !== 'gemini-3.5-flash-lite'
         || !Number.isInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 120_000) throw new AiProviderError('AI_NOT_CONFIGURED');
@@ -112,6 +138,9 @@ export function createGeminiProvider(options: GeminiProviderOptions = {}): AiPro
       onAbort = () => reject(new AiProviderError('AI_TIMEOUT'));
       signal.addEventListener('abort', onAbort, { once: true });
     });
+    let phase: GeminiFailureDiagnostic['phase'] = 'fetch';
+    let httpStatus: number | undefined;
+    let errorReason: string | undefined;
     try {
       return await Promise.race([aborted, (async () => {
         let response: Response;
@@ -131,6 +160,7 @@ export function createGeminiProvider(options: GeminiProviderOptions = {}): AiPro
           throw new AiProviderError('AI_REQUEST_FAILED');
         }
         if (signal.aborted) throw new AiProviderError('AI_TIMEOUT');
+        phase = 'http'; httpStatus = response.status;
         // Parse only structured reasons; never return a provider message or key.
         if (!response.ok) {
           if (response.status === 401 || response.status === 403) throw new AiProviderError('AI_ACCESS_DENIED');
@@ -138,11 +168,13 @@ export function createGeminiProvider(options: GeminiProviderOptions = {}): AiPro
           if (response.status === 408 || response.status === 499 || response.status === 504) throw new AiProviderError('AI_TIMEOUT');
           if (response.status === 400 || response.status === 429) {
             const reason = apiErrorReason(await response.json().catch(() => null));
+            errorReason = reason;
             if (response.status === 400 && reason === 'API_KEY_INVALID') throw new AiProviderError('AI_ACCESS_DENIED');
             if (response.status === 429) throw new AiProviderError(reason === 'QUOTA_EXCEEDED' ? 'AI_QUOTA_EXCEEDED' : 'AI_RATE_LIMITED');
           }
           throw new AiProviderError('AI_REQUEST_FAILED');
         }
+        phase = 'body';
         try {
           const body: unknown = await response.json();
           if (signal.aborted) throw new AiProviderError('AI_TIMEOUT');
@@ -163,6 +195,9 @@ export function createGeminiProvider(options: GeminiProviderOptions = {}): AiPro
           throw new AiProviderError('AI_INVALID_OUTPUT');
         }
       })()]);
+    } catch (error) {
+      diagnose(operation, phase, error instanceof AiProviderError ? error.code : 'AI_REQUEST_FAILED', httpStatus, errorReason);
+      throw error;
     } finally {
       clearTimeout(timer);
       signal.removeEventListener('abort', onAbort);
@@ -176,7 +211,7 @@ export function createGeminiProvider(options: GeminiProviderOptions = {}): AiPro
       const prompt = `Generate exactly 10 distinct SHORT story ideas for this brief. Do not expand any story or write bibles/scenes yet. Use ids idea_1 through idea_10. Each title, logline and hook must contain Thai and English; keep loglines to 1-2 concise sentences. Brief data: ${JSON.stringify(brief)}`;
       const result = await request('ideas', IdeasResultSchema, prompt, ideasModel, 6000, requestOptions);
       try { return validateIdeas(IdeasResultSchema.parse(result).ideas); }
-      catch { throw new AiProviderError('AI_INVALID_OUTPUT'); }
+      catch { diagnose('ideas', 'validation', 'AI_INVALID_OUTPUT'); throw new AiProviderError('AI_INVALID_OUTPUT'); }
     },
     async expandStory(input, selectedIdea, requestOptions): Promise<StoryPackage> {
       let brief: ProjectInput;
@@ -185,7 +220,7 @@ export function createGeminiProvider(options: GeminiProviderOptions = {}): AiPro
       const prompt = `Expand ONLY the single selected idea provided below. Produce a complete short story with a premise, beginning, arc and ending in storyBible; stable character and location bibles; continuity rules; and 3-12 ordered scenes (4-20 seconds each, total <=180 seconds). ${brief.targetDurationSeconds !== undefined ? `Target a total story duration of ${brief.targetDurationSeconds} seconds.` : ''} Use unique ASCII ids character_1, location_1, scene_1 etc. Each scene's characterIds and locationId must reference the bibles; scene order starts at 1 without gaps. Every scene needs an explanation in Thai and a cinematic English Google Flow prompt with character appearances, setting, action, camera, lighting and continuity; bilingual narration. Character names are stable proper names. Do not expand or mention alternative ideas. Brief data: ${JSON.stringify(brief)}. Selected idea data: ${JSON.stringify(selected)}`;
       const result = await request('expand', StoryPackageSchema, prompt, expansionModel, 12000, requestOptions);
       try { return validateStoryPackage(result); }
-      catch { throw new AiProviderError('AI_INVALID_OUTPUT'); }
+      catch { diagnose('expand', 'validation', 'AI_INVALID_OUTPUT'); throw new AiProviderError('AI_INVALID_OUTPUT'); }
     },
   };
 }
