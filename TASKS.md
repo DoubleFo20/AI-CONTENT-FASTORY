@@ -1,4 +1,67 @@
-# Tasks and dependencies
+# Task dependency plan
+
+STATUS: LOCAL_V1_READY_FOR_OWNER_APPROVAL
+RELEASE_READINESS: READY_FOR_OWNER_APPROVAL
+ANTIGRAVITY_STATUS: PUBLISHED_PASS_FOR_PRE_PATCH_RELEASE_3e9c1aa
+Updated: 2026-10-10 (Asia/Bangkok)
+
+Antigravity เผยแพร่ QA commit ddccf9c/PASS ที่ source3e9c1aa แล้ว หลักฐานสองไฟล์ถูกเก็บใน release. RC sourceปัจจุบัน 0b35cea82d7e7867e11c653df0d6d790a6b66f19 เพิ่มเฉพาะ Drive help แบบ block, dialog สีตาม Premium Cinematic V2 และ focus กลับปุ่มเมนูมือถือ; backend baseline b271855 คงเดิม ไม่มีการย้าย schema. Published PASS เดิมไม่ได้ครอบคลุม UI delta นี้ จึงเตรียม handoff ให้ตรวจ actual latest RC ก่อนอนุมัติขั้นสุดท้าย.
+
+ผลจริง RC: Node regression 145 total/144 passed/0 failed/1 POSIX permission skip บน Windows ที่de59fe6 (50.786s); หลัง frontend focus fixผ่าน build/สาม typechecks และ lint. Browserปัจจุบัน0b35ceaผ่าน12 dialog cases + Preview360 TH/ENสอง cases. Regressionไฟล์ modal-focus.js รันจริงแยกทั้งRC/Phase2 ผ่าน12/12ต่อสาขา รวม contrast, Tab, Escape/Close และ focus กลับ opener. MP4สังเคราะห์ใหม่ผ่าน FFprobe: H.264720×1280 + AAC48k stereo,4.021333s/122601bytes; Chrome เล่นได้; แยกตรวจ HTTP download ด้วยขนาด/hash ตรงต้นฉบับ. ไม่ใช่ Flow live generation.
+
+Owner app3006ใช้ original storage และ Mock; client rebuildแล้ว, API/backendเดิมคงอยู่. Read-only baselineยืนยันบัญชี/โปรเจกต์/ประวัติ4jobs/10cachedMockideas/0activejobsและสื่อเดิมยังอยู่ ไม่มี database writes/reset/migration. Child processไม่ได้รับ OpenAI credential; keyในenvironmentที่Ownerเก็บถาวรไม่ถูกแก้.
+
+Phase2 source de462843a2847e850334730c004f8b1d8f01e0b6 อยู่ใน stacked Draft PR#3 target release/v1-real-world. Gemini Free Tier gate/provider selection/usage, Drive verifier และ one-request Gemini canaryพร้อม injected tests; pure worker presence/reconnectพร้อม10tests ยังไม่มี authenticated broker/durable CAS/active waiting UI. Full regressionที่86dbbb5:204total/203passed/0failed/1POSIXskip,91.243s; หลังแก้ frontendผ่านbuild/typechecks/lintและbrowsertargeted. Matrix36/36ที่86dbbb5 + latest12dialogที่de46284ผ่าน, TH/EN×360/768/1440 ไม่มีpage overflow. RuntimeขณะQAล้างcredentialsและใช้ฐานข้อมูลสังเคราะห์ ไม่มี live provider calls.
+
+Geminiเป็นprimarytextเฉพาะ Flash-Lite; ต้อง private backend keyและ ACF_GEMINI_FREE_TIER_CONFIRMED=true หลังOwnerตรวจว่าAPIprojectใช้FreeTier/Billingdisabled. Quotaหมดหยุด ไม่มีpaidupgrade/retry/providerfallback. OpenAIต้องapprovalใหม่ก่อนเรียก. Google Flowเป็นprimaryvideoแบบOwner-operated; Driveต้องOAuth/consentและliveupload/download/approvedrestoreก่อนcutover. Cloudยังต้องapprovedSupabase/HTTPShost/schema, owner-scopedclaim, frozenprovider/mediareceiptและdisconnected-deviceproof.
+
+usage ที่ตรวจจากบัญชีล่าสุดเหลือ 45% ในรอบ 5 ชั่วโมง และ 32% ในรอบสัปดาห์ ยังไม่ถึงเกณฑ์หยุด 7%; checkpointหยุด1%ก่อนหน้าคงเป็นประวัติ. ไม่มีschedulerหรือautomaticresume. ไม่มีmerge main/deploy/billing/publish.
+
+NEXT_TASK: Ownerreview PR#2และPR#3; ตรวจUIdeltaจริงผ่านAntigravityhandoff. เมื่อprivateGeminiKeyและFreeTierconfirmationพร้อมให้รันPhase2runtimeแยก→canary10ideasหนึ่งครั้ง; resumeด้วยproject-idเดิม ไม่regenerate และOwnerเลือกหนึ่งก่อนexpand. หลังDriveOAuthconsentตรวจsmall-fileroundtrip/checksumและrestoreที่Ownerอนุมัติ; cloudต้องapprovalก่อนเปิดใช้งาน.
+
+ดู [ผล final review](docs/release/FINAL_REVIEW.md), [readiness matrix](docs/release/V1_READINESS.md), [published QA](docs/release/QA_VISUAL_REPORT.md). Localauth/persistence/editor/MP4 VERIFIED; storytext MOCK_ONLY; Gemini/Drive/cloudfoundation PREPARED; notebook-offline/fullautomation NOT_IMPLEMENTED.
+
+| งาน | สถานะ / dependency |
+| --- | --- |
+| RC regression/current dialogs/MP4/data preservation | VERIFIED; Owner approval และ UI delta review pending |
+| Phase2 injected regression + TH/EN responsive QA | VERIFIED within synthetic/injected scope |
+| Gemini canary | PREPARED; private key + verified Free Tier project required |
+| Drive round trip / verified restore | BLOCKED; OAuth/consentและrestore approval |
+| Worker presence helper | PREPARED; broker/auth/durable CAS/media bridgeยังไม่มี |
+| Notebook-offline cloud acceptance | NOT_IMPLEMENTED; approved host/project/deployment required |
+
+## Historical checkpoints — superseded by the current status above
+
+STATUS: LOCAL_V1_RC_VERIFIED_EXTERNAL_GATES_PENDING
+Updated: 2026-10-10 (Asia/Bangkok)
+
+| ID | Task | Depends on | State |
+| --- | --- | --- | --- |
+| RC-01 | Preserve/fetch/review main, PR#1 and Premium V2 in isolated release | Owner mission | DONE |
+| RC-02 | Diagnose actual Ideas quota failure and stale state | RC-01 | DONE |
+| RC-03 | Mode/provenance/cache/progress/retry/cancel/deadline/restart fences | RC-02 | VERIFIED |
+| RC-04 | Consistent backup + original10Mock ideas recovery; preserve accounts/history/media/schema | RC-03, Owner proceed | VERIFIED |
+| RC-05 | Selected-only variable story + bibles/scenes/EN prompts/TH explanation | RC-03 | MOCK_ONLY |
+| RC-06 | Assisted Flow refs/status/credit rate/matching/missing clips | RC-05 | PREPARED; real Flow gate |
+| RC-07 | Real clip/audio/image imports + deterministic editor/MP4/play/download/persistence | RC-05 | VERIFIED_SYNTHETIC_MEDIA |
+| RC-08 | Drive private folders/index/progress/verified retry/cache restore | RC-07 | PREPARED; OAuth/live gate |
+| RC-09 | Request-lifecycle shutdown/auth/file/OAuth/queue safety review | RC-03,RC-08 | VERIFIED; independent review accepted |
+| RC-10 | THEN/48viewport cases/PWA/restart/read-error recovery; critical tablet/mobile repairs | RC-05,RC-07 | VERIFIED; visual/physical-device acceptance pending |
+| RC-11 | Full regressions/typecheck/lint/build/PWA/docs/secrets | RC-09,RC-10 | 144pass/0fail/1POSIXskip; checks passed |
+| RC-12 | Storage-preserving local3006 activation; normal release push/draft PR | RC-11 | VERIFIED; [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2) |
+| RC-13 | Antigravity actual combined UI visual QA + final integration review | RC-12 | OWNER_REPORTED_READY; final evidence/SHA + Owner approval PENDING |
+| RC-14 | Live AI10/selected expansion canary after quota fix | Owner billing/access | BLOCKED; actual HTTP429 insufficient_quota |
+| RC-15 | Live Drive OAuth/checksum upload/download/restore | Owner Google setup+consent | BLOCKED |
+| RC-16 | Supabase/HTTPS host/approved migration + paired-worker bridge + notebook-offline mobile acceptance | RC-15, Owner host/schema approval | PREPARED / BLOCKED / NOT_IMPLEMENTED individually |
+
+Latest source checkpoint `b271855`; Root reviewed disjoint agents before integration. Root owns Git/contracts/config/progress/schema. Existing architecture, owner data and Antigravity original worktree/specifications remain preserved. No main merge/force push/deploy/billing/publishing.
+
+Final regression rerun ที่3e9c1aa ผ่าน145/144/0/1, typecheck/lint/build/PWA และ actual MP4 playback; [FINAL_REVIEW](docs/release/FINAL_REVIEW.md). Phase2 Gemini/provider/usage + Drive verifier อยู่สาขาแยก และ cloud remains externally gated.
+
+Exact next task and consolidated Owner gates: [HANDOFF](HANDOFF.md). Current [QA](docs/release/QA_RESULTS.json) and [readiness](docs/release/V1_READINESS.md) supersede the historical counts below.
+
+## บันทึก checkpoint ก่อนหน้า (historical)
+
 
 | ID | Task | Depends on | Owner | State |
 | --- | --- | --- | --- | --- |
@@ -16,8 +79,8 @@
 | P1-07 | Integration/typecheck/lint/build/browser/mobile/PWA QA | P1-03,P1-06 | Root + QA | DONE |
 | P1-08 | Evidence, operations guide and checkpoint commit | P1-07 | Root | DONE_LOCAL |
 | D-01 | Reviewed design system, UX specs and interactive reference | P0-04,P1-07 | UX lead + design/spec/QA agents + Root review | DONE; DESIGN_READY_FOR_CODEX |
-| D-02 | Design implementation in existing client | D-01,P1-07 | Antigravity in separate worktree | OWNED_BY_ANTIGRAVITY; Codex does not concurrently edit UX/UI |
-| D-03 | Visual QA | D-02 | Antigravity | BLOCKED_BY_D-02 |
+| D-02 | Design implementation in existing client | D-01,P1-07 | Antigravity in separate worktree | DELIVERED_ON_DESIGN_BRANCH; integrated by I-02/I-03 |
+| D-03 | Actual integrated application visual QA | I-04 | Antigravity | READY_FOR_REVIEW; PENDING |
 | D-04 | Drive primary-media, trusted cost and durable approval contracts | D-01,C-03; approved external integration | Codex engineering lead | BACKUP_API_PREPARED; primary media index/cutover and cost/approval pending |
 | C-01 | Updated Supabase/Drive/Cloud+Local architecture without rewriting local stack | P1-08 | Root | DONE; no migration applied |
 | C-02 | Labelled Mock AI, bounded auto fallback and safe invalid-mode handling | C-01 | Luna agent + Root/QA | DONE; injected provider checks |
@@ -27,6 +90,13 @@
 | C-06 | Cloud AI executor and Local Worker target/lease architecture | C-04,C-05 | Sol High + Root | FOUNDATION_DONE; actual local pairing/media bridge H-05 |
 | C-07 | Combined regressions, typecheck/build/lint/PWA and independent security review | C-05,C-06 | Luna QA + Root | DONE;57 passed,1 POSIX skip Windows |
 | C-08 | Core/API/Drive/cloud operations handoff and Git checkpoint | C-07 | Root + Luna docs | DONE;2d112dc pushed/verified; docs/secrets/whitespace passed |
+| I-01 | Fetch/compare branches, inspect worktrees and preserve uncommitted work | C-08,D-02 | Root | DONE; main dfe2b2c, design cad482e |
+| I-02 | Dedicated integration/v1-ui-core worktree and safe design merge | I-01 | Root | DONE; no conflicts; core unchanged |
+| I-03 | Connect approved UI to actual APIs and fix functional/accessibility regressions | I-02 | Sol High UI + Root review | DONE; picker, saved choice, TH/EN, honest capabilities, focus and44px targets |
+| I-04 | Combined automated/browser/auth/offline/media verification | I-03 | Luna QA + Root | DONE;63 passes,1 POSIX skip;216 layout+6 login cases; real synthetic24-second MP4 |
+| I-05 | Evidence, normal commit/push and PR to main | I-04 | Root + Luna docs | DONE; fda96d6 pushed/remote verified; Draft PR#1 targets main; unmerged |
+| I-06 | Visual QA handoff for actual combined app | I-04 | Root | READY; external visual review PENDING |
+| I-07 | Final integration review before main merge | I-05,D-03 | Owner + reviewers | PENDING; main not merged |
 | H-03 | App Google OAuth configuration, owner consent and real private round trip | C-03 | Owner + Root | AWAITING_EXTERNAL |
 | H-04 | App-specific Supabase project/secret and hosted SQL/RLS/PostgREST verification | C-04 | Owner + Root | AWAITING_PROJECT_SELECTION; unrelated projects untouched |
 | H-05 | Approved data/auth/media migration, always-on host and Local Worker pairing | H-03,H-04,C-06 | Owner + Root | AWAITING_DEPENDENCIES_AND_MIGRATION_APPROVAL |
@@ -38,7 +108,13 @@ Verification evidence and the separate live/design/creative gates are recorded i
 
 ## Parallel ownership contract
 
-Current Backend/Core assignment: Root owns shared contracts, server/app/index/integrations,
+Current integration assignment: Root owns the dedicated integration branch, Git, progress and
+final acceptance. UI, QA and docs writers used separate worktrees with disjoint paths. Root
+reviewed their output before copying it to the candidate. Antigravity's original branch/worktree
+and UX specifications remain untouched; Antigravity owns actual-app visual QA. Core/shared/public/
+package paths stay identical to main. No concurrent writer edits occurred in the candidate.
+
+Historical Backend/Core assignment: Root owns shared contracts, server/app/index/integrations,
 cloud service composition, architecture/progress/config/Git and final schema acceptance.
 Core writer owns new server/storage files and Drive tests in core-drive; cloud writer owns
 new server/cloud adapters/runner, cloud tests and review-only SQL in core-cloud. Scoped Luna

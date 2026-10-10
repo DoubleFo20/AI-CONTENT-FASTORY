@@ -16,8 +16,8 @@ export class CloudAiWorker {
       repository, workerId: `cloud-${randomUUID()}`, target: 'cloud',
       execute: async (input, signal) => {
         if (signal.aborted) throw new AppError('INTERRUPTED', 409);
-        if (input.type === 'ideas') return { ideas: validateIdeas(await provider.generateIdeas(input.brief)) };
-        if (input.type === 'expand') return validateStoryPackage(await provider.expandStory(input.brief, input.selectedIdea));
+        if (input.type === 'ideas') return { ideas: validateIdeas(await provider.generateIdeas(input.brief, { signal })) };
+        if (input.type === 'expand') return validateStoryPackage(await provider.expandStory(input.brief, input.selectedIdea, { signal }));
         throw new AppError('CONFLICT', 409);
       },
     });

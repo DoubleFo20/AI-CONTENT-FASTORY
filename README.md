@@ -1,21 +1,24 @@
 # AI Content Factory
 
+Release Candidate: [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2) รอ Antigravity visual QA และ final integration review; main ยังไม่ merge.
+
 A TH/EN short-story production workspace with a working local lane and prepared cloud adapters. V1 moves from a brief to ten ideas,
 one selected story, bibles/scenes, English Google Flow prompts, imported clips and MP4.
-The running application is a functional validation shell. The reviewed studio design packet
-is now DESIGN_READY_FOR_CODEX; implementation visual QA and real Flow creative acceptance
-remain separate release gates.
+The release candidate retains Premium Cinematic V2 and connects the studio UI to the
+existing APIs. Antigravity visual QA of this combined application and real Flow creative
+acceptance remain separate release gates.
 
-Current backend checkpoint adds labelled Mock AI, private Drive/OAuth preparation and an
-opt-in Supabase cloud project/queue API. Antigravity owns UX/UI in a separate worktree.
+Current release adds labelled/persisted Mock AI, safe job recovery, production/editor settings,
+private audio/images and Drive project-media index with verified uploads/cache restore.
+The Supabase cloud project/queue API is opt-in and prepared; hosting/pairing are unverified.
 See [core integration handoff](docs/CORE_INTEGRATION_HANDOFF.md). Live OpenAI generation with the authorized
 existing key is blocked by insufficient_quota until the Owner resolves the API project's
 credits/access. This does not prevent setup, project management or local clip editing.
 
-The [design packet](ANTIGRAVITY_HANDOFF.md) includes an interactive synthetic reference.
-Run `node scripts/preview-design.mjs` and open http://127.0.0.1:3003 to inspect its15 screens.
-See [reference screenshots and measured QA](docs/design/README.md). The real application
-on port3001 retains its Phase1 visual shell until Antigravity's implementation is safely integrated.
+The [readiness matrix](docs/release/V1_READINESS.md) separates verified local behavior from
+Mock-only content and live integration gates. The [design packet](ANTIGRAVITY_HANDOFF.md)
+and [reference](docs/design/README.md) are visual references; they do not replace testing
+the actual integrated release.
 
 ## Requirements
 
@@ -26,6 +29,9 @@ on port3001 retains its Phase1 visual shell until Antigravity's implementation i
 - The creator's own Google Flow access for video generation. No Flow API/account automation.
 
 ## Run locally
+
+Existing Owner on this machine: use [the original-data launch guide](docs/release/LOCAL_OWNER_RUN.md)
+for candidate port3006. Default storage in a new worktree is not the existing Owner database.
 
 ```powershell
 npm.cmd install
@@ -63,6 +69,8 @@ npm.cmd run validate:secrets
 Automated tests inject AI responses and do not use live credits. Runtime/media test data
 is isolated under .tmp/. See PROJECT_STATUS.md for commands actually executed, results,
 live smoke checks and remaining limits; a command shown here is not proof it has passed.
+Tests run with one file at a time to keep FFmpeg/FFprobe fixtures within their deadlines
+on this shared Windows host. No runtime dependency or lockfile change is required.
 
 ## Configuration
 

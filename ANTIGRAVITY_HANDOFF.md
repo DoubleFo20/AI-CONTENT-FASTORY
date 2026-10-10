@@ -1,15 +1,27 @@
 # Antigravity handoff — AI Content Factory
 
-ANTIGRAVITY_STATUS: DESIGN_READY_FOR_CODEX
+ANTIGRAVITY_STATUS: QA_COMPLETED_PASS_FOR_RELEASE_3e9c1aa
+DESIGN_DELIVERY_STATUS: DESIGN_READY_FOR_CODEX
 PHASE_0A_STATUS: STABLE
 DESIGN_REFERENCE_QA: PASS_WITH_DOCUMENTED_LIMITS
-APP_IMPLEMENTATION_VISUAL_QA: PENDING
-Updated: 2026-10-09 (Asia/Bangkok)
+VISUAL_QA_STATUS: PASS
+APP_IMPLEMENTATION_VISUAL_QA: PASS_FOR_RELEASE_3e9c1aa
+RELEASE_PR: [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2)
+Updated: 2026-10-10 (Asia/Bangkok)
+
+The approved Premium Cinematic V2 and reviewed integration are now in `release/v1-real-world` with the latest
+backend/core main. Published QA evidence ddccf9c accepts release source3e9c1aa; review
+[visual QA handoff](docs/ANTIGRAVITY_VISUAL_QA_HANDOFF.md) and
+[Final Visual QA](docs/release/QA_VISUAL_REPORT.md). PR#2 still requires explicit Owner approval; Phase2 changes require separate review.
 
 The Phase 0 checkpoint was READY_FOR_DESIGN. The Owner then assigned the UX/UI lead
-role in this chat. Root reviewed and integrated isolated design/prototype/spec/QA agent
-output. This packet is now ready for Codex implementation; it does not claim an external
-Antigravity session received the packet or that the production app has adopted the design.
+role in this chat. Root reviewed the design/specification packet and has now integrated its
+committed implementation with current core in a dedicated candidate. The actual app is ready
+for visual review; no external Antigravity message or main merge is claimed.
+
+## Current scoped delta for final review
+
+Published Antigravity QA ddccf9c/PASS tested pre-patch release3e9c1aa. Latest RC source 0b35cea82d7e7867e11c653df0d6d790a6b66f19 adds only CSS8lines and App/Modal visible-opener focus fallback; backend remains unchanged. These correct unreadable three-column Drive help, default white dialog backing and mobile editor focus loss using approved tokens/native modal behavior. Engineering current-source evidence is recorded in the final review; do not attribute new-delta testing to Antigravity. Please inspect actual latest RC before final Owner approval/main merge. Phase2 source de462843a2847e850334730c004f8b1d8f01e0b6 needs separate provider/usage review in Draft PR#3.
 
 ## Completed design and implementation source
 

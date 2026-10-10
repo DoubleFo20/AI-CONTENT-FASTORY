@@ -22,7 +22,20 @@ separate design branch and never force push.
 The Owner explicitly chose to reuse the existing environment OPENAI_API_KEY.
 Keep it server-side; never write it into source, client bundles, logs, commits or messages.
 
+The Owner's later 2026-10-10 policy supersedes permission to call OpenAI: Gemini API
+Free Tier Flash-Lite is the primary text provider. Require private backend key and
+explicit Free Tier confirmation after the Owner verifies billing is disabled. Stop
+on quota exhaustion; no paid upgrade, automatic retry or provider fallback. OpenAI
+requests are prohibited until new explicit Owner approval, regardless of key/quota presence.
+
 ## Delivery and orchestration
+
+The Owner's later integration assignment authorizes combining the approved design and core
+on `integration/v1-ui-core`, based on latest main, with isolated integration writer worktrees.
+Fix and verify frontend API/navigation/state behavior there; preserve Antigravity's original
+worktree and branch. Push the reviewed integration branch and open a PR targeting main.
+Do not merge main before final integration review; return the actual integrated application
+to Antigravity for implementation visual QA.
 
 On 2026-10-09 the Owner assigned Codex backend/core/integration and Antigravity UX/UI
 in a separate worktree. Do not concurrently edit src/, public/, docs/design/ or approved

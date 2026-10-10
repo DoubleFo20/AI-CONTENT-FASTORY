@@ -1,5 +1,74 @@
 # Changelog
 
+## 2026-10-10 — Verified release and Phase2 checkpoint
+
+- แก้Drivehelp/dialogcontrast/mobileeditorfocusด้วยPremiumCinematicV2tokens;backend/schema/dependenciesคงเดิม.
+- RC regression144pass/1skip;Phase2203pass/1skip. Build/typecheck/full lintผ่าน;syntheticNodecoverageแยกจากliveproof.
+- ActualRC14targetedcasesและPhase2latest12dialogsผ่าน;ไฟล์modal-focus.jsรันจริง12/12ทั้งสองสาขา. PreviousPhase2matrix36/36ผูกsource86dbbb5.
+- MP4ใหม่4.021333s/122601bytesผ่านFFprobeและChrome playback + HTTP download/hash. Ownerdataread-onlybaselinepreserved.
+- เพิ่มGemini/Googlekeyguard;syntheticnegativeสองกรณี+cleanpositiveผ่าน ไม่มีvalueprinted. Independentread-onlyreviewยอมรับ.
+- PublishedAntigravityPASSผูกpre-patch3e9c1aa;currentdeltaส่งhandoffเพื่อreview ไม่claimretest.
+- usage ที่ตรวจจากบัญชีล่าสุดเหลือ 45% ในรอบ 5 ชั่วโมง และ 32% ในรอบสัปดาห์ ยังไม่ถึงเกณฑ์หยุด 7%; main/deployยังไม่อนุมัติ. PrivateGeminiFreeTier/OAuth/cloudgatesยังคงอยู่.
+
+## 2026-10-10 — Explicit resume and Phase2 preparation
+
+- Owner proceed resumed work only after authoritative remaining100%/41%; latest73%/37%, above stop threshold.
+- Restored Owner3006 on reviewed RC code with original data, Mock only and no OpenAI credential passed to its child; read-only preservation passed.
+- Prepared stacked Draft PR#3 targeting release/v1-real-world; PR#2/main remain unmerged.
+- Phase2 source86dbbb5 adds bounded one-request Gemini canary/resume, pure worker presence/reconnect and scoped Drive guide block layout; independent reviews accepted.
+- Full204 tests/203 passes/1 Windows POSIX skip; build/typechecks/lint passed. All Gemini/Drive/cloud tests are injected/prepared, not live acceptance.
+- Current external gates: private Gemini key + Free Tier confirmation; Drive OAuth/consent; approved Supabase/HTTPS host/schema. OpenAI requires new explicit approval.
+
+
+
+## 2026-10-10 — Usage safety checkpoint
+
+- STATUS: PAUSED_FOR_USAGE_RESET; authoritative remaining1% after checkpoint began at7%. No new features/agents or automatic resume.
+- Published Antigravity QA ddccf9c/PASS on source3e9c1aa integrated as evidence; RC ready for Owner approval, main/deploy unchanged.
+- Final regression 145total/144pass/0fail/1POSIXskip; Owner data preserved.
+- Exact NEXT_TASK and external credential/authorization gates recorded in HANDOFF; safe checkpoint only.
+
+## 2026-10-10 — Final release review
+
+- Reran release3e9c1aa regressions:145total/144pass/0fail/1WindowsPOSIXskip, typecheck/lint/build/PWA passed.
+- Verified fresh synthetic H.264/AAC MP4 with FFprobe and actual Chrome playback; preserved Owner database/media via read-only inspection.
+- Recorded Owner-reported Antigravity approval readiness separately from missing final evidence. PR2 remains draft/main unmerged; Phase2 work uses a separate branch.
+
+## 2026-10-10 — V1 Release Candidate
+
+- Published release checkpoint8434c84 normally with verified remote SHA; [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2) targets main and remains draft/unmerged. Final documentation commits preserve verified sourceb271855.
+
+- Final source b271855: full145tests/144passes/1Windows skip; build/lint/typechecks/PWA and48viewport cases passed.
+- Fixed recovered polling alert without hiding owner-command failure; retained reproducible browser regression. Restored tablet nav icons and mobile focused headings with scopedCSS.
+- Actual live OpenAI one-call diagnosis still429/insufficient_quota; no retry, key leak, billing or Owner data mutation.
+- Added current readiness/QA evidence, original-owner restart guide and actual-release Antigravity visual handoff.
+
+- Preserved Premium Cinematic V2 and React/Vite + Express/SQLite; no rewrite/migration/reset.
+- Diagnosed actual quota-failed Ideas history; backed up original data and recovered 10 labelled Mock concepts while preserving account/session/media/schema/history.
+- Added persisted explicit AI mode/provenance, job cancel/progress/deadlines/restart/manual retry and late completion fencing.
+- Added variable-duration scenes, continuity/reference-enriched English Flow prompts + Thai explanations, scene production state, verified owner-configured credit estimates and confirmed clip matching.
+- Added private audio/images and deterministic editor ordering,720p/1080p,cut/fade,normalization/music/SFX/subtitles,preview/export settings.
+- Added six-category Drive preparation, owner/project private media index, verified/idempotent transfers/progress/retry and missing-cache restore without local deletion; live OAuth gate remains.
+- Fixed request shutdown/late-Multer/filehandle races after independent review; added targeted auth/media/queue/storage regressions.
+- Corrected critical TH/EN labels/form validation and360px Drive instructions overflow; retained public-shell PWA privacy.
+- Verified synthetic 12-second MP4 playback/download and persistence/offline/auth; final combined checks and release publication are recorded in current status.
+
+
+## 2026-10-09 — Verified UI/core integration candidate
+
+- Integrated approved Antigravity studio UI in a dedicated branch from latest main; preserved
+  original worktrees, uncommitted writer work and backend/shared/public/package files.
+- Connected real project/editor/queue/selection/clip/export APIs and truthful capabilities.
+  Preserved TH/EN/PWA/Mock; Flow stays the manual primary engine and planned modules stay disabled.
+- Fixed modal keyboard focus/Escape/return and44px brand/project/review links. Added six
+  client API regressions and a guarded isolated Mock QA launcher.
+- Verified63 automated passes/1 POSIX Windows skip, typechecks/lint/build/PWA/mock HTTP smoke,
+  216 responsive+6 login cases, clipboard, offline/cache/auth and a real synthetic24-second MP4.
+- Recorded actual-app captures/evidence and Antigravity handoff; visual/final integration
+  review and live provider/storage/cloud acceptance remain pending.
+- Pushed fda96d6 normally to integration/v1-ui-core and created Draft PR#1 against main;
+  verified original main/design remote SHAs unchanged. No force push or merge occurred.
+
 ## 2026-10-09 — Parallel backend/core integration checkpoint
 
 - Preserved the existing React/Express/SQLite/auth/queue/FFmpeg stack and Antigravity's UX/UI ownership.

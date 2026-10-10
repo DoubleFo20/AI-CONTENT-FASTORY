@@ -10,9 +10,11 @@ import { AppError } from './errors.js';
 import { managedPath } from './media.js';
 import type { DriveIntegration } from './storage/types.js';
 import { DriveError } from './storage/types.js';
+import { RequestLifecycle } from './request-lifecycle.js';
 
 export interface IntegrationOptions {
   aiStatus?: () => AiRuntimeStatus;
+  setAiMode?: (mode: 'mock' | 'openai') => AiRuntimeStatus;
   drive?: DriveIntegration;
   cloudRepository?: CloudRepository | null;
 }
@@ -29,13 +31,14 @@ const driveUnavailable = { provider: 'google_drive', configured: false, connecte
 export function driveFailure(error: unknown): AppError {
   if (!(error instanceof DriveError)) return error instanceof AppError ? error : new AppError('INTERNAL_ERROR', 500);
   switch (error.code) {
-    case 'DRIVE_NOT_CONFIGURED': case 'DRIVE_NOT_CONNECTED': case 'DRIVE_AUTH_FAILED': case 'DRIVE_ACCESS_DENIED': return new AppError('CONFLICT', 409);
+    case 'DRIVE_NOT_CONFIGURED': case 'DRIVE_NOT_CONNECTED': case 'DRIVE_AUTH_FAILED': return new AppError(error.code, 409);
+    case 'DRIVE_ACCESS_DENIED': return new AppError(error.code, 403);
     case 'DRIVE_INVALID_INPUT': case 'DRIVE_STATE_INVALID': return new AppError('INVALID_INPUT');
     case 'DRIVE_NOT_FOUND': return new AppError('NOT_FOUND', 404);
     case 'DRIVE_RATE_LIMITED': return new AppError('RATE_LIMITED', 429);
-    case 'DRIVE_TIMEOUT': return new AppError('INTERRUPTED', 504);
+    case 'DRIVE_TIMEOUT': return new AppError(error.code, 504);
     case 'DRIVE_FILE_TOO_LARGE': return new AppError('FILE_TOO_LARGE', 413);
-    default: return new AppError('INTERNAL_ERROR', 502);
+    case 'DRIVE_INVALID_OUTPUT': case 'DRIVE_VAULT_FAILED': case 'DRIVE_REQUEST_FAILED': return new AppError(error.code, 502);
   }
 }
 async function driveAction<T>(operation: () => Promise<T>): Promise<T> {
@@ -44,23 +47,26 @@ async function driveAction<T>(operation: () => Promise<T>): Promise<T> {
 
 // Google redirects do not carry our SameSite=Strict cookie. The one-time OAuth state
 // binds the original session hash; the adapter validates it before and after exchange.
-export function registerDriveCallback(app: Express, store: Store, options: IntegrationOptions): void {
+export function registerDriveCallback(app: Express, store: Store, options: IntegrationOptions, lifecycle = new RequestLifecycle()): void {
   app.get('/api/integrations/drive/callback', async (req, res) => {
     res.set('Referrer-Policy', 'no-referrer');
     const input = CallbackSchema.parse(req.query);
-    if (!options.drive) throw new AppError('CONFLICT', 409);
-    await driveAction(() => options.drive!.callback(input, (ownerId, sessionHash) => store.session(sessionHash)?.user.id === ownerId));
+    if (!options.drive) throw new AppError('DRIVE_NOT_CONFIGURED', 409);
+    await lifecycle.race(driveAction(() => options.drive!.callback(input, (ownerId, sessionHash) =>
+      !lifecycle.signal.aborted && store.session(sessionHash)?.user.id === ownerId)));
+    lifecycle.guard();
     res.redirect(303, '/');
   });
 }
 
-export function registerIntegrations(app: Express, store: Store, auth: Auth, options: IntegrationOptions): void {
+export function registerIntegrations(app: Express, store: Store, auth: Auth, options: IntegrationOptions, lifecycle = new RequestLifecycle()): void {
   const repository = () => {
     if (!options.cloudRepository) throw new AppError('CONFLICT', 409);
     return options.cloudRepository;
   };
   const project = async (res: Response, projectId: string): Promise<CloudProjectSnapshot> => {
     const value = await repository().project(owner(res), projectId);
+    lifecycle.guard();
     if (!value) throw new AppError('NOT_FOUND', 404);
     return value;
   };
@@ -91,7 +97,7 @@ export function registerIntegrations(app: Express, store: Store, auth: Auth, opt
     EmptySchema.parse(req.body ?? {});
     const token = auth.token(req);
     if (!token) throw new AppError('AUTH_REQUIRED', 401);
-    if (!options.drive) throw new AppError('CONFLICT', 409);
+    if (!options.drive) throw new AppError('DRIVE_NOT_CONFIGURED', 409);
     const sessionHash = createHash('sha256').update(token).digest('hex');
     res.json(await driveAction(() => options.drive!.begin(owner(res), sessionHash)));
   });
@@ -106,16 +112,18 @@ export function registerIntegrations(app: Express, store: Store, auth: Auth, opt
     const ownerId = owner(res);
     const media = store.media(ownerId, input.mediaId, input.kind);
     const filePath = managedPath(store.dataDir, input.kind, media.filename);
-    if (!options.drive) throw new AppError('CONFLICT', 409);
+    if (!options.drive) throw new AppError('DRIVE_NOT_CONFIGURED', 409);
     const extension = extname(media.filename).toLowerCase();
     const mimeType = extension === '.webm' ? 'video/webm' : extension === '.mov' ? 'video/quicktime' : 'video/mp4';
-    const file = await exclusiveStorage(ownerId, () => options.drive!.upload(ownerId, { filePath, name: `${input.kind}-${input.mediaId}${extension}`, mimeType }));
+    const file = await lifecycle.race(exclusiveStorage(ownerId, () => options.drive!.upload(ownerId, { filePath, name: `${input.kind}-${input.mediaId}${extension}`, mimeType, signal: lifecycle.signal })));
+    lifecycle.guard();
     res.status(201).json({ file });
   });
   app.get('/api/integrations/drive/files/:id', async (req, res) => {
     const fileId = z.string().regex(/^[a-zA-Z0-9_-]{1,256}$/).parse(req.params.id);
-    if (!options.drive) throw new AppError('CONFLICT', 409);
-    const bytes = await exclusiveStorage(owner(res), () => options.drive!.download(owner(res), fileId));
+    if (!options.drive) throw new AppError('DRIVE_NOT_CONFIGURED', 409);
+    const bytes = await lifecycle.race(exclusiveStorage(owner(res), () => options.drive!.download(owner(res), fileId, { signal: lifecycle.signal })));
+    lifecycle.guard();
     res.attachment(`drive-media-${fileId}`).type('application/octet-stream').send(Buffer.from(bytes));
   });
   app.get('/api/cloud/projects', async (_req, res) => res.json({ projects: await repository().projects(owner(res)) }));
@@ -135,6 +143,7 @@ export function registerIntegrations(app: Express, store: Store, auth: Auth, opt
     if (snapshot.ideas.length !== 10) throw new AppError('IDEAS_REQUIRED', 409);
     if (!snapshot.ideas.some(idea => idea.id === input.ideaId)) throw new AppError('INVALID_SELECTION');
     const selected = { ...snapshot, selectedIdeaId: input.ideaId, revision: snapshot.revision + 1 };
+    lifecycle.guard();
     await repository().saveProject(owner(res), selected);
     res.json({ project: selected });
   });
@@ -155,6 +164,7 @@ export function registerIntegrations(app: Express, store: Store, auth: Auth, opt
     const snapshot = await project(res, uuid(req.params.id));
     const jobId = uuid(req.params.jobId);
     const failed = (await repository().jobs(owner(res), snapshot.id)).find(job => job.id === jobId);
+    lifecycle.guard();
     if (!failed) throw new AppError('NOT_FOUND', 404);
     if (failed.status !== 'failed') throw new AppError('CONFLICT', 409);
     if (failed.type === 'export') throw new AppError('CLIPS_REQUIRED', 409);

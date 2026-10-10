@@ -1,9 +1,103 @@
 # Handoff
 
-STATUS: CORE_CHECKPOINT_COMPLETE_EXTERNAL_GATES
-ANTIGRAVITY_STATUS: DESIGN_READY_FOR_CODEX
+STATUS: LOCAL_V1_READY_FOR_OWNER_APPROVAL
+RELEASE_READINESS: READY_FOR_OWNER_APPROVAL
+ANTIGRAVITY_STATUS: PUBLISHED_PASS_FOR_PRE_PATCH_RELEASE_3e9c1aa
+Updated: 2026-10-10 (Asia/Bangkok)
+
+Antigravity เผยแพร่ QA commit ddccf9c/PASS ที่ source3e9c1aa แล้ว หลักฐานสองไฟล์ถูกเก็บใน release. RC sourceปัจจุบัน 0b35cea82d7e7867e11c653df0d6d790a6b66f19 เพิ่มเฉพาะ Drive help แบบ block, dialog สีตาม Premium Cinematic V2 และ focus กลับปุ่มเมนูมือถือ; backend baseline b271855 คงเดิม ไม่มีการย้าย schema. Published PASS เดิมไม่ได้ครอบคลุม UI delta นี้ จึงเตรียม handoff ให้ตรวจ actual latest RC ก่อนอนุมัติขั้นสุดท้าย.
+
+ผลจริง RC: Node regression 145 total/144 passed/0 failed/1 POSIX permission skip บน Windows ที่de59fe6 (50.786s); หลัง frontend focus fixผ่าน build/สาม typechecks และ lint. Browserปัจจุบัน0b35ceaผ่าน12 dialog cases + Preview360 TH/ENสอง cases. Regressionไฟล์ modal-focus.js รันจริงแยกทั้งRC/Phase2 ผ่าน12/12ต่อสาขา รวม contrast, Tab, Escape/Close และ focus กลับ opener. MP4สังเคราะห์ใหม่ผ่าน FFprobe: H.264720×1280 + AAC48k stereo,4.021333s/122601bytes; Chrome เล่นได้; แยกตรวจ HTTP download ด้วยขนาด/hash ตรงต้นฉบับ. ไม่ใช่ Flow live generation.
+
+Owner app3006ใช้ original storage และ Mock; client rebuildแล้ว, API/backendเดิมคงอยู่. Read-only baselineยืนยันบัญชี/โปรเจกต์/ประวัติ4jobs/10cachedMockideas/0activejobsและสื่อเดิมยังอยู่ ไม่มี database writes/reset/migration. Child processไม่ได้รับ OpenAI credential; keyในenvironmentที่Ownerเก็บถาวรไม่ถูกแก้.
+
+Phase2 source de462843a2847e850334730c004f8b1d8f01e0b6 อยู่ใน stacked Draft PR#3 target release/v1-real-world. Gemini Free Tier gate/provider selection/usage, Drive verifier และ one-request Gemini canaryพร้อม injected tests; pure worker presence/reconnectพร้อม10tests ยังไม่มี authenticated broker/durable CAS/active waiting UI. Full regressionที่86dbbb5:204total/203passed/0failed/1POSIXskip,91.243s; หลังแก้ frontendผ่านbuild/typechecks/lintและbrowsertargeted. Matrix36/36ที่86dbbb5 + latest12dialogที่de46284ผ่าน, TH/EN×360/768/1440 ไม่มีpage overflow. RuntimeขณะQAล้างcredentialsและใช้ฐานข้อมูลสังเคราะห์ ไม่มี live provider calls.
+
+Geminiเป็นprimarytextเฉพาะ Flash-Lite; ต้อง private backend keyและ ACF_GEMINI_FREE_TIER_CONFIRMED=true หลังOwnerตรวจว่าAPIprojectใช้FreeTier/Billingdisabled. Quotaหมดหยุด ไม่มีpaidupgrade/retry/providerfallback. OpenAIต้องapprovalใหม่ก่อนเรียก. Google Flowเป็นprimaryvideoแบบOwner-operated; Driveต้องOAuth/consentและliveupload/download/approvedrestoreก่อนcutover. Cloudยังต้องapprovedSupabase/HTTPShost/schema, owner-scopedclaim, frozenprovider/mediareceiptและdisconnected-deviceproof.
+
+usage ที่ตรวจจากบัญชีล่าสุดเหลือ 45% ในรอบ 5 ชั่วโมง และ 32% ในรอบสัปดาห์ ยังไม่ถึงเกณฑ์หยุด 7%; checkpointหยุด1%ก่อนหน้าคงเป็นประวัติ. ไม่มีschedulerหรือautomaticresume. ไม่มีmerge main/deploy/billing/publish.
+
+NEXT_TASK: Ownerreview PR#2และPR#3; ตรวจUIdeltaจริงผ่านAntigravityhandoff. เมื่อprivateGeminiKeyและFreeTierconfirmationพร้อมให้รันPhase2runtimeแยก→canary10ideasหนึ่งครั้ง; resumeด้วยproject-idเดิม ไม่regenerate และOwnerเลือกหนึ่งก่อนexpand. หลังDriveOAuthconsentตรวจsmall-fileroundtrip/checksumและrestoreที่Ownerอนุมัติ; cloudต้องapprovalก่อนเปิดใช้งาน.
+
+ดู [ผล final review](docs/release/FINAL_REVIEW.md), [readiness matrix](docs/release/V1_READINESS.md), [published QA](docs/release/QA_VISUAL_REPORT.md). Localauth/persistence/editor/MP4 VERIFIED; storytext MOCK_ONLY; Gemini/Drive/cloudfoundation PREPARED; notebook-offline/fullautomation NOT_IMPLEMENTED.
+
+## Historical checkpoints — superseded by the current status above
+
+STATUS: LOCAL_V1_RC_VERIFIED_EXTERNAL_GATES_PENDING
+ANTIGRAVITY_STATUS: OWNER_REPORTED_READY_EVIDENCE_PENDING
+Updated: 2026-10-10 (Asia/Bangkok)
+
+FINAL_REVIEW: ทดสอบซ้ำที่ release `3e9c1aa` ใน `.worktrees/v1-final-qa`: npm test145/144pass/0fail/1POSIXskip188.264s; typecheck/lint/build/PWA ผ่าน; synthetic MP44.021333s/720×1280/AAC48k เล่นใน Chrome advanced=true/error=null. Original Owner storage ตรวจ read-only ไม่มีการเขียน. [Final review](docs/release/FINAL_REVIEW.md) supersedes test timing เดิมด้านล่าง. Owner รายงาน Antigravity ready แต่ยังไม่มี final evidence/source SHA ให้ตรวจรับ; PR2 ยัง Draft/main unmerged. งาน provider/Drive Phase2 แยกใน `.worktrees/phase2-real-integrations` ไม่เปลี่ยน Owner runtime3006.
+
+Source checkpoint `b271855dfa535bf4a1b18afef5917f8b1280c925` on `release/v1-real-world` in `D:\xampp\htdocs\Ai-content-factory\.worktrees\release-v1`. Preserve root main dfe2b2c and every other dirty worktree. Reviewed integration cfa6554/Premium V2 be29e0a are retained. Draft PR#1 stays unmerged. RELEASE_PR: [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2).
+
+Actual Owner storage: `D:\xampp\htdocs\Ai-content-factory-premium-v2\storage`. Original root storage is empty and must not be substituted. Latest Owner proceed authorized the pending original-storage recovery. Verified consistent backup `.tmp/owner-backup-j6CByS/factory.sqlite` + ignored BACKUP.json. Recovered 10 labelled Mock concepts/completed100 without changing account/session/media/schema or old3 quota failures; no Owner selection/expansion. Recovery and live-probe scripts/evidence remain private/ignored.
+
+Owner compiled app runs at `http://127.0.0.1:3006`, hidden PID14516, loopback only, original database and persistedMock. Keep it running for Owner; normal existing-account login, no shipped credentials. Verify current process/listener before operations using ignored `.tmp/release-owner-process.json`; PID is a checkpoint observation, not permanent identity. [Local Owner run guide](docs/release/LOCAL_OWNER_RUN.md) records exact storage-preserving launch environment. No public dev API or Codex background scheduler.
+
+Latest source keeps SQLite/auth/FFmpeg and adds owner/project private sidecars, safe serial queue deadlines/cancel/restart/late fences, explicit AI provenance, manual Flow plan/reference/credit estimate/matching, real media/editor and private Drive reservations/checksum transfers/cache restore. HTTP lifecycle drains actual handlers, aborts probes/OAuth admissions, guards post-await writes and cleans late Multer files. Independent high-risk review accepted. Socket drain10s and handler drain5s are separate; noncompliant late callbacks stay fenced and clean when they return. No populated schema application.
+
+Full final npm.cmd test145/144pass/0fail/1WindowsPOSIXskip (79.02s), lint/build/3typechecks/PWA/docs/source secrets passed. Browser workflow/relogin/restart/auth/private401/no-store/offlinepublicshell, 48 layout cases plus targeted tablet/mobile/read-error retakes passed. Real synthetic MP4 H264720×1280/AAC48k/12.021029s/250501bytes played/downloaded; selected9 remains authoritative, order2→1→3/audio/image/settings persist. Mock results are not live-provider evidence. Source-only last change after full suite was the two scoped CSS repairs; build/PWA and actual-app target retakes passed afterward.
+
+One live OpenAI diagnostic call (2026-10-10T08:21:09Z) returned429/insufficient_quota, mappedAI_QUOTA_EXCEEDED, no retry/billing change/Owner data touched. No successful live generation. Credentials absent for Gemini/Google OAuth/Supabase. Use [external setup/gates](docs/release/EXTERNAL_INTEGRATIONS.md) and [readiness](docs/release/V1_READINESS.md); do not re-send a paid canary until quota/access is resolved.
+
+Synthetic QA fixture `.tmp/release-qa-7thsIz` is QA_ONLY-marked; resume with ACF_QA_DATA_DIR only inside ignored release.tmp. It has normal synthetic owner auth and cached Mock text/real synthetic media; no default credentials shipped. Use fresh `scripts/release-qa-server.mjs` on free3005 for visual QA, not the original Owner DB. Browser regression `tests/browser/network-recovery.js` runs separately through Playwright CLI on completed QA preview and refuses Owner port3006.
+
+NEXT_TASK: Antigravity actual-app visual QA → final integration review; Owner confirms OpenAI quota correction, provisions OAuth via private environment and authorizes consent; Owner selects host/Supabase and approves schema/cutover before deployment or pairing work. Then run live10shortideas→ownerselectedexpansion in a new isolated project, Drive small-file checksum roundtrip, and deployed/mobile/notebook-disconnected proof in dependency order. Keep cached Mock concepts and original data. Paired Local Worker/WAITING_FOR_WORKER bridge, direct Flow/Meta automation remain NOT_IMPLEMENTED.
+
+No force push, main merge, publishing, public deployment, billing purchase or data reset occurred. Candidate 8434c847f447cc6719bbf7c8e37224b0daf7e840 ถูก push ปกติและตรวจ remote SHA ตรงแล้ว; [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2) เป็น OPEN/DRAFT เป้าหมาย main. GitHub ไม่มี configured PR status checks ณ เวลาตรวจ; ผลทดสอบในเอกสารรัน local จริง. New external input or invocation is needed for blocked work; do not claim automatic resumption.
+
+## บันทึก checkpoint ก่อนหน้า (historical)
+
+
+STATUS: INTEGRATION_ENGINEERING_VERIFIED_REVIEW_PENDING
+ANTIGRAVITY_STATUS: READY_FOR_IMPLEMENTATION_VISUAL_QA
 Updated: 2026-10-09 (Asia/Bangkok)
-Current phase: Phase 2 core integrations; Antigravity implementation visual QA pending.
+Current phase: V1 UI/core integration; actual-app visual QA and final integration review pending.
+
+## Current integration handoff
+
+Branch `integration/v1-ui-core`, worktree
+`D:\xampp\htdocs\Ai-content-factory\.worktrees\integration-v1-ui-core`.
+Inputs: main dfe2b2c89599fec84472840b4934e5e1604a0805 and design
+cad482e906f2dcc6db172c085196643a75f70c4f; merged without conflicts. Original branches/worktrees
+and pre-existing uncommitted writer work remain preserved. Do not merge main before final review.
+
+[Draft PR#1](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/1) is open against main.
+Verified implementation commit fda96d6377eb9895ab606bfdb01f758adb623e1c was pushed normally;
+main/design remote SHAs remain the inputs above. Later publication-record commits change docs
+only. No configured GitHub PR checks are reported; the checks below were executed locally.
+
+Approved studio UI now connects to cookie/CSRF auth, persisted projects, selected-only Story
+Factory, actual queue, private clip import, local FFmpeg/preview/MP4, TH/EN/content modes and
+the existing PWA. The real editor project picker replaces its placeholder; planned modules
+remain disabled. Native Modal retains keyboard focus. Backend/shared/public/schema/packages/
+lockfile/environment were preserved. No migration or real service/publishing action occurred.
+
+Verification:64 automated unit/integration tests,63 passed,0 failed,1 POSIX Windows skip;
+lint/build/all3 typechecks/PWA/compiled mock smoke passed. Chrome154 CLI exercised216 layout
+cases plus6 auth layouts. Saved idea10 prevailed over unsaved9; English clipboard read-back
+passed in3 modes. Actual imports/queue/preview/play/download and ffprobe24.021333-second
+H.2641080×1080+AAC MP4 passed. Offline/cache/reconnect, failed/valid login, logout401 files and
+missing-session clearing passed. Only public preferences and nine shell assets persisted.
+Final staged hygiene passed:27 document/link checks,109-file secret/ignore check and whitespace.
+See [integration review](docs/INTEGRATION_REVIEW.md) and [QA results](docs/integration/QA_RESULTS.json).
+
+For Antigravity follow [actual-app visual QA handoff](docs/ANTIGRAVITY_VISUAL_QA_HANDOFF.md).
+From the candidate run `npm.cmd run build`, then `node scripts/integration-qa-server.mjs`.
+Each launch creates a fresh ignored synthetic database, strips live provider credentials and
+forces Mock. Choose synthetic credentials yourself. Port3004 currently holds Root's completed
+fixture; for a fresh review use PowerShell `$env:ACF_QA_PORT='3005'` before launching.
+Fresh3005 startup/health/first-owner checks passed and that process was stopped. Never reuse
+the real owner database; original3001/3003 apps were untouched. Stop a review server after use.
+Record actual `git rev-parse HEAD` with visual findings.
+
+Antigravity visual QA and final integration review remain PENDING. The design branch's earlier
+PASS does not accept this combined app. Live provider/storage/cloud/worker, billing, OAuth and
+approved migration remain separate gates. Main merge, force push and publishing have not occurred.
+No external Antigravity message has been sent.
+
+## Prior backend/core handoff (historical)
 
 Stable decisions and Owner authorization are in MASTER_CONTEXT.md and AGENTS.md.
 ANTIGRAVITY_HANDOFF.md contains the reviewed UX/UI design packet and Codex implementation order.

@@ -1,11 +1,12 @@
 import { createHash, randomBytes } from 'node:crypto';
 import { z } from 'zod';
-import { AUTHORIZATION_ENDPOINT, DRIVE_SCOPE, TOKEN_ENDPOINT, DriveError, googleRequest, validateOwner,
+import { AUTHORIZATION_ENDPOINT, DRIVE_SCOPE, TOKEN_ENDPOINT, DriveError, googleRequest, checkDriveSignal, validateOwner,
   type DriveOptions, type OAuthCallback, type SessionValidator, type TokenSet } from './types.js';
 import { TokenVault } from './vault.js';
 
 export interface OAuthConfiguration { clientId: string; clientSecret: string; redirectUri: string }
 interface PendingState { ownerId: string; sessionHash: string; verifier: string; expiresAt: number }
+interface RefreshRequest { promise: Promise<string>; abort: AbortController; waiters: number; settled: boolean }
 const TokenResponseSchema = z.object({
   access_token: z.string().min(1).max(8192).refine(value => !/[\r\n]/.test(value)),
   token_type: z.literal('Bearer'), expires_in: z.number().int().min(1).max(86400),
@@ -31,7 +32,7 @@ export function oauthConfiguration(options: DriveOptions): OAuthConfiguration | 
 export class DriveOAuth {
   private states = new Map<string, PendingState>();
   private locks = new Map<string, Promise<unknown>>();
-  private refreshes = new Map<string, Promise<string>>();
+  private refreshes = new Map<string, RefreshRequest>();
   private now: () => number;
   private fetchImpl: typeof fetch;
   private timeoutMs: number;
@@ -85,8 +86,8 @@ export class DriveOAuth {
       await this.vault.write(state.ownerId, tokens);
     });
   }
-  private async tokenRequest(body: URLSearchParams): Promise<z.infer<typeof TokenResponseSchema>> {
-    const bytes = await googleRequest(this.fetchImpl, TOKEN_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body }, 32 * 1024, this.timeoutMs, 'oauth');
+  private async tokenRequest(body: URLSearchParams, signal?: AbortSignal): Promise<z.infer<typeof TokenResponseSchema>> {
+    const bytes = await googleRequest(this.fetchImpl, TOKEN_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body, signal }, 32 * 1024, this.timeoutMs, 'oauth');
     try { return TokenResponseSchema.parse(JSON.parse(Buffer.from(bytes).toString('utf8'))); }
     catch { throw new DriveError('DRIVE_INVALID_OUTPUT'); }
   }
@@ -107,28 +108,50 @@ export class DriveOAuth {
     if (!tokens || tokens.reauthorizationRequired) return false;
     return tokens.expiresAt > this.now() + 30_000 || Boolean(tokens.refreshToken && (!tokens.refreshExpiresAt || tokens.refreshExpiresAt > this.now()));
   }
-  async accessToken(ownerId: string): Promise<string> {
+  async accessToken(ownerId: string, options?: { signal?: AbortSignal }): Promise<string> {
     validateOwner(ownerId);
-    const pending = this.refreshes.get(ownerId);
-    if (pending) return pending;
-    const operation = this.serialized(ownerId, async () => {
-      const previous = await this.vault.read(ownerId);
-      if (!previous) throw new DriveError('DRIVE_NOT_CONNECTED');
-      if (previous.reauthorizationRequired) throw new DriveError('DRIVE_AUTH_FAILED');
-      if (previous.expiresAt > this.now() + 30_000) return previous.accessToken;
-      if (!previous.refreshToken || (previous.refreshExpiresAt && previous.refreshExpiresAt <= this.now())) throw new DriveError('DRIVE_AUTH_FAILED');
-      let result: z.infer<typeof TokenResponseSchema>;
-      try { result = await this.tokenRequest(new URLSearchParams({ client_id: this.config.clientId, client_secret: this.config.clientSecret, refresh_token: previous.refreshToken, grant_type: 'refresh_token' })); }
-      catch (error) {
-        if (error instanceof DriveError && error.code === 'DRIVE_AUTH_FAILED') await this.vault.write(ownerId, { ...previous, reauthorizationRequired: true });
-        throw error;
-      }
-      const tokens = this.tokens(result, previous, true);
-      await this.vault.write(ownerId, tokens);
-      return tokens.accessToken;
+    const signal = options?.signal; checkDriveSignal(signal);
+    let pending = this.refreshes.get(ownerId);
+    if (!pending) {
+      const abort = new AbortController();
+      const operation = this.serialized(ownerId, async () => {
+        checkDriveSignal(abort.signal);
+        const previous = await this.vault.read(ownerId);
+        checkDriveSignal(abort.signal);
+        if (!previous) throw new DriveError('DRIVE_NOT_CONNECTED');
+        if (previous.reauthorizationRequired) throw new DriveError('DRIVE_AUTH_FAILED');
+        if (previous.expiresAt > this.now() + 30_000) return previous.accessToken;
+        if (!previous.refreshToken || (previous.refreshExpiresAt && previous.refreshExpiresAt <= this.now())) throw new DriveError('DRIVE_AUTH_FAILED');
+        let result: z.infer<typeof TokenResponseSchema>;
+        try { result = await this.tokenRequest(new URLSearchParams({ client_id: this.config.clientId, client_secret: this.config.clientSecret, refresh_token: previous.refreshToken, grant_type: 'refresh_token' }), abort.signal); }
+        catch (error) {
+          if (error instanceof DriveError && error.code === 'DRIVE_AUTH_FAILED') await this.vault.write(ownerId, { ...previous, reauthorizationRequired: true });
+          throw error;
+        }
+        checkDriveSignal(abort.signal);
+        const tokens = this.tokens(result, previous, true);
+        await this.vault.write(ownerId, tokens);
+        return tokens.accessToken;
+      });
+      pending = { promise: operation, abort, waiters: 0, settled: false };
+      this.refreshes.set(ownerId, pending);
+      const current = pending;
+      const cleanup = () => { current.settled = true; if (this.refreshes.get(ownerId) === current) this.refreshes.delete(ownerId); };
+      void operation.then(cleanup, cleanup);
+    }
+    checkDriveSignal(pending.abort.signal);
+    const current = pending; current.waiters++;
+    let cancel!: () => void;
+    const aborted = new Promise<never>((_resolve, reject) => {
+      cancel = () => reject(new DriveError('DRIVE_REQUEST_FAILED'));
+      signal?.addEventListener('abort', cancel, { once: true });
+      if (signal?.aborted) cancel();
     });
-    this.refreshes.set(ownerId, operation);
-    try { return await operation; }
-    finally { if (this.refreshes.get(ownerId) === operation) this.refreshes.delete(ownerId); }
+    try { return await Promise.race([current.promise, aborted]); }
+    finally {
+      signal?.removeEventListener('abort', cancel);
+      // Cancelling one subscriber must not abort another concurrent caller's refresh.
+      if (--current.waiters === 0 && !current.settled) current.abort.abort();
+    }
   }
 }

@@ -25,8 +25,14 @@ export const TokenSetSchema = z.strictObject({
   reauthorizationRequired: z.boolean().optional(),
 });
 export type TokenSet = z.infer<typeof TokenSetSchema>;
-export interface DriveMedia { id: string; name: string; mimeType: string; size: number; createdTime?: string }
-export type DriveUpload = { name: string; mimeType: string; parentId?: string } &
+export interface DriveMedia { id: string; name: string; mimeType: string; size: number; createdTime?: string; md5Checksum?: string; verified?: boolean }
+export interface DriveProjectFolders {
+  rootId: string;
+  categories: { story: string; productReview: string; kidsToy: string; investment: string; sharedAssets: string; archives: string };
+  projectFolderId: string;
+}
+export type DriveUpload = { name: string; mimeType: string; parentId?: string;
+  project?: { id: string; name: string }; idempotencyKey?: string; signal?: AbortSignal; onProgress?: (bytes: number, total: number) => void } &
   ({ bytes: Uint8Array; filePath?: never } | { filePath: string; bytes?: never });
 export type SessionValidator = (ownerId: string, sessionHash: string) => boolean | Promise<boolean>;
 export interface OAuthCallback { state: string; code?: string; error?: string }
@@ -35,7 +41,8 @@ export interface DriveIntegration {
   begin(ownerId: string, sessionHash: string): Promise<{ authorizationUrl: string }>;
   callback(input: OAuthCallback, validateSessionHash: SessionValidator): Promise<void>;
   upload(ownerId: string, input: DriveUpload): Promise<DriveMedia>;
-  download(ownerId: string, fileId: string): Promise<Uint8Array>;
+  download(ownerId: string, fileId: string, options?: { signal?: AbortSignal }): Promise<Uint8Array>;
+  ensureProjectFolders?(ownerId: string, projectId: string, projectName: string, options?: { signal?: AbortSignal }): Promise<DriveProjectFolders>;
 }
 export interface DriveOptions {
   privateDir: string; clientId?: string; clientSecret?: string; redirectUri?: string;
@@ -72,6 +79,11 @@ function permittedEndpoint(url: string, method: string): boolean {
     if (parsed.username || parsed.password || parsed.hash) return false;
     if (url === TOKEN_ENDPOINT) return method === 'POST';
     if (parsed.origin !== 'https://www.googleapis.com') return false;
+    if (parsed.pathname === '/drive/v3/files/generateIds') return method === 'GET' &&
+      [...parsed.searchParams.keys()].every(key => ['count', 'space', 'type'].includes(key));
+    if (parsed.pathname === '/drive/v3/files') return method === 'GET' ?
+      [...parsed.searchParams.keys()].every(key => ['q', 'fields', 'pageSize', 'spaces', 'corpora'].includes(key)) :
+      method === 'POST' && [...parsed.searchParams.keys()].every(key => key === 'fields');
     if (/^\/drive\/v3\/files\/[a-zA-Z0-9_-]{1,256}$/.test(parsed.pathname)) return method === 'GET';
     if (parsed.pathname !== '/upload/drive/v3/files') return false;
     if (method === 'PUT') { validateUploadSession(url); return true; }
@@ -83,16 +95,25 @@ function permittedEndpoint(url: string, method: string): boolean {
 // All callers supply fixed Google endpoints. Redirects and upstream error bodies are rejected.
 // The timeout covers both connection and bounded streamed response consumption.
 export interface GoogleResponse { status: number; headers: Headers; bytes: Uint8Array }
+export function checkDriveSignal(signal?: AbortSignal) { if (signal?.aborted) throw new DriveError('DRIVE_REQUEST_FAILED'); }
 export async function googleResponse(fetchImpl: typeof fetch, url: string, init: RequestInit,
   maxBytes: number, timeoutMs: number, kind: 'oauth' | 'drive', allowedStatuses: number[] = []): Promise<GoogleResponse> {
   if (!permittedEndpoint(url, init.method ?? 'GET')) throw new DriveError('DRIVE_INVALID_INPUT');
+  checkDriveSignal(init.signal ?? undefined);
   const abort = new AbortController();
+  let cancelExternal!: () => void;
+  const external = new Promise<never>((_resolve, reject) => {
+    cancelExternal = () => { abort.abort(); reject(new DriveError('DRIVE_REQUEST_FAILED')); };
+    init.signal?.addEventListener('abort', cancelExternal, { once: true });
+  });
   let timer: ReturnType<typeof setTimeout> | undefined;
   const deadline = new Promise<never>((_resolve, reject) => {
     timer = setTimeout(() => { abort.abort(); reject(new DriveError('DRIVE_TIMEOUT')); }, timeoutMs);
   });
   const operation = async () => {
+    checkDriveSignal(init.signal ?? undefined);
     const response = await fetchImpl(url, { ...init, redirect: 'manual', signal: abort.signal });
+    if (abort.signal.aborted) { void response.body?.cancel().catch(() => undefined); throw new DriveError(init.signal?.aborted ? 'DRIVE_REQUEST_FAILED' : 'DRIVE_TIMEOUT'); }
     if (response.redirected || (response.url && response.url !== url) || (!response.ok && !allowedStatuses.includes(response.status))) {
       void response.body?.cancel().catch(() => undefined);
       const code = response.status === 429 ? 'DRIVE_RATE_LIMITED' : response.status === 404 ? 'DRIVE_NOT_FOUND' :
@@ -112,6 +133,7 @@ export async function googleResponse(fetchImpl: typeof fetch, url: string, init:
     try {
       while (true) {
         const part = await reader.read();
+        if (abort.signal.aborted) throw new DriveError(init.signal?.aborted ? 'DRIVE_REQUEST_FAILED' : 'DRIVE_TIMEOUT');
         if (part.done) break;
         size += part.value.byteLength;
         if (size > maxBytes) { void reader.cancel().catch(() => undefined); throw new DriveError('DRIVE_FILE_TOO_LARGE'); }
@@ -122,11 +144,11 @@ export async function googleResponse(fetchImpl: typeof fetch, url: string, init:
     for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
     return { status: response.status, headers: response.headers, bytes };
   };
-  try { return await Promise.race([operation(), deadline]); }
+  try { return await Promise.race([operation(), deadline, external]); }
   catch (error) {
     if (error instanceof DriveError) throw error;
     throw new DriveError(abort.signal.aborted ? 'DRIVE_TIMEOUT' : 'DRIVE_REQUEST_FAILED');
-  } finally { clearTimeout(timer); }
+  } finally { clearTimeout(timer); init.signal?.removeEventListener('abort', cancelExternal); }
 }
 
 export async function googleRequest(fetchImpl: typeof fetch, url: string, init: RequestInit,

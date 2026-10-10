@@ -9,6 +9,9 @@ import { AppError } from './errors.js';
 type Row = Record<string, string | number | null>;
 const now = () => new Date().toISOString();
 const parse = <T>(value: string | number | null): T => JSON.parse(String(value)) as T;
+type GenerationSource = 'mock' | 'openai';
+type StoredInput = ProjectInput & { _generation?: ProjectSummary['generation'] };
+export interface StoreOptions { resumeQueuedMock?: boolean }
 
 function openApplicationLock(path: string): number {
   const create = () => {
@@ -43,7 +46,7 @@ export class Store {
   private lockPath: string;
   private closed = false;
 
-  constructor(dataDir: string) {
+  constructor(dataDir: string, options: StoreOptions = {}) {
     this.dataDir = resolve(dataDir);
     mkdirSync(this.dataDir, { recursive: true });
     this.lockPath = join(this.dataDir, 'application.lock');
@@ -67,6 +70,8 @@ export class Store {
       }
       this.db.exec('PRAGMA journal_mode = WAL');
       this.db.prepare("UPDATE jobs SET status='failed', error_code='INTERRUPTED', updated_at=? WHERE status='running'").run(now());
+      // Pending paid requests require explicit retry after a restart. Mock replay is opt-in.
+      if (!options.resumeQueuedMock) this.db.prepare("UPDATE jobs SET status='failed', error_code='INTERRUPTED', updated_at=? WHERE status='queued' AND type IN ('ideas','expand')").run(now());
     } catch (error) {
       this.db?.close();
       closeSync(this.lockFd);
@@ -117,7 +122,16 @@ export class Store {
   revokeSession(tokenHash: string) { this.db.prepare('DELETE FROM sessions WHERE token_hash=?').run(tokenHash); }
 
   private summary(row: Row): ProjectSummary {
-    return { ...parse<ProjectInput>(row.input_json), id: String(row.id), status: row.status as ProjectSummary['status'], createdAt: String(row.created_at), updatedAt: String(row.updated_at) };
+    const input = parse<StoredInput>(row.input_json);
+    const generation: NonNullable<ProjectSummary['generation']> = {};
+    for (const key of ['ideas', 'expansion'] as const) {
+      const source = input._generation?.[key];
+      if (source === 'mock' || source === 'openai') generation[key] = source;
+    }
+    return { name: input.name, brief: input.brief, genre: input.genre, audience: input.audience, aspectRatio: input.aspectRatio,
+      ...(input.targetDurationSeconds !== undefined ? { targetDurationSeconds: input.targetDurationSeconds } : {}),
+      ...(Object.keys(generation).length ? { generation } : {}),
+      id: String(row.id), status: row.status as ProjectSummary['status'], createdAt: String(row.created_at), updatedAt: String(row.updated_at) };
   }
   listProjects(ownerId: string): ProjectSummary[] {
     return (this.db.prepare('SELECT * FROM projects WHERE owner_id=? ORDER BY updated_at DESC,rowid DESC').all(ownerId) as Row[]).map(row => this.summary(row));
@@ -151,7 +165,7 @@ export class Store {
     });
   }
   prerequisites(project: Project, type: JobType) {
-    if (type === 'ideas' && (project.selectedIdeaId || project.package)) throw new AppError('CONFLICT', 409);
+    if (type === 'ideas' && (project.ideas.length === 10 || project.selectedIdeaId || project.package)) throw new AppError('CONFLICT', 409);
     if (type === 'expand') {
       if (project.package) throw new AppError('CONFLICT', 409);
       if (!project.selectedIdeaId || !project.ideas.some(idea => idea.id === project.selectedIdeaId)) throw new AppError('SELECTION_REQUIRED', 409);
@@ -186,28 +200,57 @@ export class Store {
     if (job.status !== 'failed') throw new AppError('CONFLICT', 409);
     return this.enqueue(ownerId, job.projectId, job.type);
   }
-  claim(): { job: Job; ownerId: string } | null {
+  cancel(ownerId: string, id: string): Job {
     return this.transaction(() => {
-      const row = this.db.prepare("SELECT j.*,p.input_json FROM jobs j JOIN projects p ON p.id=j.project_id WHERE j.status='queued' ORDER BY j.created_at,j.rowid LIMIT 1").get() as Row | undefined;
+      const job = this.job(ownerId, id);
+      if (job.status === 'failed' && job.errorCode === 'JOB_CANCELLED') return job;
+      if (job.status !== 'queued' && job.status !== 'running') throw new AppError('CONFLICT', 409);
+      this.db.prepare("UPDATE jobs SET status='failed',error_code='JOB_CANCELLED',updated_at=? WHERE id=? AND owner_id=? AND status IN ('queued','running')").run(now(), id, ownerId);
+      return this.job(ownerId, id);
+    });
+  }
+  updateProgress(id: string, progress: number): boolean {
+    if (!Number.isInteger(progress) || progress < 0 || progress >= 100) throw new AppError('INVALID_INPUT');
+    return this.db.prepare("UPDATE jobs SET progress=?,updated_at=? WHERE id=? AND status='running' AND progress<?").run(progress, now(), id, progress).changes > 0;
+  }
+  claim(excludedProjectIds: readonly string[] = []): { job: Job; ownerId: string } | null {
+    return this.transaction(() => {
+      const exclusion = excludedProjectIds.length ? ` AND j.project_id NOT IN (${excludedProjectIds.map(() => '?').join(',')})` : '';
+      const row = this.db.prepare(`SELECT j.*,p.input_json FROM jobs j JOIN projects p ON p.id=j.project_id WHERE j.status='queued'${exclusion} ORDER BY j.created_at,j.rowid LIMIT 1`).get(...excludedProjectIds) as Row | undefined;
       if (!row) return null;
       this.db.prepare("UPDATE jobs SET status='running',progress=5,updated_at=? WHERE id=? AND status='queued'").run(now(), String(row.id));
       return { job: this.job(String(row.owner_id), String(row.id)), ownerId: String(row.owner_id) };
     });
   }
-  completeIdeas(job: Job, ideas: Idea[]) {
-    this.transaction(() => {
+  completeIdeas(job: Job, ideas: Idea[], source?: GenerationSource): boolean {
+    return this.transaction(() => {
+      if (!this.completeJob(job)) return false;
       this.db.prepare("UPDATE projects SET ideas_json=?,status='ideas_ready',updated_at=? WHERE id=?").run(JSON.stringify(ideas), now(), job.projectId);
-      this.completeJob(job.id);
+      this.recordGeneration(job.projectId, 'ideas', source);
+      return true;
     });
   }
-  completePackage(job: Job, story: StoryPackage) {
-    this.transaction(() => {
+  completePackage(job: Job, story: StoryPackage, source?: GenerationSource): boolean {
+    return this.transaction(() => {
+      if (!this.completeJob(job)) return false;
       this.db.prepare("UPDATE projects SET package_json=?,status='expanded',updated_at=? WHERE id=?").run(JSON.stringify(story), now(), job.projectId);
-      this.completeJob(job.id);
+      this.recordGeneration(job.projectId, 'expansion', source);
+      return true;
     });
   }
-  private completeJob(id: string) { this.db.prepare("UPDATE jobs SET status='completed',progress=100,error_code=NULL,updated_at=? WHERE id=?").run(now(), id); }
-  failJob(id: string, code: ErrorCode) { this.db.prepare("UPDATE jobs SET status='failed',error_code=?,updated_at=? WHERE id=?").run(code, now(), id); }
+  private recordGeneration(projectId: string, key: 'ideas' | 'expansion', source?: GenerationSource) {
+    if (!source) return;
+    const row = this.db.prepare('SELECT input_json FROM projects WHERE id=?').get(projectId) as Row;
+    const input = parse<StoredInput>(row.input_json);
+    input._generation = { ...input._generation, [key]: source };
+    this.db.prepare('UPDATE projects SET input_json=? WHERE id=?').run(JSON.stringify(input), projectId);
+  }
+  private completeJob(job: Job): boolean {
+    return this.db.prepare("UPDATE jobs SET status='completed',progress=100,error_code=NULL,updated_at=? WHERE id=? AND project_id=? AND type=? AND status='running'").run(now(), job.id, job.projectId, job.type).changes > 0;
+  }
+  failJob(id: string, code: ErrorCode): boolean {
+    return this.db.prepare("UPDATE jobs SET status='failed',error_code=?,updated_at=? WHERE id=? AND status IN ('queued','running')").run(code, now(), id).changes > 0;
+  }
   private clip(row: Row): Clip {
     return { id: String(row.id), projectId: String(row.project_id), sceneId: String(row.scene_id), originalName: String(row.original_name), durationSeconds: Number(row.duration_seconds), createdAt: String(row.created_at) };
   }
@@ -229,16 +272,17 @@ export class Store {
       return this.clip(this.db.prepare('SELECT * FROM clips WHERE id=?').get(id) as Row);
     });
   }
-  completeExport(job: Job, filename: string, ratio: ExportArtifact['aspectRatio']) {
-    this.transaction(() => {
+  completeExport(job: Job, filename: string, ratio: ExportArtifact['aspectRatio']): boolean {
+    return this.transaction(() => {
+      if (!this.completeJob(job)) return false;
       this.db.prepare('INSERT INTO exports VALUES(?,?,?,?,?)').run(randomUUID(), job.projectId, filename, ratio, now());
       this.db.prepare("UPDATE projects SET status='exported',updated_at=? WHERE id=?").run(now(), job.projectId);
-      this.completeJob(job.id);
+      return true;
     });
   }
-  media(ownerId: string, id: string, kind: 'clips' | 'exports'): { filename: string; originalName?: string } {
+  media(ownerId: string, id: string, kind: 'clips' | 'exports'): { filename: string; projectId: string; originalName?: string; sceneId?: string } {
     const row = this.db.prepare(`SELECT m.* FROM ${kind} m JOIN projects p ON p.id=m.project_id WHERE m.id=? AND p.owner_id=?`).get(id, ownerId) as Row | undefined;
     if (!row) throw new AppError('NOT_FOUND', 404);
-    return { filename: String(row.internal_filename), ...(kind === 'clips' ? { originalName: String(row.original_name) } : {}) };
+    return { filename: String(row.internal_filename), projectId: String(row.project_id), ...(kind === 'clips' ? { originalName: String(row.original_name), sceneId: String(row.scene_id) } : {}) };
   }
 }

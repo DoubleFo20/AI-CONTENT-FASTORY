@@ -39,7 +39,7 @@ function outputSchema(schema: z.ZodType): Record<string, unknown> {
 function briefData(input: ProjectInput): ProjectInput {
   // Structural subtypes (such as Project) may carry alternative ideas/private metadata.
   // Keep the provider boundary restricted to the public five-field brief.
-  return { name: input.name, brief: input.brief, genre: input.genre, audience: input.audience, aspectRatio: input.aspectRatio };
+  return { name: input.name, brief: input.brief, genre: input.genre, audience: input.audience, aspectRatio: input.aspectRatio, ...(input.targetDurationSeconds !== undefined ? { targetDurationSeconds: input.targetDurationSeconds } : {}) };
 }
 
 export function createOpenAiProvider(options: ProviderOptions = {}): AiProvider {
@@ -49,14 +49,14 @@ export function createOpenAiProvider(options: ProviderOptions = {}): AiProvider 
   const requestFetch = options.fetchImpl ?? fetch;
   const timeoutMs = options.timeoutMs ?? 120_000;
 
-  async function request(name: string, schema: z.ZodType, prompt: string, model: string, budget: number): Promise<unknown> {
+  async function request(name: string, schema: z.ZodType, prompt: string, model: string, budget: number, signal?: AbortSignal): Promise<unknown> {
     if (!apiKey?.trim()) throw new AiProviderError('AI_NOT_CONFIGURED');
     let response: Response;
     try {
       response = await requestFetch('https://api.openai.com/v1/responses', {
         method: 'POST',
         headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-        signal: AbortSignal.timeout(timeoutMs),
+        signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(timeoutMs)]) : AbortSignal.timeout(timeoutMs),
         body: JSON.stringify({
           model, store: false, reasoning: { effort: 'low' }, max_output_tokens: budget,
           input: [
@@ -100,15 +100,15 @@ export function createOpenAiProvider(options: ProviderOptions = {}): AiProvider 
   }
 
   return {
-    async generateIdeas(input: ProjectInput): Promise<Idea[]> {
+    async generateIdeas(input: ProjectInput, options?: { signal?: AbortSignal }): Promise<Idea[]> {
       const prompt = `Generate exactly 10 distinct SHORT story ideas for this brief. Do not expand any story or write bibles/scenes yet. Use ids idea_1 through idea_10. Each title, logline and hook must contain Thai and English; keep loglines to 1-2 concise sentences. Brief data: ${JSON.stringify(briefData(input))}`;
-      const result = await request('story_ideas', IdeasResultSchema, prompt, ideasModel, 6000);
+      const result = await request('story_ideas', IdeasResultSchema, prompt, ideasModel, 6000, options?.signal);
       try { return validateIdeas(IdeasResultSchema.parse(result).ideas); }
       catch { throw new AiProviderError('AI_INVALID_OUTPUT'); }
     },
-    async expandStory(input: ProjectInput, selectedIdea: Idea): Promise<StoryPackage> {
-      const prompt = `Expand ONLY the single selected idea provided below. Produce a complete short story with a premise, beginning, arc and ending in storyBible; stable character and location bibles; continuity rules; and 3-8 ordered scenes (4-20 seconds each, total <=180 seconds). Use unique ASCII ids character_1, location_1, scene_1 etc. Each scene's characterIds and locationId must reference the bibles; scene order starts at 1 without gaps. Every scene needs an explanation in Thai and a cinematic English Google Flow prompt with character appearances, setting, action, camera, lighting and continuity; bilingual narration. Character names are stable proper names. Do not expand or mention alternative ideas. Brief data: ${JSON.stringify(briefData(input))}. Selected idea data: ${JSON.stringify(selectedIdea)}`;
-      const result = await request('selected_story_package', StoryPackageSchema, prompt, expandModel, 12000);
+    async expandStory(input: ProjectInput, selectedIdea: Idea, options?: { signal?: AbortSignal }): Promise<StoryPackage> {
+      const prompt = `Expand ONLY the single selected idea provided below. Produce a complete short story with a premise, beginning, arc and ending in storyBible; stable character and location bibles; continuity rules; and 3-12 ordered scenes (4-20 seconds each, total <=180 seconds). ${input.targetDurationSeconds ? `Target a total story duration of ${input.targetDurationSeconds} seconds.` : ''} Use unique ASCII ids character_1, location_1, scene_1 etc. Each scene's characterIds and locationId must reference the bibles; scene order starts at 1 without gaps. Every scene needs an explanation in Thai and a cinematic English Google Flow prompt with character appearances, setting, action, camera, lighting and continuity; bilingual narration. Character names are stable proper names. Do not expand or mention alternative ideas. Brief data: ${JSON.stringify(briefData(input))}. Selected idea data: ${JSON.stringify(selectedIdea)}`;
+      const result = await request('selected_story_package', StoryPackageSchema, prompt, expandModel, 12000, options?.signal);
       try { return validateStoryPackage(result); }
       catch { throw new AiProviderError('AI_INVALID_OUTPUT'); }
     },

@@ -1,6 +1,38 @@
 # System architecture
 
-STATUS: STABLE_FOR_PHASE_0A
+STATUS: LOCAL_V1_RELEASE_CANDIDATE
+
+## Local release amendment — 2026-10-10
+
+The active release keeps React/Vite + Express/SQLite and Premium Cinematic V2. No FastAPI
+rewrite or populated database migration is attempted. SQLite remains authoritative for
+owner/session/project/clip/export/job records. Additive private per-project JSON sidecars
+store scene production/reference settings, owner-verified Flow rates, editor/audio/image
+catalogs and a Drive media index. API serializers omit filenames, tokens and private paths.
+
+Text jobs use persisted explicit Mock/Real mode and result provenance. Startup interrupts
+pending paid jobs; manual retry/cancel, deadlines, monotonic progress and fenced completion
+preserve previous valid content. Only the saved idea is expanded. Variable duration is12–180s.
+Flow stays an assisted primary engine; prompts carry scene/ref/character/location continuity,
+TH explanations and EN generation instructions. No Flow API or automatic credit spending.
+
+FFmpeg uses saved ordering/ratio/quality/audio/subtitle settings and is a deterministic
+local worker task. Drive preparation/uploads are owner-requested, with six private categories,
+durable preallocated IDs, verified MD5/SHA256/size and explicit retry. Missing local cache
+can be restored only from an owned verified index entry; existing local files are not deleted
+or overwritten. Drive-primary activation still requires live OAuth/round-trip verification.
+
+Shutdown stops API admission, aborts probes/background work, tracks actual handler promises
+and guards all resumed SQLite/catalog commits. Late Multer completion cleans its own file.
+HTTP drain10s and handler drain5s are separate bounded phases; a noncompliant late callback
+stays fenced and performs cleanup when it returns. Production Supabase RPCs have their own
+deadline; no unbounded custom repository is promised a fixed total shutdown duration.
+
+Cloud adapters/SQL are prepared and opt-in, with no hosted deployment or approved migration.
+Paired worker enrollment/heartbeat/media bridge and cloud WAITING_FOR_WORKER rendering are
+not implemented. The PWA persists public shell/preferences only; notebook-offline mobile
+cloud operation remains blocked on hosting/database/pairing and actual end-to-end proof.
+See [readiness matrix](release/V1_READINESS.md) and [API contract](API_CONTRACT.md).
 
 ## Engineering amendment — 2026-10-09
 
@@ -28,10 +60,12 @@ chosen project, owner-approved schema application, verified persistence/session 
 Drive OAuth authorization, HTTPS/origins and worker credential enrollment. Cloud deployment
 and billing are external gates, not simulated acceptance.
 
-Provider policy: retain OpenAI structured output and one paid request. Mock mode produces
-visible TH/EN fixtures. Explicit auto mode may fall back only on missing configuration or
-quota/access failure, never refusals, malformed output, timeouts or ambiguous paid requests.
-Mock titles/explanations/prompts identify sample provenance even in the unchanged frontend.
+Current Owner runtime uses Mock on reviewed RC code; no OpenAI credential is passed to
+its process. Latest Owner policy chooses Gemini Free Tier Flash-Lite as primary text,
+prepared on the separate Phase2 branch with backend key and Free Tier confirmation gates.
+The RC itself has no Gemini adapter. OpenAI is a historical backup and requests remain
+prohibited until new explicit approval. Existing Mock content stays labelled and cached;
+no silent live claim, automatic paid retry, paid upgrade or provider fallback is authorized.
 Google Flow remains user-operated primary video generation; Meta AI supporting work is
 manual/unconfigured until an official supported integration is selected. Remotion is an
 optional future editing adapter; the verified FFmpeg implementation stays active.
