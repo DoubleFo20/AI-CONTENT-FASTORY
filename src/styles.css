@@ -233,6 +233,7 @@ progress::-moz-progress-bar { background: var(--accent); }
   .topbar { padding: var(--space-2) var(--space-3); }
   .top-actions button { padding: var(--space-2); min-height: 36px; }
   main { padding: var(--space-4) var(--space-3); }
+  section[id^="workspace-"] { scroll-margin-top: 128px; }
 }
 
 @media (min-width: 768px) and (max-width: 1199px) {
@@ -243,7 +244,7 @@ progress::-moz-progress-bar { background: var(--accent); }
     padding: var(--space-3) var(--space-2); display: flex; flex-direction: column; align-items: center;
   }
   .sidebar a { width: 100%; justify-content: center; padding: var(--space-3) var(--space-2); }
-  .sidebar span { display: none; /* Icon only on rail */ }
+  .sidebar .nav-label { display: none; /* Keep the existing icons visible on the rail. */ }
   .sidebar-section { display: none; }
   main { padding: var(--space-5); }
   .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
