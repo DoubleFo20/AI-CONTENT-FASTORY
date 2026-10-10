@@ -2,6 +2,11 @@
 
 STATUS: LOCAL_V1_RELEASE_CANDIDATE
 
+The Owner's current app remains on the reviewed RC with original SQLite/media and
+explicit Mock text; that RC has no Gemini adapter and receives no OpenAI credential.
+This branch prepares Gemini and worker helpers separately. It does not activate them
+in the Owner app, migrate data or deploy a cloud service.
+
 ## Local release amendment — 2026-10-10
 
 The active release keeps React/Vite + Express/SQLite and Premium Cinematic V2. No FastAPI
