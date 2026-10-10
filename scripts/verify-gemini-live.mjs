@@ -3,12 +3,17 @@ import { pathToFileURL } from 'node:url';
 import { performance } from 'node:perf_hooks';
 
 // Explicit operator command only. Importing this module is inert. No API key is read.
+// Operator prerequisites: ACF_OPENAI_REQUESTS_APPROVED=false and no concurrent
+// provider-mode changes. Capabilities do not expose approval or freeze a job's
+// provider/model; repeated preflight is observation, not an atomic mode lock.
 const model = 'gemini-3.5-flash-lite';
 const marker = /^ACF GEMINI FREE TIER CANARY [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const pipelineMarker = /^ACF GEMINI FREE TIER PIPELINE CANARY [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const uuid = value => typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
 const codes = new Set(['INVALID_CONFIGURATION', 'FREE_TIER_CONFIRMATION_REQUIRED', 'AUTH_FAILED', 'GEMINI_NOT_READY',
   'INVALID_RESPONSE', 'REQUEST_FAILED', 'REQUEST_TIMEOUT', 'POLL_TIMEOUT', 'CANARY_STATE_UNSAFE', 'IDEAS_REQUEST_AMBIGUOUS',
-  'CANARY_CREATE_AMBIGUOUS', 'IDEAS_INVALID', 'JOB_FAILED', 'QUOTA_STOP', 'ACCESS_STOP', 'LOGOUT_FAILED']);
+  'CANARY_CREATE_AMBIGUOUS', 'IDEAS_INVALID', 'PACKAGE_INVALID', 'SELECTION_REQUEST_AMBIGUOUS', 'EXPAND_REQUEST_AMBIGUOUS',
+  'JOB_FAILED', 'QUOTA_STOP', 'ACCESS_STOP', 'LOGOUT_FAILED']);
 export class GeminiVerificationError extends Error {
   constructor(code) { super(codes.has(code) ? code : 'REQUEST_FAILED'); this.name = 'GeminiVerificationError'; }
 }
@@ -31,7 +36,8 @@ function settings(options) {
   const origin = validateOrigin(options.origin, options.approvedHttpsOrigin);
   if (typeof options.username !== 'string' || !/^[a-zA-Z0-9_.-]{3,32}$/.test(options.username) ||
       typeof options.password !== 'string' || options.password.length < 12 || options.password.length > 128 ||
-      options.projectId !== undefined && !uuid(options.projectId)) fail('INVALID_CONFIGURATION');
+      options.projectId !== undefined && !uuid(options.projectId) ||
+      options.expandFirstIdea !== undefined && typeof options.expandFirstIdea !== 'boolean') fail('INVALID_CONFIGURATION');
   const requestTimeoutMs = options.requestTimeoutMs ?? 15000;
   const pollTimeoutMs = options.pollTimeoutMs ?? 180000;
   const pollIntervalMs = options.pollIntervalMs ?? 1000;
@@ -68,19 +74,19 @@ function providerFailure(code) {
   return 'JOB_FAILED';
 }
 
-function validateProject(project, projectId) {
-  if (project?.id !== projectId || typeof project.name !== 'string' || !marker.test(project.name) || !Array.isArray(project.ideas)) fail('CANARY_STATE_UNSAFE');
+function validateProject(project, projectId, pipeline = false) {
+  if (project?.id !== projectId || typeof project.name !== 'string' || !(pipeline ? pipelineMarker : marker).test(project.name) || !Array.isArray(project.ideas)) fail('CANARY_STATE_UNSAFE');
 }
 
-function validateJob(job, projectId, projectName, jobId) {
-  if (!uuid(job?.id) || jobId && job.id !== jobId || job.projectId !== projectId || job.projectName !== projectName || job.type !== 'ideas' ||
+function validateJob(job, projectId, projectName, jobId, type = 'ideas') {
+  if (!uuid(job?.id) || jobId && job.id !== jobId || job.projectId !== projectId || job.projectName !== projectName || job.type !== type ||
       !['queued', 'running', 'completed', 'failed'].includes(job.status)) fail('CANARY_STATE_UNSAFE');
   if (job.status === 'failed') fail(providerFailure(job.errorCode));
   if (job.errorCode !== null) fail('CANARY_STATE_UNSAFE');
   return job;
 }
 
-function verifyIdeas(project, jobId) {
+function verifyIdeas(project, jobId, expansionJobId) {
   if (project.generation?.ideas !== 'gemini' || project.ideas.length !== 10) fail('IDEAS_INVALID');
   const ids = new Set(); const titles = { th: new Set(), en: new Set() };
   for (const idea of project.ideas) {
@@ -104,11 +110,15 @@ function verifyIdeas(project, jobId) {
   }
   if (project.aiUsage !== undefined && !Array.isArray(project.aiUsage)) fail('IDEAS_INVALID');
   const receipts = project.aiUsage ?? [];
-  if (receipts.length > 1 || receipts.some(receipt => receipt?.operation !== 'ideas' || receipt.provider !== 'gemini' ||
-      receipt.model !== model || !uuid(receipt.jobId) || receipt.jobId !== jobId)) fail('IDEAS_INVALID');
+  if (receipts.length > (expansionJobId ? 2 : 1) || new Set(receipts.map(receipt => receipt?.operation)).size !== receipts.length ||
+      receipts.some(receipt => !['ideas', ...(expansionJobId ? ['expand'] : [])].includes(receipt?.operation) || receipt.provider !== 'gemini' ||
+      receipt.model !== model || !uuid(receipt.jobId) || receipt.jobId !== (receipt.operation === 'ideas' ? jobId : expansionJobId))) fail('IDEAS_INVALID');
   if (['model', 'ideasModel'].some(key => project[key] !== undefined && project[key] !== model)) fail('IDEAS_INVALID');
   // Usage is optional; absent or unverified counts are never guessed or logged.
-  const usage = receipts.length === 1 ? receipts[0] : null;
+  return verifiedUsage(receipts.find(receipt => receipt.operation === 'ideas'));
+}
+
+function verifiedUsage(usage) {
   const counts = ['inputTokens', 'outputTokens', 'totalTokens'];
   if (usage && counts.every(key => Number.isSafeInteger(usage[key]) && usage[key] >= 0) &&
       usage.totalTokens >= usage.inputTokens + usage.outputTokens &&
@@ -119,15 +129,53 @@ function verifyIdeas(project, jobId) {
   return undefined;
 }
 
-/** One ideas enqueue at most. Never selects, expands, changes mode, retries or deletes. */
+function verifyPackage(project) {
+  if (project.generation?.expansion !== 'gemini' || project.selectedIdeaId !== project.ideas[0]?.id ||
+      project.expansionModel !== undefined && project.expansionModel !== model) fail('PACKAGE_INVALID');
+  const exact = (value, keys) => value && typeof value === 'object' && Object.keys(value).sort().join(',') === keys.split(',').sort().join(',');
+  const text = (value, limit, locale) => typeof value === 'string' && value.trim() && value.length <= limit &&
+    !/MOCK sample data|ข้อมูลตัวอย่าง MOCK/i.test(value) &&
+    (locale === 'th' ? /[\u0e00-\u0e7f]/.test(value) : /[a-z]/i.test(value) && !/[\u0e00-\u0e7f]/.test(value));
+  const bilingual = value => exact(value, 'th,en') && text(value.th, 8000, 'th') && text(value.en, 8000, 'en');
+  const id = value => typeof value === 'string' && value.trim() && value.length <= 64 && !/^mock_/i.test(value);
+  const list = (value, max) => Array.isArray(value) && value.length >= 1 && value.length <= max;
+  const pack = project.package;
+  if (!exact(pack, 'storyBible,characters,locations,continuityRules,scenes') || !bilingual(pack.storyBible) ||
+      !list(pack.characters, 6) || !list(pack.locations, 6) || !list(pack.continuityRules, 12) || !pack.continuityRules.every(bilingual) ||
+      !list(pack.scenes, 12) || pack.scenes.length < 3) fail('PACKAGE_INVALID');
+  for (const character of pack.characters) {
+    if (!exact(character, 'id,name,visualDescriptionEn,background') || !id(character.id) ||
+        typeof character.name !== 'string' || !character.name.trim() || character.name.length > 120 || /MOCK sample data|ข้อมูลตัวอย่าง MOCK/i.test(character.name) ||
+        !text(character.visualDescriptionEn, 2000, 'en') || !bilingual(character.background)) fail('PACKAGE_INVALID');
+  }
+  for (const location of pack.locations) {
+    if (!exact(location, 'id,name,visualDescriptionEn,description') || !id(location.id) || !bilingual(location.name) ||
+        !text(location.visualDescriptionEn, 2000, 'en') || !bilingual(location.description)) fail('PACKAGE_INVALID');
+  }
+  const characters = new Set(pack.characters.map(item => item.id)); const locations = new Set(pack.locations.map(item => item.id));
+  if (characters.size !== pack.characters.length || locations.size !== pack.locations.length ||
+      new Set(pack.scenes.map(scene => scene?.id)).size !== pack.scenes.length) fail('PACKAGE_INVALID');
+  let duration = 0;
+  for (const [index, scene] of pack.scenes.entries()) {
+    if (!exact(scene, 'id,order,title,durationSeconds,explanationTh,flowPromptEn,narration,characterIds,locationId') ||
+        !id(scene.id) || scene.order !== index + 1 || !Number.isInteger(scene.durationSeconds) || scene.durationSeconds < 4 || scene.durationSeconds > 20 ||
+        !bilingual(scene.title) || !text(scene.explanationTh, 4000, 'th') || !text(scene.flowPromptEn, 4000, 'en') || !bilingual(scene.narration) ||
+        !list(scene.characterIds, 6) || scene.characterIds.some(value => !characters.has(value)) || !locations.has(scene.locationId)) fail('PACKAGE_INVALID');
+    duration += scene.durationSeconds;
+  }
+  if (duration > 180) fail('PACKAGE_INVALID');
+  return pack.scenes.length;
+}
+
+/** Default: one ideas enqueue. New pipeline opt-in: one selected-only expansion. Every resume is observation-only. */
 export async function verifyGeminiLive(options) {
   const config = settings(options);
   const fetchImpl = options.fetchImpl ?? fetch;
   const log = options.log ?? (() => {});
   const clock = options.now ?? (() => performance.now());
   const sleep = options.sleep ?? (ms => new Promise(resolve => setTimeout(resolve, ms)));
-  let cookie; let csrf; let projectId; let jobId; let result; let failure;
-  const checkpoint = () => ({ ...(projectId ? { projectId } : {}), ...(jobId ? { jobId } : {}) });
+  let cookie; let csrf; let projectId; let jobId; let expansionJobId; let result; let failure;
+  const checkpoint = () => ({ ...(projectId ? { projectId } : {}), ...(jobId ? { jobId } : {}), ...(expansionJobId ? { expansionJobId } : {}) });
   const emit = (status, details = {}) => { try { log({ status, ...checkpoint(), ...details }); } catch { /* Observers never alter the run. */ } };
   const request = async (path, { method = 'GET', body, status = 200, timeoutMs = config.requestTimeoutMs } = {}) => {
     const controller = new AbortController(); let timer;
@@ -161,8 +209,8 @@ export async function verifyGeminiLive(options) {
     catch (error) { throw error instanceof GeminiVerificationError ? error : new GeminiVerificationError('REQUEST_FAILED'); }
     finally { clearTimeout(timer); }
   };
-  const preflight = async () => {
-    const { capabilities } = await request('/integrations/capabilities');
+  const preflight = async (timeoutMs = config.requestTimeoutMs) => {
+    const { capabilities } = await request('/integrations/capabilities', { timeoutMs });
     const ai = capabilities?.ai;
     if (ai?.mode !== 'gemini' || ai.active !== 'gemini' || ai.fallbackReason !== null ||
         ai.modeChangeLocked !== undefined && ai.modeChangeLocked !== false || capabilities?.structuredData?.configured !== false ||
@@ -179,77 +227,201 @@ export async function verifyGeminiLive(options) {
     if (uuid(matching[0]?.id)) jobId = matching[0].id;
     return validateJob(matching[0], projectId, name, expectedId);
   };
-  try {
-    const auth = await request('/auth/login', { method: 'POST', body: { username: options.username, password: options.password } });
-    if (!cookie || typeof auth?.csrfToken !== 'string' || !/^[a-f0-9]{64}$/.test(auth.csrfToken)) fail('INVALID_RESPONSE');
-    csrf = auth.csrfToken;
-    await preflight(); emit('GEMINI_READY');
-    let project; let job;
+  const runPipeline = async () => {
+    let name; let initial;
     if (options.projectId) {
       projectId = options.projectId;
-      ({ project } = await request(`/projects/${projectId}`));
-      validateProject(project, projectId);
-      job = await jobs(project.name);
-      jobId = job.id; emit('CANARY_RESUMED');
-      if (job.status === 'completed') {
-        const usage = verifyIdeas(project, jobId);
-        result = { verified: true, status: 'CACHED', projectId, jobId, ideasCount: 10, ...(usage ? { usage } : {}) };
-      } else if (project.ideas.length || project.selectedIdeaId !== null || project.package !== null) fail('CANARY_STATE_UNSAFE');
+      ({ project: initial } = await request(`/projects/${projectId}`));
+      validateProject(initial, projectId, true); name = initial.name; emit('CANARY_RESUMED');
     } else {
-      const name = `ACF GEMINI FREE TIER CANARY ${randomUUID()}`;
+      name = `ACF GEMINI FREE TIER PIPELINE CANARY ${randomUUID()}`;
       let created;
       try {
         created = await request('/projects', { method: 'POST', status: 201, body: { name,
-          brief: 'Generate ten distinct short fictional stories about a Thai neighborhood solving small everyday problems. Provide Thai and English titles, short loglines and hooks only. Do not expand or select any story.',
+          brief: 'Generate ten distinct short fictional stories about a Thai neighborhood solving small everyday problems. Provide Thai and English titles, short loglines and hooks. Only the first selected idea may later become one story with Thai scene explanations and English Google Flow prompts.',
           genre: 'Everyday fiction', audience: 'Operator acceptance', aspectRatio: '9:16' } });
       } catch { fail('CANARY_CREATE_AMBIGUOUS'); }
       if (uuid(created?.project?.id)) projectId = created.project.id;
       if (!projectId) fail('CANARY_CREATE_AMBIGUOUS');
-      emit('CANARY_CREATED');
-      project = created.project; validateProject(project, projectId);
-      if (project.name !== name || project.ideas.length || project.selectedIdeaId !== null || project.package !== null) fail('CANARY_STATE_UNSAFE');
-      // Recheck immediately before the only enqueue; never mutate provider mode.
-      await preflight();
+      initial = created.project; validateProject(initial, projectId, true);
+      if (initial.name !== name || initial.ideas.length || initial.selectedIdeaId !== null || initial.package !== null ||
+          initial.aiUsage?.length || initial.generation?.ideas || initial.generation?.expansion) fail('CANARY_STATE_UNSAFE');
+      emit('CANARY_CREATED'); await preflight();
       try {
         const queued = await request(`/projects/${projectId}/ideas`, { method: 'POST', status: 202, body: {} });
         if (uuid(queued?.job?.id)) jobId = queued.job.id;
-        job = validateJob(queued?.job, projectId, project.name, jobId);
+        validateJob(queued?.job, projectId, name, jobId);
       } catch (error) {
         if (error instanceof GeminiVerificationError && ['QUOTA_STOP', 'ACCESS_STOP', 'JOB_FAILED'].includes(error.message)) throw error;
         fail('IDEAS_REQUEST_AMBIGUOUS');
       }
       emit('IDEAS_ENQUEUED');
     }
-    if (!result) {
-      const started = clock();
-      for (;;) {
-        const remaining = config.pollTimeoutMs - (clock() - started);
-        if (remaining <= 0) fail('POLL_TIMEOUT');
-        const value = await request('/jobs', { timeoutMs: Math.min(config.requestTimeoutMs, remaining) });
+    const started = clock();
+    const remaining = () => {
+      const budget = config.pollTimeoutMs - (clock() - started);
+      if (budget <= 0) fail('POLL_TIMEOUT');
+      return budget;
+    };
+    const read = async () => {
+      await preflight(Math.min(config.requestTimeoutMs, remaining()));
+      const readJobs = async () => {
+        const value = await request('/jobs', { timeoutMs: Math.min(config.requestTimeoutMs, remaining()) });
         if (!Array.isArray(value?.jobs)) fail('INVALID_RESPONSE');
         const matching = value.jobs.filter(item => item?.projectId === projectId);
-        if (matching.length !== 1) fail('CANARY_STATE_UNSAFE');
-        job = validateJob(matching[0], projectId, project.name, jobId);
-        if (job.status === 'completed') {
-          const remainingRead = config.pollTimeoutMs - (clock() - started);
-          if (remainingRead <= 0) fail('POLL_TIMEOUT');
-          const completed = await request(`/projects/${projectId}`, { timeoutMs: Math.min(config.requestTimeoutMs, remainingRead) });
-          validateProject(completed?.project, projectId);
-          if (completed.project.name !== project.name) fail('CANARY_STATE_UNSAFE');
-          const usage = verifyIdeas(completed.project, jobId);
-          result = { verified: true, status: 'LIVE', projectId, jobId, ideasCount: 10, ...(usage ? { usage } : {}) };
-          break;
+        const ideaJobs = matching.filter(item => item.type === 'ideas'); const expandJobs = matching.filter(item => item.type === 'expand');
+        if (ideaJobs.length !== 1 || expandJobs.length > 1 || matching.length !== ideaJobs.length + expandJobs.length) fail('CANARY_STATE_UNSAFE');
+        if (jobId && ideaJobs[0].id !== jobId || expansionJobId && expandJobs[0]?.id !== expansionJobId) fail('CANARY_STATE_UNSAFE');
+        if (uuid(ideaJobs[0].id)) jobId = ideaJobs[0].id;
+        if (uuid(expandJobs[0]?.id)) expansionJobId = expandJobs[0].id;
+        return { ideasJob: validateJob(ideaJobs[0], projectId, name, jobId),
+          expandJob: expandJobs[0] && validateJob(expandJobs[0], projectId, name, expansionJobId, 'expand') };
+      };
+      let { ideasJob, expandJob } = await readJobs();
+      const { project } = await request(`/projects/${projectId}`, { timeoutMs: Math.min(config.requestTimeoutMs, remaining()) });
+      validateProject(project, projectId, true);
+      if (project.name !== name) fail('CANARY_STATE_UNSAFE');
+      // Completion may commit between these two GETs. Refresh only observations,
+      // once, before rejecting a legitimate forward transition as inconsistent.
+      if (ideasJob.status !== 'completed' && project.ideas.length ||
+          expandJob && expandJob.status !== 'completed' && project.package !== null) ({ ideasJob, expandJob } = await readJobs());
+      if (ideasJob.status !== 'completed') {
+        if (expandJob || project.ideas.length || project.selectedIdeaId !== null || project.package !== null ||
+            project.generation?.ideas || project.generation?.expansion || project.aiUsage !== undefined &&
+            (!Array.isArray(project.aiUsage) || project.aiUsage.some(receipt => receipt?.operation !== 'ideas' || receipt.provider !== 'gemini' ||
+              receipt.model !== model || receipt.jobId !== jobId) || project.aiUsage.length > 1)) fail('CANARY_STATE_UNSAFE');
+      } else {
+        verifyIdeas(project, jobId, expansionJobId);
+        for (const locale of ['th', 'en']) {
+          if (new Set(project.ideas.map(idea => idea.logline[locale].normalize('NFKC').trim().replace(/\s+/gu, ' ').toLowerCase())).size !== 10) fail('IDEAS_INVALID');
         }
-        const budget = config.pollTimeoutMs - (clock() - started);
-        if (budget <= 0) fail('POLL_TIMEOUT');
-        let timer;
-        try { await Promise.race([sleep(Math.min(config.pollIntervalMs, budget)), new Promise((_, reject) => {
-          timer = setTimeout(() => reject(new GeminiVerificationError('POLL_TIMEOUT')), Math.max(1, budget));
-        })]); } finally { clearTimeout(timer); }
+        if (expandJob) {
+          if (project.selectedIdeaId !== project.ideas[0].id) fail('CANARY_STATE_UNSAFE');
+          if (expandJob.status !== 'completed' && (project.package !== null || project.generation?.expansion)) fail('CANARY_STATE_UNSAFE');
+        } else if (project.package !== null || project.generation?.expansion ||
+            project.selectedIdeaId !== null && project.selectedIdeaId !== project.ideas[0].id) fail('CANARY_STATE_UNSAFE');
+      }
+      return { project, ideasJob, expandJob };
+    };
+    const pause = async () => {
+      const budget = remaining(); let timer;
+      try { await Promise.race([sleep(Math.min(config.pollIntervalMs, budget)), new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new GeminiVerificationError('POLL_TIMEOUT')), Math.max(1, budget));
+      })]); } finally { clearTimeout(timer); }
+    };
+    let state = await read(); let cached = Boolean(state.expandJob?.status === 'completed');
+    // Every explicit resume is observation-only, including unselected ideas.
+    // A missing expansion job requires an Owner audit/manual action in the app.
+    if (options.projectId && !state.expandJob) fail('CANARY_STATE_UNSAFE');
+    while (state.ideasJob.status !== 'completed') { await pause(); state = await read(); }
+    if (!state.expandJob) {
+      // Only this invocation's newly created canary may select and expand once.
+      if (state.project.selectedIdeaId !== null) fail('CANARY_STATE_UNSAFE');
+      await preflight(Math.min(config.requestTimeoutMs, remaining())); state = await read();
+      if (state.expandJob || state.project.selectedIdeaId !== null) fail('CANARY_STATE_UNSAFE');
+      const first = state.project.ideas[0].id;
+      try {
+        const selected = await request(`/projects/${projectId}/select`, { method: 'POST', body: { ideaId: first }, timeoutMs: Math.min(config.requestTimeoutMs, remaining()) });
+        validateProject(selected?.project, projectId, true);
+        if (selected.project.name !== name || selected.project.selectedIdeaId !== first || selected.project.package !== null ||
+            JSON.stringify(selected.project.ideas) !== JSON.stringify(state.project.ideas)) fail('CANARY_STATE_UNSAFE');
+        verifyIdeas(selected.project, jobId);
+      } catch { fail('SELECTION_REQUEST_AMBIGUOUS'); }
+      emit('FIRST_IDEA_SELECTED'); await preflight(Math.min(config.requestTimeoutMs, remaining())); state = await read();
+      if (state.expandJob || state.project.selectedIdeaId !== first) fail('CANARY_STATE_UNSAFE');
+      try {
+        const queued = await request(`/projects/${projectId}/expand`, { method: 'POST', status: 202, body: {}, timeoutMs: Math.min(config.requestTimeoutMs, remaining()) });
+        if (uuid(queued?.job?.id)) expansionJobId = queued.job.id;
+        validateJob(queued?.job, projectId, name, expansionJobId, 'expand');
+      } catch (error) {
+        if (error instanceof GeminiVerificationError && ['QUOTA_STOP', 'ACCESS_STOP', 'JOB_FAILED'].includes(error.message)) throw error;
+        fail('EXPAND_REQUEST_AMBIGUOUS');
+      }
+      emit('EXPAND_ENQUEUED'); cached = false; state = await read();
+    }
+    while (state.expandJob.status !== 'completed') { await pause(); state = await read(); }
+    const usage = verifyIdeas(state.project, jobId, expansionJobId);
+    const expansionUsage = verifiedUsage(state.project.aiUsage?.find(receipt => receipt.operation === 'expand'));
+    const scenesCount = verifyPackage(state.project);
+    return { verified: true, status: cached ? 'CACHED' : 'LIVE', projectId, jobId, expansionJobId, ideasCount: 10,
+      selectedIdeaId: state.project.selectedIdeaId, scenesCount, ...(usage ? { usage } : {}), ...(expansionUsage ? { expansionUsage } : {}) };
+  };
+  try {
+    const auth = await request('/auth/login', { method: 'POST', body: { username: options.username, password: options.password } });
+    if (!cookie || typeof auth?.csrfToken !== 'string' || !/^[a-f0-9]{64}$/.test(auth.csrfToken)) fail('INVALID_RESPONSE');
+    csrf = auth.csrfToken;
+    await preflight(); emit('GEMINI_READY');
+    if (options.expandFirstIdea === true) {
+      result = await runPipeline();
+    } else {
+      let project; let job;
+      if (options.projectId) {
+        projectId = options.projectId;
+        ({ project } = await request(`/projects/${projectId}`));
+        validateProject(project, projectId);
+        job = await jobs(project.name);
+        jobId = job.id; emit('CANARY_RESUMED');
+        if (job.status === 'completed') {
+          const usage = verifyIdeas(project, jobId);
+          result = { verified: true, status: 'CACHED', projectId, jobId, ideasCount: 10, ...(usage ? { usage } : {}) };
+        } else if (project.ideas.length || project.selectedIdeaId !== null || project.package !== null) fail('CANARY_STATE_UNSAFE');
+      } else {
+        const name = `ACF GEMINI FREE TIER CANARY ${randomUUID()}`;
+        let created;
+        try {
+          created = await request('/projects', { method: 'POST', status: 201, body: { name,
+            brief: 'Generate ten distinct short fictional stories about a Thai neighborhood solving small everyday problems. Provide Thai and English titles, short loglines and hooks only. Do not expand or select any story.',
+            genre: 'Everyday fiction', audience: 'Operator acceptance', aspectRatio: '9:16' } });
+        } catch { fail('CANARY_CREATE_AMBIGUOUS'); }
+        if (uuid(created?.project?.id)) projectId = created.project.id;
+        if (!projectId) fail('CANARY_CREATE_AMBIGUOUS');
+        emit('CANARY_CREATED');
+        project = created.project; validateProject(project, projectId);
+        if (project.name !== name || project.ideas.length || project.selectedIdeaId !== null || project.package !== null) fail('CANARY_STATE_UNSAFE');
+        // Recheck immediately before the only enqueue; never mutate provider mode.
+        await preflight();
+        try {
+          const queued = await request(`/projects/${projectId}/ideas`, { method: 'POST', status: 202, body: {} });
+          if (uuid(queued?.job?.id)) jobId = queued.job.id;
+          job = validateJob(queued?.job, projectId, project.name, jobId);
+        } catch (error) {
+          if (error instanceof GeminiVerificationError && ['QUOTA_STOP', 'ACCESS_STOP', 'JOB_FAILED'].includes(error.message)) throw error;
+          fail('IDEAS_REQUEST_AMBIGUOUS');
+        }
+        emit('IDEAS_ENQUEUED');
+      }
+      if (!result) {
+        const started = clock();
+        for (;;) {
+          const remaining = config.pollTimeoutMs - (clock() - started);
+          if (remaining <= 0) fail('POLL_TIMEOUT');
+          const value = await request('/jobs', { timeoutMs: Math.min(config.requestTimeoutMs, remaining) });
+          if (!Array.isArray(value?.jobs)) fail('INVALID_RESPONSE');
+          const matching = value.jobs.filter(item => item?.projectId === projectId);
+          if (matching.length !== 1) fail('CANARY_STATE_UNSAFE');
+          job = validateJob(matching[0], projectId, project.name, jobId);
+          if (job.status === 'completed') {
+            const remainingRead = config.pollTimeoutMs - (clock() - started);
+            if (remainingRead <= 0) fail('POLL_TIMEOUT');
+            const completed = await request(`/projects/${projectId}`, { timeoutMs: Math.min(config.requestTimeoutMs, remainingRead) });
+            validateProject(completed?.project, projectId);
+            if (completed.project.name !== project.name) fail('CANARY_STATE_UNSAFE');
+            const usage = verifyIdeas(completed.project, jobId);
+            result = { verified: true, status: 'LIVE', projectId, jobId, ideasCount: 10, ...(usage ? { usage } : {}) };
+            break;
+          }
+          const budget = config.pollTimeoutMs - (clock() - started);
+          if (budget <= 0) fail('POLL_TIMEOUT');
+          let timer;
+          try { await Promise.race([sleep(Math.min(config.pollIntervalMs, budget)), new Promise((_, reject) => {
+            timer = setTimeout(() => reject(new GeminiVerificationError('POLL_TIMEOUT')), Math.max(1, budget));
+          })]); } finally { clearTimeout(timer); }
+        }
       }
     }
-    emit(result.status, { ideasCount: result.ideasCount, ...(result.usage ? { usage: result.usage } : {}) });
-    emit('OWNER_SELECTION_REQUIRED');
+    emit(result.status, { ideasCount: result.ideasCount, ...(result.usage ? { usage: result.usage } : {}),
+      ...(result.scenesCount ? { scenesCount: result.scenesCount } : {}), ...(result.expansionUsage ? { expansionUsage: result.expansionUsage } : {}) });
+    emit(options.expandFirstIdea === true ? 'FLOW_HANDOFF_READY' : 'OWNER_SELECTION_REQUIRED');
   } catch (error) { failure = error instanceof GeminiVerificationError ? error : new GeminiVerificationError('REQUEST_FAILED'); }
   finally {
     if (cookie) {
@@ -274,8 +446,11 @@ const guidance = {
   ACCESS_STOP: 'ตรวจสิทธิ์และ backend Free Tier/key/model; ห้าม retry อัตโนมัติ',
   CANARY_CREATE_AMBIGUOUS: 'การสร้าง canary อาจสำเร็จแล้ว ตรวจในแอปก่อน ห้ามเรียกซ้ำอัตโนมัติ',
   IDEAS_REQUEST_AMBIGUOUS: 'คำขอ ideas อาจได้รับแล้ว ใช้ --project-id เพื่อตรวจ canary เดิมเท่านั้น ห้ามสร้างซ้ำ',
-  CANARY_STATE_UNSAFE: 'สถานะ canary ไม่แน่นอนหรือไม่ใช่ canary ที่กำหนด หยุดโดยไม่ retry',
+  SELECTION_REQUEST_AMBIGUOUS: 'คำขอเลือกเรื่องอาจได้รับแล้ว ใช้ --project-id --expand-first-idea เพื่อตรวจ canary เดิม; สถานะเลือกแล้วที่ไม่มีงานขยายจะหยุด',
+  EXPAND_REQUEST_AMBIGUOUS: 'คำขอขยายอาจได้รับแล้ว ใช้ --project-id --expand-first-idea เพื่อตรวจงานเดิมเท่านั้น ห้าม enqueue ซ้ำ',
+  CANARY_STATE_UNSAFE: 'สถานะ canary ไม่ปลอดภัย หรือ resume ไม่มีงาน expand เดิม; --project-id อ่านสถานะเท่านั้น ให้ Owner ตรวจหลักฐานและดำเนินการเองผ่านแอป ห้าม retry อัตโนมัติ',
   IDEAS_INVALID: 'ผลลัพธ์หรือหลักฐาน Gemini ไม่ผ่าน หยุดโดยไม่สร้างใหม่',
+  PACKAGE_INVALID: 'แพ็กเกจเรื่องหรือหลักฐาน Gemini/Flow ไม่ผ่าน หยุดโดยไม่สร้างใหม่',
   JOB_FAILED: 'งานล้มเหลว หยุดโดยไม่ retry',
   POLL_TIMEOUT: 'หมดเวลารองาน ใช้ --project-id เพื่อตรวจงานเดิม ห้าม enqueue ซ้ำ',
   REQUEST_TIMEOUT: 'หมดเวลาคำขอ หยุดและตรวจ canary เดิมก่อนดำเนินการ',
@@ -285,14 +460,19 @@ const guidance = {
 export async function main(argv = process.argv.slice(2), env = process.env) {
   try {
     const flags = {};
-    for (let index = 0; index < argv.length; index += 2) {
+    for (let index = 0; index < argv.length; index++) {
       const flag = argv[index];
+      if (flag === '--expand-first-idea') {
+        if (flags[flag] !== undefined) fail('INVALID_CONFIGURATION');
+        flags[flag] = true; continue;
+      }
       if (!['--origin', '--approved-https-origin', '--project-id'].includes(flag) || flags[flag] !== undefined ||
           typeof argv[index + 1] !== 'string' || argv[index + 1].startsWith('--')) fail('INVALID_CONFIGURATION');
-      flags[flag] = argv[index + 1];
+      flags[flag] = argv[++index];
     }
     if (!flags['--origin']) fail('INVALID_CONFIGURATION');
     await verifyGeminiLive({ origin: flags['--origin'], approvedHttpsOrigin: flags['--approved-https-origin'], projectId: flags['--project-id'],
+      expandFirstIdea: flags['--expand-first-idea'] === true,
       username: env.ACF_VERIFY_USERNAME, password: env.ACF_VERIFY_PASSWORD, freeTierConfirmed: env.ACF_VERIFY_GEMINI_FREE_TIER_CONFIRMED === 'true',
       log: status => console.log(`Gemini verification: ${JSON.stringify(status)}`) });
     return 0;

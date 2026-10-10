@@ -805,5 +805,69 @@
     ],
     "storeFalse": "Supported optional logging control, not zero-retention or Free Tier data-use exemption",
     "freeTier": "Model supports Standard Free Tier; actual API project tier/access requires Owner verification"
+  },
+  "geminiActivationPreparation": {
+    "date": "2026-10-10",
+    "baseCommit": "574fe5d3c8f13fd1bf8497dce291d0eaa729a0cc",
+    "status": "PAUSED_FOR_USAGE_RESET",
+    "sourceFileSha256": {
+      "scripts/gemini-local.ps1": "4386dd0ea2fc025723509eb96c8243b6ba25f5c87ebea289f711935e2e2ae6d5",
+      "scripts/start-gemini-local.mjs": "76b9035bca197961c865625413ca3d1dc22ee424abcd15511fd5547d6c9e0203",
+      "scripts/verify-gemini-live.mjs": "f459ce274219443cebe5f641a78f9d18cc029b8ec8bc87655723db6d727409c9",
+      "tests/gemini-local-setup.ps1": "1f071e46d2bbfaf704ef9a4b3152d7af7597d88334911037898aae41ff72bcbc",
+      "tests/gemini-live-verifier.test.ts": "b5f0ecfb1d95f476694f27015efabbbf73d44dc5ce39dbc24b8e2a6286ec706d"
+    },
+    "targeted": {
+      "command": "node --import tsx --test --test-concurrency=1 tests/gemini-live-verifier.test.ts tests/gemini-provider.test.ts tests/drive-live-verifier.test.ts tests/cloud.test.ts tests/worker-presence.test.ts",
+      "exitCode": 0,
+      "total": 74,
+      "passed": 74,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 5107.41,
+      "liveProviderCalls": 0
+    },
+    "windows": {
+      "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File tests/gemini-local-setup.ps1",
+      "exitCode": 0,
+      "checksPassed": 14,
+      "culture": "th-TH forced",
+      "runtime": "Windows PowerShell 5",
+      "syntheticOnly": true,
+      "ownerDataTouched": false,
+      "PS7PrePatch": "9/10; DateTime conversion/timezone ownership failure; preserved evidence",
+      "PS7PostPatch": "NOT_RUN; exact NEXT_TASK before live activation"
+    },
+    "checks": {
+      "threeTypechecks": "PASS",
+      "fullLint": "PASS",
+      "powershellAST": "PASS_BOTH_FILES",
+      "docs": "PASS",
+      "pwa": "PASS_PUBLIC_SHELL_ONLY",
+      "secretGuard": "PASS_TRACKED_FILES_NO_VALUES_PRINTED",
+      "whitespace": "PASS"
+    },
+    "independentReview": "ACCEPTED; auth/queue/canary, DPAPI/config, listener probe/timestamp, no actionable P1/P2; read-only source review",
+    "owner3006": {
+      "runtime": "RC/Mock",
+      "pid": 14548,
+      "httpIndex": 200,
+      "health": 200,
+      "authStatus": 200,
+      "anonymousProjects": 401,
+      "originalDataPreserved": true,
+      "databaseWrites": false,
+      "activeJobs": 0,
+      "cachedTenIdeas": true
+    },
+    "syntheticFixtureProcessesStopped": 4,
+    "liveGemini": "BLOCKED_OWNER_KEY_AND_FREE_TIER_CONFIRMATION",
+    "Drive": "PREPARED_OAUTH_CONSENT_AND_LIVE_ROUNDTRIP_PENDING",
+    "Cloud": "PREPARED_NO_DEPLOYED_OFFLINE_PROOF",
+    "remainingPercent": {
+      "fiveHour": 3,
+      "weekly": 26
+    },
+    "nextTask": "NEXT_TASK: หลังusage reset/Owner invocation ให้รัน pwsh -NoProfile -File tests/gemini-local-setup.ps1 เพื่อตรวจ PS7 th-TH หลัง timestamp DateTime/string และ bounded netstat fixes (WinPS5ล่าสุด14/14ผ่าน). เมื่อOwnerยืนยันprivateGEMINI_API_KEY+APIprojectFreeTier/Billingdisabledพร้อม จึงbuildPhase2/startfresh3013/normalcanaryaccount/verify-gemini-live --expand-first-ideaหนึ่งครั้ง (สูงสุดideas1+expand1 ไม่มีretry). ใช้UUIDเดิมอ่านสถานะหากtimeout;ไม่generateOwnerstoryเดิม. Owner3006activationต้องbackup/0active/schema check+preservesavedMock. Driveยังต้องOAuth+consent;Cloudต้องapprovedproject/HTTPS/schema/deploy. ห้ามmainmerge/publicdeploy/publish/billing."
   }
 }

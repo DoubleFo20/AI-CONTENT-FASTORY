@@ -1,5 +1,26 @@
 # Task dependency plan
 
+STATUS: PAUSED_FOR_USAGE_RESET
+
+## Gemini activation preparation — 2026-10-10
+
+Owner กำลังตั้ง private GEMINI_API_KEY และตรวจ Free Tier; ยังไม่มี live Gemini call หรือ successful live result. Backend ต้อง GEMINI_API_KEY + ACF_GEMINI_FREE_TIER_CONFIRMED=true จากแหล่งเดียวกันหลัง Owner ตรวจ API project/Billing disabled. Primarytext=gemini-3.5-flash-lite; OpenAI requestsยังไม่อนุมัติ, ไม่มีpaidfallback/retry/billingchange.
+
+เพิ่ม Windows hidden-input/DPAPI helper + isolated launcher: current-user ACL, ancestor/reparse rejection, atomicnooverwrite, freshcontainedcanary, envallowlist, boundedPID/listening/health readiness. คู่มือไฟล์และคำสั่งละเอียด: [GEMINI_LOCAL_SETUP_TH](docs/GEMINI_LOCAL_SETUP_TH.md). Helper startupไม่เรียก AI. Independentread-onlyreviewปิดP1/P2; WindowsPowerShell5 th-THregression14/14ผ่าน; PS7prepatchQA9/10 (timestampissue) เก็บไว้ตามจริง, PS7postpatchยังไม่verified. Finalindependentread-onlyreviewยอมรับboundednetstat/DateTimefix ไม่มีP1/P2. Rootหยุด4syntheticfixtureprocessesที่verifyidentity/pathแล้ว; Owner3006ยังactive.
+
+Explicit --expand-first-idea สำหรับ canaryใหม่เท่านั้น: ideas/select/expandอย่างละหนึ่งPOST แล้วตรวจสิบconcepts, selected-onlypackage/scene refs/คำอธิบายไทย/Flowpromptsอังกฤษ. ทุก --project-id resumeอ่านสถานะเท่านั้น; ไม่มีexpandjobเดิมหยุดCANARY_STATE_UNSAFE. ไม่เปลี่ยน Owner storyหรือmode. Rootรัน targeted Gemini/provider/Drive/cloud/presence regression74/74ผ่าน, three typechecks/full lintผ่าน. Testsทั้งหมดinjected/synthetic, ไม่ใช่liveproviderproof.
+
+Owner app3006 ยัง RC/Mock/PID14548; /,health,authstatus200และanonymousprojects401. Read-onlypreservationผ่าน:1owner/1project/4jobs/10ideas/0active/0clips/0exports,baselineunchanged. ไม่มี src/public/server/shared/schema/dependency/lockfile/env/CI changeในcheckpointนี้. PremiumCinematicV2/source0b35ceaยังคงเดิม. PR#2และ#3ยังOPEN/DRAFT/unmerged; mainไม่เปลี่ยน.
+
+DriveOAuth/folders/encryptedvault/upload/download/checksumverifierและcloudjobs/presence/reconnectfoundationตรวจด้วยmockต่อได้; 74testsรวมDriveverifier/cloudด้วย. ไม่มีOAuthgrant/remoteupload/approvedrestore/Supabaseproject/HTTPShost/schema/deploy; notebook-offline/fullautomationยังNOT_IMPLEMENTED. ห้ามลบlocalmedia/cutover/publish/deploy/mergeโดยไม่มีapproval.
+
+NEXT_TASK: หลังusage reset/Owner invocation ให้รัน pwsh -NoProfile -File tests/gemini-local-setup.ps1 เพื่อตรวจ PS7 th-TH หลัง timestamp DateTime/string และ bounded netstat fixes (WinPS5ล่าสุด14/14ผ่าน). เมื่อOwnerยืนยันprivateGEMINI_API_KEY+APIprojectFreeTier/Billingdisabledพร้อม จึงbuildPhase2/startfresh3013/normalcanaryaccount/verify-gemini-live --expand-first-ideaหนึ่งครั้ง (สูงสุดideas1+expand1 ไม่มีretry). ใช้UUIDเดิมอ่านสถานะหากtimeout;ไม่generateOwnerstoryเดิม. Owner3006activationต้องbackup/0active/schema check+preservesavedMock. Driveยังต้องOAuth+consent;Cloudต้องapprovedproject/HTTPS/schema/deploy. ห้ามmainmerge/publicdeploy/publish/billing.
+
+Usage authoritative ล่าสุด:เหลือ3%/26% (5hr/week), แตะthresholdแล้ว. หยุดstartingfeatures/spawns; essentialchecks/handoff/checkpointpushเท่านั้น จากนั้นหยุดจนusage resetและnewOwnerinvocation. ไม่ใช้resetcredit/ไม่มีschedulerหรือautomaticresume.
+
+---
+
+
 STATUS: PHASE2_PREPARED_LIVE_GATES_PENDING
 RELEASE_READINESS: READY_FOR_OWNER_APPROVAL
 ANTIGRAVITY_STATUS: PUBLISHED_PASS_FOR_PRE_PATCH_RELEASE_3e9c1aa

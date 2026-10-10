@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-10 — Gemini limited pipeline and private backend setup (usage paused)
+
+- เพิ่มexplicitselected-onlypipelinecanary/observation-onlyresume;25verifiertestsผ่าน. RoottargetedGemini/provider/Drive/cloud/presence74/74,three typechecks/full lintผ่าน;ทั้งหมดinjectedไม่live.
+- เพิ่มhidden-inputWindowsDPAPI/atomicnooverwrite/privateACL/envallowlist/freshcanary/PID+healthlauncherและคู่มือThai;independentreviewปิดP1/P2,WindowsPowerShell5 th-TH14checksผ่าน; PS7prepatch9/10timestampfailureและpostpatchยังรอตรวจ. แก้idempotentACL/firstNode/invarianttypedtimestamp/boundednetstat;independentreviewยอมรับ.
+- ตรวจOwner3006/publicAPI/anonymousdenialและread-onlydata preservationผ่าน;PremiumUI/server/schema/dependenciesคงเดิม,main/PR2/PR3ยังunmerged.
+- PrivateGeminiKey+OwnerFreeTierconfirmation/OAuth/cloudexternalgatesยังรอ ไม่มีbilling/livecalls/publicdeploy/contentpublish.
+- Authoritativeusageเหลือ3%/26% จึงSTATUS:PAUSED_FOR_USAGE_RESET; checkpoint/essentialchecksแล้วหยุด ไม่มีautomaticresume/resetcredituse. ExactNEXT_TASKอยู่HANDOFF.
+
+
 ## 2026-10-10 — Verified release and Phase2 checkpoint
 
 - แก้Drivehelp/dialogcontrast/mobileeditorfocusด้วยPremiumCinematicV2tokens;backend/schema/dependenciesคงเดิม.

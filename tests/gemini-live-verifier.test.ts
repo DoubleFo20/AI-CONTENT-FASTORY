@@ -6,7 +6,7 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createApplication } from '../server/app.js';
 import type { AiProvider } from '../server/ai/types.js';
-import type { Idea } from '../shared/contracts.js';
+import type { Idea, StoryPackage } from '../shared/contracts.js';
 
 // Standalone operator module stays outside the server build; importing it must be inert.
 let importRequests = 0;
@@ -34,6 +34,19 @@ const capabilities = { ai: { mode: 'gemini', active: 'gemini', fallbackReason: n
   execution: { active: 'local', cloudDeploymentVerified: false } };
 const receipt = { provider: 'gemini', operation: 'ideas', model, jobId, inputTokens: 17, outputTokens: 41, totalTokens: 58,
   recordedAt: '2026-10-10T00:00:00.000Z', estimatedCostUsd: null, rateVerifiedAt: null };
+const pipelineName = `ACF GEMINI FREE TIER PIPELINE CANARY ${otherJobId}`;
+const pipelineIdeas = ideas.map((idea, index) => ({ ...idea, logline: { th: `เพื่อนบ้านแก้ปัญหาหมายเลข ${index + 1}`, en: `Neighbors solve problem ${index + 1}.` } }));
+const storyPackage: StoryPackage = {
+  storyBible: { th: 'เพื่อนบ้านรวมพลังค้นหาจดหมายและคืนให้เจ้าของ', en: 'Neighbors find the letter and return it to its owner.' },
+  characters: [{ id: 'character_1', name: 'Mali', visualDescriptionEn: 'Mali wears a blue jacket.', background: { th: 'มะลิรักชุมชน', en: 'Mali loves her neighborhood.' } }],
+  locations: [{ id: 'location_1', name: { th: 'ชุมชน', en: 'Neighborhood' }, visualDescriptionEn: 'A warm sunny street.', description: { th: 'ถนนเงียบสงบ', en: 'A quiet street.' } }],
+  continuityRules: [{ th: 'เสื้อแจ็กเก็ตสีน้ำเงินทุกฉาก', en: 'Keep the blue jacket in every scene.' }],
+  scenes: Array.from({ length: 3 }, (_, index) => ({ id: `scene_${index + 1}`, order: index + 1, durationSeconds: 8,
+    title: { th: `ฉากที่ ${index + 1}`, en: `Scene ${index + 1}` }, explanationTh: 'มะลิค้นหาเจ้าของจดหมาย',
+    flowPromptEn: 'Mali walks along a sunny street, wearing the same blue jacket. Gentle tracking shot.',
+    narration: { th: 'ชุมชนร่วมค้นหาคำตอบ', en: 'The neighborhood finds an answer.' }, characterIds: ['character_1'], locationId: 'location_1' })),
+};
+const expansionReceipt = { ...receipt, operation: 'expand', jobId: otherJobId, inputTokens: 23, outputTokens: 70, totalTokens: 93 };
 interface Event { status: string; projectId?: string; jobId?: string; ideasCount?: number; usage?: Record<string, number> }
 interface Control {
   capabilities?: unknown; changedCapabilities?: unknown; resume?: 'cached' | 'running' | 'failed' | 'empty' | 'ambiguous';
@@ -274,7 +287,220 @@ test('CLI validates flags and private confirmation with zero requests, supports 
   } finally { globalThis.fetch = originalFetch; console.log = originalLog; console.error = originalError; }
 });
 
-test('real loopback API persists Gemini concepts/receipt with normal auth and cached resume spends no further provider request (injected only)', async t => {
+interface PipelineControl {
+  phase?: 'new' | 'ideas-running' | 'ideas-ready' | 'selected' | 'expand-running' | 'expanded' | 'failed';
+  name?: string; pending?: boolean; noUsage?: boolean; failedCode?: string;
+  project?: Record<string, unknown>; jobs?: unknown[]; changedAt?: number;
+  ambiguous?: 'select' | 'expand' | 'expand-unaccepted';
+  hang?: 'select' | 'expand';
+  completeBetweenReads?: 'ideas' | 'expand';
+}
+function pipelineFixture(control: PipelineControl = {}) {
+  const calls: Array<{ path: string; method: string; body: unknown }> = []; const events: unknown[] = [];
+  let phase = control.phase ?? 'new'; let name = control.name ?? pipelineName; let time = 0; let preflights = 0; let expandPolls = 0;
+  const job = (type: 'ideas' | 'expand', status: string) => ({ id: type === 'ideas' ? jobId : otherJobId, projectId, projectName: name,
+    type, status, errorCode: status === 'failed' ? control.failedCode ?? 'AI_REQUEST_FAILED' : null });
+  const project = () => ({ id: projectId, name, ideas: phase === 'new' || phase === 'ideas-running' ? [] : pipelineIdeas,
+    selectedIdeaId: ['selected', 'expand-running', 'expanded', 'failed'].includes(phase) ? pipelineIdeas[0].id : null,
+    package: phase === 'expanded' ? storyPackage : null,
+    ...(!['new', 'ideas-running'].includes(phase) ? { generation: { ideas: 'gemini', ...(phase === 'expanded' ? { expansion: 'gemini' } : {}) } } : {}),
+    ...(!control.noUsage && !['new', 'ideas-running'].includes(phase) ? { aiUsage: [receipt, ...(phase === 'expanded' ? [expansionReceipt] : [])] } : {}),
+    ...control.project });
+  const fetchImpl: typeof fetch = async (address, init) => {
+    const url = new URL(String(address)); assert.equal(url.origin, origin);
+    const path = url.pathname.replace(/^\/api/, ''); const method = init?.method ?? 'GET';
+    const headers = new Headers(init?.headers); const body = init?.body ? JSON.parse(String(init.body)) as unknown : undefined;
+    calls.push({ path, method, body }); assert.equal(headers.get('Origin'), origin);
+    assert.equal(init?.redirect, 'error'); assert.equal(init?.credentials, 'omit'); assert(init?.signal);
+    if (path !== '/auth/login') { assert.equal(headers.get('Cookie'), cookie); if (method === 'POST') assert.equal(headers.get('X-CSRF-Token'), csrf); }
+    if (path === '/auth/login') return json({ csrfToken: csrf }, 200, { 'Set-Cookie': `${cookie}; HttpOnly; Path=/` });
+    if (path === '/auth/logout') return json({ ok: true });
+    if (path === '/integrations/capabilities') {
+      preflights++;
+      return json({ capabilities: control.changedAt && preflights >= control.changedAt ? { ...capabilities, ai: { ...capabilities.ai, active: 'mock' } } : capabilities });
+    }
+    if (path === '/projects' && method === 'POST') {
+      assert.equal(phase, 'new'); name = (body as { name: string }).name; assert.match(name, /^ACF GEMINI FREE TIER PIPELINE CANARY /);
+      return json({ project: project() }, 201);
+    }
+    if (path === `/projects/${projectId}/ideas` && method === 'POST') {
+      assert.equal(phase, 'new'); phase = 'ideas-running'; assert.deepEqual(body, {}); return json({ job: job('ideas', 'queued') }, 202);
+    }
+    if (path === `/projects/${projectId}/select` && method === 'POST') {
+      assert.equal(phase, 'ideas-ready'); assert.deepEqual(body, { ideaId: pipelineIdeas[0].id }); phase = 'selected';
+      if (control.hang === 'select') return new Promise(() => {});
+      return control.ambiguous === 'select' ? new Response('synthetic ambiguous response') : json({ project: project() });
+    }
+    if (path === `/projects/${projectId}/expand` && method === 'POST') {
+      assert.equal(phase, 'selected'); assert.deepEqual(body, {});
+      if (control.ambiguous !== 'expand-unaccepted') phase = 'expand-running';
+      if (control.hang === 'expand') return new Promise(() => {});
+      return control.ambiguous?.startsWith('expand') ? new Response('synthetic ambiguous response') : json({ job: job('expand', 'queued') }, 202);
+    }
+    if (path === '/jobs') {
+      if (!control.pending && phase === 'ideas-running' && control.completeBetweenReads !== 'ideas') phase = 'ideas-ready';
+      if (!control.pending && phase === 'expand-running' && ++expandPolls > 1 && control.completeBetweenReads !== 'expand') phase = 'expanded';
+      const response = json({ jobs: control.jobs ?? [job('ideas', phase === 'ideas-running' ? 'running' : 'completed'),
+        ...(['expand-running', 'expanded', 'failed'].includes(phase) ? [job('expand', phase === 'expanded' ? 'completed' : phase === 'failed' ? 'failed' : 'running')] : [])] });
+      if (phase === 'ideas-running' && control.completeBetweenReads === 'ideas') phase = 'ideas-ready';
+      if (phase === 'expand-running' && control.completeBetweenReads === 'expand') phase = 'expanded';
+      return response;
+    }
+    if (path === `/projects/${projectId}`) return json({ project: project() });
+    throw new Error('Unexpected synthetic pipeline request');
+  };
+  return { calls, events, options: { origin, ...credentials, freeTierConfirmed: true, expandFirstIdea: true, fetchImpl,
+    log: (event: unknown) => events.push(event), now: () => time, sleep: async (ms: number) => { time += ms; } } };
+}
+const pipelinePosts = (f: ReturnType<typeof pipelineFixture>, operation: string) => f.calls.filter(call => call.method === 'POST' && call.path.endsWith(`/${operation}`));
+const assertPipelineWrites = (f: ReturnType<typeof pipelineFixture>) => {
+  assert(f.calls.every(call => call.method === 'GET' || ['/auth/login', '/auth/logout', '/projects',
+    `/projects/${projectId}/ideas`, `/projects/${projectId}/select`, `/projects/${projectId}/expand`].includes(call.path)));
+  assert(!f.calls.some(call => /retry|cancel|mode|cloud|authorize/.test(call.path)));
+};
+
+test('explicit pipeline opt-in creates a new named canary, ten distinct concepts, selects only first and expands once with separate usage', async () => {
+  const f = pipelineFixture(); const result = await verifyGeminiLive(f.options);
+  assert.equal(result.status, 'LIVE'); assert.equal(result.ideasCount, 10); assert.equal(result.scenesCount, 3);
+  assert.equal(result.selectedIdeaId, pipelineIdeas[0].id); assert.equal(result.expansionJobId, otherJobId);
+  assert.deepEqual(result.usage, { inputTokens: 17, outputTokens: 41, totalTokens: 58 });
+  assert.deepEqual(result.expansionUsage, { inputTokens: 23, outputTokens: 70, totalTokens: 93 });
+  for (const operation of ['ideas', 'select', 'expand']) assert.equal(pipelinePosts(f, operation).length, 1);
+  assertPipelineWrites(f); assert.equal(f.calls.at(-1)?.path, '/auth/logout');
+  const output = JSON.stringify(f.events);
+  for (const privateValue of [credentials.username, credentials.password, cookie, csrf, pipelineIdeas[0].title.en, storyPackage.storyBible.en]) assert(!output.includes(privateValue));
+  assert(output.includes('FLOW_HANDOFF_READY')); assert(!output.includes('OWNER_SELECTION_REQUIRED'));
+});
+
+test('pipeline resume observes pending/completed expansion and refuses unselected completed ideas without any mutation', async () => {
+  for (const phase of ['ideas-ready', 'ideas-running'] as const) {
+    const unselected = pipelineFixture({ phase, pending: true });
+    await assert.rejects(verifyGeminiLive({ ...unselected.options, projectId }), errorIs('CANARY_STATE_UNSAFE'));
+    assert.equal(unselected.calls.filter(call => call.method === 'POST').length, 2); assertPipelineWrites(unselected);
+  }
+  for (const phase of ['expand-running', 'expanded'] as const) {
+    const f = pipelineFixture({ phase }); const result = await verifyGeminiLive({ ...f.options, projectId });
+    assert.equal(result.status, phase === 'expanded' ? 'CACHED' : 'LIVE');
+    assert.equal(pipelinePosts(f, 'ideas').length, 0); assert.equal(pipelinePosts(f, 'select').length, 0);
+    assert.equal(pipelinePosts(f, 'expand').length, 0);
+    assert.equal(f.calls.filter(call => call.path === '/projects').length, 0); assertPipelineWrites(f);
+  }
+});
+
+test('pipeline marker, selected inconsistency, missing/duplicate/foreign jobs and invalid operation receipts stop without mutation', async () => {
+  const ideaJob = { id: jobId, projectId, projectName: pipelineName, type: 'ideas', status: 'completed', errorCode: null };
+  const expandJob = { ...ideaJob, id: otherJobId, type: 'expand' };
+  for (const control of [
+    { phase: 'ideas-ready', name: canaryName }, { phase: 'ideas-ready', name: 'OWNER PROJECT' }, { phase: 'selected' },
+    { phase: 'ideas-ready', project: { selectedIdeaId: pipelineIdeas[1].id } },
+    { phase: 'expanded', project: { selectedIdeaId: pipelineIdeas[1].id } }, { phase: 'ideas-ready', jobs: [] },
+    { phase: 'ideas-ready', jobs: [{ id: jobId, projectId, projectName: pipelineName, type: 'export', status: 'completed', errorCode: null }] },
+    { phase: 'ideas-ready', jobs: [ideaJob, ideaJob] }, { phase: 'expanded', jobs: [ideaJob, expandJob, expandJob] },
+    { phase: 'expanded', project: { aiUsage: [receipt, expansionReceipt, expansionReceipt] } },
+    { phase: 'ideas-ready', project: { aiUsage: [receipt, expansionReceipt] } },
+    { phase: 'expanded', project: { aiUsage: [receipt, { ...expansionReceipt, model: 'gemini-pro' }] } },
+    { phase: 'expanded', project: { aiUsage: [receipt, { ...expansionReceipt, jobId }] } },
+  ] as PipelineControl[]) {
+    const f = pipelineFixture(control);
+    await assert.rejects(verifyGeminiLive({ ...f.options, projectId }), error => errorIs('CANARY_STATE_UNSAFE')(error) || errorIs('IDEAS_INVALID')(error));
+    assert.equal(f.calls.filter(call => call.method === 'POST').length, 2); assertPipelineWrites(f);
+  }
+});
+
+test('pipeline rejects duplicate concepts, mock/foreign provenance, malformed packages and non-English Flow prompts without regeneration', async () => {
+  const badPackages = [
+    null, { ...storyPackage, scenes: storyPackage.scenes.slice(0, 2) },
+    { ...storyPackage, scenes: storyPackage.scenes.map(scene => ({ ...scene, flowPromptEn: 'มะลิเดินตามถนน' })) },
+    { ...storyPackage, scenes: storyPackage.scenes.map(scene => ({ ...scene, explanationTh: 'Mali walks.' })) },
+    { ...storyPackage, scenes: storyPackage.scenes.map(scene => ({ ...scene, locationId: 'missing' })) },
+    { ...storyPackage, scenes: storyPackage.scenes.map(scene => ({ ...scene, flowPromptEn: 'MOCK sample data: Mali walks.' })) },
+    { ...storyPackage, characters: storyPackage.characters.map(character => ({ ...character, id: 'mock_character_1' })) },
+  ];
+  for (const project of [{ generation: { ideas: 'gemini', expansion: 'mock' } }, { generation: { ideas: 'gemini', expansion: 'openai' } },
+    { expansionModel: 'gemini-pro' }, ...badPackages.map(pack => ({ package: pack }))]) {
+    const f = pipelineFixture({ phase: 'expanded', project });
+    await assert.rejects(verifyGeminiLive({ ...f.options, projectId }), errorIs('PACKAGE_INVALID'));
+    assert.equal(f.calls.filter(call => call.method === 'POST').length, 2);
+  }
+  const duplicate = pipelineFixture({ phase: 'ideas-ready', project: { ideas } });
+  await assert.rejects(verifyGeminiLive({ ...duplicate.options, projectId }), errorIs('IDEAS_INVALID'));
+  assert.equal(pipelinePosts(duplicate, 'select').length, 0);
+});
+
+test('pipeline usage remains optional and malformed counts are not invented or logged', async () => {
+  const absent = pipelineFixture({ phase: 'expanded', noUsage: true }); const result = await verifyGeminiLive({ ...absent.options, projectId });
+  assert(!('usage' in result)); assert(!('expansionUsage' in result));
+  const invalid = pipelineFixture({ phase: 'expanded', project: { aiUsage: [receipt, { ...expansionReceipt, totalTokens: 1 }] } });
+  const invalidResult = await verifyGeminiLive({ ...invalid.options, projectId }); assert(!('expansionUsage' in invalidResult));
+  assert(!JSON.stringify(invalid.events).includes('"totalTokens":1'));
+});
+
+test('ambiguous selection/expansion stops, preserves checkpoint and resumed run never duplicates an uncertain enqueue', async () => {
+  for (const ambiguous of ['select', 'expand', 'expand-unaccepted'] as const) {
+    const control: PipelineControl = { ambiguous }; const f = pipelineFixture(control);
+    await assert.rejects(verifyGeminiLive(f.options), (error: unknown) => {
+      assert(errorIs(ambiguous === 'select' ? 'SELECTION_REQUEST_AMBIGUOUS' : 'EXPAND_REQUEST_AMBIGUOUS')(error));
+      assert.equal((error as Error & { checkpoint: { projectId: string } }).checkpoint.projectId, projectId); return true;
+    });
+    control.ambiguous = undefined;
+    if (ambiguous === 'expand') assert.equal((await verifyGeminiLive({ ...f.options, projectId })).scenesCount, 3);
+    else await assert.rejects(verifyGeminiLive({ ...f.options, projectId }), errorIs('CANARY_STATE_UNSAFE'));
+    assert.equal(pipelinePosts(f, 'ideas').length, 1); assert.equal(pipelinePosts(f, 'select').length, 1);
+    assert.equal(pipelinePosts(f, 'expand').length, ambiguous === 'select' ? 0 : 1); assertPipelineWrites(f);
+  }
+});
+
+test('hung pipeline mutation has a deadline, logs out and resume observes accepted expansion without another attempt', async () => {
+  for (const hang of ['select', 'expand'] as const) {
+    const control: PipelineControl = { hang }; const f = pipelineFixture(control);
+    await assert.rejects(verifyGeminiLive({ ...f.options, requestTimeoutMs: 15 }), errorIs(hang === 'select' ? 'SELECTION_REQUEST_AMBIGUOUS' : 'EXPAND_REQUEST_AMBIGUOUS'));
+    assert.equal(f.calls.at(-1)?.path, '/auth/logout'); control.hang = undefined;
+    if (hang === 'expand') assert.equal((await verifyGeminiLive({ ...f.options, projectId })).scenesCount, 3);
+    else await assert.rejects(verifyGeminiLive({ ...f.options, projectId }), errorIs('CANARY_STATE_UNSAFE'));
+    assert.equal(pipelinePosts(f, 'ideas').length, 1); assert.equal(pipelinePosts(f, 'select').length, 1);
+    assert.equal(pipelinePosts(f, 'expand').length, hang === 'select' ? 0 : 1);
+  }
+});
+
+test('completion between jobs/project GETs refreshes observations but resume never expands newly completed ideas', async () => {
+  for (const operation of ['ideas', 'expand'] as const) {
+    const f = pipelineFixture({ phase: operation === 'ideas' ? 'ideas-running' : 'expand-running', completeBetweenReads: operation });
+    if (operation === 'ideas') await assert.rejects(verifyGeminiLive({ ...f.options, projectId }), errorIs('CANARY_STATE_UNSAFE'));
+    else assert.equal((await verifyGeminiLive({ ...f.options, projectId })).scenesCount, 3);
+    assert.equal(pipelinePosts(f, 'ideas').length, 0); assert.equal(pipelinePosts(f, 'select').length, 0); assert.equal(pipelinePosts(f, 'expand').length, 0);
+  }
+});
+
+test('pipeline quota/failed jobs stop without retry, timeout resume observes pending job, changed provider prevents expansion', async () => {
+  for (const failedCode of ['AI_QUOTA_EXCEEDED', 'AI_RATE_LIMITED', 'AI_ACCESS_DENIED', 'AI_REQUEST_FAILED']) {
+    const f = pipelineFixture({ phase: 'failed', failedCode });
+    await assert.rejects(verifyGeminiLive({ ...f.options, projectId }), errorIs(failedCode.includes('QUOTA') || failedCode.includes('RATE') ? 'QUOTA_STOP' : failedCode.includes('ACCESS') ? 'ACCESS_STOP' : 'JOB_FAILED'));
+    assert.equal(f.calls.filter(call => call.method === 'POST').length, 2);
+  }
+  const control: PipelineControl = { phase: 'expand-running', pending: true }; const timed = pipelineFixture(control);
+  await assert.rejects(verifyGeminiLive({ ...timed.options, projectId, pollTimeoutMs: 3, pollIntervalMs: 1 }), errorIs('POLL_TIMEOUT'));
+  control.pending = false; const resumed = await verifyGeminiLive({ ...timed.options, projectId }); assert.equal(resumed.scenesCount, 3);
+  assert.equal(pipelinePosts(timed, 'expand').length, 0); assert.equal(pipelinePosts(timed, 'select').length, 0);
+  const changed = pipelineFixture({ changedAt: 3 });
+  await assert.rejects(verifyGeminiLive(changed.options), errorIs('GEMINI_NOT_READY'));
+  assert.equal(pipelinePosts(changed, 'expand').length, 0); assert.equal(pipelinePosts(changed, 'select').length, 0);
+});
+
+test('CLI pipeline flag is a unique valueless opt-in, still needs private Free Tier confirmation and cannot expand old canaries', async () => {
+  const f = pipelineFixture({ phase: 'expanded' }); const output: string[] = [];
+  const originalFetch = globalThis.fetch; const originalLog = console.log; const originalError = console.error;
+  globalThis.fetch = f.options.fetchImpl; console.log = console.error = (value: string) => { output.push(value); };
+  const env = { ACF_VERIFY_USERNAME: credentials.username, ACF_VERIFY_PASSWORD: credentials.password, ACF_VERIFY_GEMINI_FREE_TIER_CONFIRMED: 'true' };
+  try {
+    for (const argv of [['--origin', origin, '--expand-first-idea', '--expand-first-idea'], ['--origin', origin, '--expand-first-idea', 'true']]) assert.equal(await main(argv, env), 1);
+    assert.equal(await main(['--origin', origin, '--expand-first-idea'], {}), 1); assert.equal(f.calls.length, 0);
+    assert.equal(await main(['--expand-first-idea', '--origin', origin, '--project-id', projectId], env), 0);
+    assert.equal(f.calls.filter(call => call.method === 'POST').length, 2); assert(output.some(line => line.includes('FLOW_HANDOFF_READY')));
+    for (const secret of [credentials.password, csrf, cookie]) assert(!output.join(' ').includes(secret));
+  } finally { globalThis.fetch = originalFetch; console.log = originalLog; console.error = originalError; }
+});
+
+for (const pipeline of [false, true]) test(`real loopback API persists Gemini ${pipeline ? 'full selected-only pipeline' : 'concepts/receipt'} and cached resume spends no further provider request (injected only)`, async t => {
   const workspace = fileURLToPath(new URL('../', import.meta.url));
   const temporaryRoot = resolve(workspace, '.tmp');
   await mkdir(temporaryRoot, { recursive: true });
@@ -302,11 +528,16 @@ test('real loopback API persists Gemini concepts/receipt with normal auth and ca
   const provider: AiProvider = {
     async generateIdeas(input, options) {
       providerCalls++;
-      assert.match(input.name, /^ACF GEMINI FREE TIER CANARY /);
+      assert.match(input.name, /^ACF GEMINI FREE TIER (PIPELINE )?CANARY /);
       options?.onUsage?.({ provider: 'gemini', operation: 'ideas', model, inputTokens: 17, outputTokens: 41, totalTokens: 58 });
-      return structuredClone(ideas);
+      return structuredClone(pipeline ? pipelineIdeas : ideas);
     },
-    async expandStory() { expansionCalls++; throw new Error('Expansion is outside this canary acceptance'); },
+    async expandStory(input, selected, options) {
+      expansionCalls++;
+      assert.equal(pipeline, true); assert.equal(selected.id, pipelineIdeas[0].id); assert.equal('ideas' in input, false);
+      options?.onUsage?.({ provider: 'gemini', operation: 'expand', model, inputTokens: 23, outputTokens: 70, totalTokens: 93 });
+      return structuredClone(storyPackage);
+    },
   };
   const application = createApplication({ dataDir, provider, allowedOrigins: [integrationOrigin], integrations: {
     aiStatus: () => ({ mode: 'gemini', active: 'gemini', fallbackReason: null }),
@@ -332,23 +563,33 @@ test('real loopback API persists Gemini concepts/receipt with normal auth and ca
   }, body: '{}' });
   assert.equal(setupLogout.status, 200); assert.deepEqual(await setupLogout.json(), { ok: true });
   requests.length = 0; logoutCookies.length = 0;
-  const options = { origin: integrationOrigin, ...credentials, freeTierConfirmed: true, pollIntervalMs: 5, pollTimeoutMs: 5000 };
+  const options = { origin: integrationOrigin, ...credentials, freeTierConfirmed: true, expandFirstIdea: pipeline, pollIntervalMs: 5, pollTimeoutMs: 5000 };
   const accepted = await verifyGeminiLive(options);
   assert.equal(accepted.status, 'LIVE'); assert.equal(accepted.ideasCount, 10); assert.equal(providerCalls, 1);
   const persisted = application.store.project(setupState.user.id, accepted.projectId);
-  assert.deepEqual(persisted.ideas, ideas); assert.equal(persisted.generation?.ideas, 'gemini');
-  assert.equal(persisted.selectedIdeaId, null); assert.equal(persisted.package, null);
-  assert.equal(persisted.aiUsage?.length, 1);
+  assert.deepEqual(persisted.ideas, pipeline ? pipelineIdeas : ideas); assert.equal(persisted.generation?.ideas, 'gemini');
+  assert.equal(persisted.selectedIdeaId, pipeline ? pipelineIdeas[0].id : null);
+  assert.deepEqual(persisted.package, pipeline ? storyPackage : null);
+  assert.equal(persisted.aiUsage?.length, pipeline ? 2 : 1);
   assert.equal(persisted.aiUsage?.[0].provider, 'gemini'); assert.equal(persisted.aiUsage?.[0].model, model);
   assert.equal(persisted.aiUsage?.[0].jobId, accepted.jobId); assert.equal(persisted.aiUsage?.[0].totalTokens, 58);
   const cached = await verifyGeminiLive({ ...options, projectId: accepted.projectId });
   assert.equal(cached.status, 'CACHED'); assert.equal(providerCalls, 1); assert.equal(cached.jobId, accepted.jobId);
   assert.deepEqual(application.store.project(setupState.user.id, accepted.projectId), persisted);
-  assert.equal(expansionCalls, 0); assert.equal(modeCalls, 0);
+  assert.equal(expansionCalls, pipeline ? 1 : 0); assert.equal(modeCalls, 0);
+  if (pipeline) {
+    assert.equal(accepted.scenesCount, 3); assert.equal(cached.expansionJobId, accepted.expansionJobId);
+    assert.equal(persisted.generation?.expansion, 'gemini');
+    assert.equal(persisted.aiUsage?.[1].jobId, accepted.expansionJobId);
+    assert.equal(persisted.aiUsage?.[1].operation, 'expand'); assert.equal(persisted.aiUsage?.[1].model, model);
+    assert.deepEqual(cached.expansionUsage, { inputTokens: 23, outputTokens: 70, totalTokens: 93 });
+    assert.equal(requests.filter(request => request.method === 'POST' && request.path.endsWith('/select')).length, 1);
+    assert.equal(requests.filter(request => request.method === 'POST' && request.path.endsWith('/expand')).length, 1);
+  }
   assert.equal(requests.filter(request => request.method === 'POST' && request.path.endsWith('/ideas')).length, 1);
   assert.equal(requests.filter(request => request.path === '/api/projects' && request.method === 'POST').length, 1);
   assert.equal(requests.filter(request => request.path === '/api/auth/login').length, 2);
-  assert(!requests.some(request => /select|expand|retry|cancel|mode|cloud/.test(request.path)));
+  assert(!requests.some(request => (pipeline ? /retry|cancel|mode|cloud/ : /select|expand|retry|cancel|mode|cloud/).test(request.path)));
   assert.equal(logoutCookies.length, 2); assert.equal(new Set(logoutCookies).size, 2);
   for (const sessionCookie of logoutCookies) {
     const status = await fetch(`${integrationOrigin}/api/auth/status`, { redirect: 'error', headers: { Cookie: sessionCookie } });
