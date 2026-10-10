@@ -219,6 +219,13 @@ progress::-moz-progress-bar { background: var(--accent); }
 .capability-info { margin-bottom: var(--space-5); }
 
 .menu-toggle { display: none; }
+.modal {
+  width: min(640px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow-y: auto;
+  padding: var(--space-5); border: 1px solid var(--border); border-radius: var(--radius-xl);
+  background: var(--surface); color: var(--text); box-shadow: var(--shadow);
+}
+.modal::backdrop { background: rgba(0, 0, 0, 0.6); }
+.modal-inner { min-width: 0; }
 .drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 40; }
 .drawer-content { display: none; position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: var(--surface); z-index: 50; padding: var(--space-4); flex-direction: column; overflow-y: auto; }
 .drawer-overlay.drawer-open, .drawer-content.drawer-open { display: flex; }
