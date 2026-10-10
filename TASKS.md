@@ -17,12 +17,14 @@ Updated: 2026-10-10 (Asia/Bangkok)
 | RC-10 | THEN/48viewport cases/PWA/restart/read-error recovery; critical tablet/mobile repairs | RC-05,RC-07 | VERIFIED; visual/physical-device acceptance pending |
 | RC-11 | Full regressions/typecheck/lint/build/PWA/docs/secrets | RC-09,RC-10 | 144pass/0fail/1POSIXskip; checks passed |
 | RC-12 | Storage-preserving local3006 activation; normal release push/draft PR | RC-11 | VERIFIED; [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2) |
-| RC-13 | Antigravity actual combined UI visual QA + final integration review | RC-12 | READY_FOR_REVIEW; acceptance PENDING |
+| RC-13 | Antigravity actual combined UI visual QA + final integration review | RC-12 | OWNER_REPORTED_READY; final evidence/SHA + Owner approval PENDING |
 | RC-14 | Live AI10/selected expansion canary after quota fix | Owner billing/access | BLOCKED; actual HTTP429 insufficient_quota |
 | RC-15 | Live Drive OAuth/checksum upload/download/restore | Owner Google setup+consent | BLOCKED |
 | RC-16 | Supabase/HTTPS host/approved migration + paired-worker bridge + notebook-offline mobile acceptance | RC-15, Owner host/schema approval | PREPARED / BLOCKED / NOT_IMPLEMENTED individually |
 
 Latest source checkpoint `b271855`; Root reviewed disjoint agents before integration. Root owns Git/contracts/config/progress/schema. Existing architecture, owner data and Antigravity original worktree/specifications remain preserved. No main merge/force push/deploy/billing/publishing.
+
+Final regression rerun ที่3e9c1aa ผ่าน145/144/0/1, typecheck/lint/build/PWA และ actual MP4 playback; [FINAL_REVIEW](docs/release/FINAL_REVIEW.md). Phase2 Gemini/provider/usage + Drive verifier อยู่สาขาแยก และ cloud remains externally gated.
 
 Exact next task and consolidated Owner gates: [HANDOFF](HANDOFF.md). Current [QA](docs/release/QA_RESULTS.json) and [readiness](docs/release/V1_READINESS.md) supersede the historical counts below.
 

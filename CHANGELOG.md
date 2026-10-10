@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-10 — Final release review
+
+- Reran release3e9c1aa regressions:145total/144pass/0fail/1WindowsPOSIXskip, typecheck/lint/build/PWA passed.
+- Verified fresh synthetic H.264/AAC MP4 with FFprobe and actual Chrome playback; preserved Owner database/media via read-only inspection.
+- Recorded Owner-reported Antigravity approval readiness separately from missing final evidence. PR2 remains draft/main unmerged; Phase2 work uses a separate branch.
+
 ## 2026-10-10 — V1 Release Candidate
 
 - Published release checkpoint8434c84 normally with verified remote SHA; [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2) targets main and remains draft/unmerged. Final documentation commits preserve verified sourceb271855.
