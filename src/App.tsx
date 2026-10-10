@@ -54,6 +54,7 @@ export default function App() {
   const session = useRef(new AbortController());
   const actionPending = useRef(false);
   const refreshVersion = useRef(0);
+  const drawerOpener = useRef<HTMLButtonElement | null>(null);
   const m = dictionaries[locale];
   const userId = auth?.user?.id;
   const projectId = route.page === 'story' ? route.projectId : undefined;
@@ -286,7 +287,7 @@ export default function App() {
       <div className="top-actions">
         <label className="locale"><span className="sr-only">{m.language}</span><select value={locale} onChange={(event) => setLocale(event.target.value as Locale)}><option value="th">ไทย</option><option value="en">English</option></select></label>
         {userId && <label className="content-mode"><span className="sr-only">{m.contentMode}</span><select value={contentMode} onChange={(event) => setContentMode(event.target.value as ContentMode)}><option value="th">TH</option><option value="en">EN</option><option value="th+en">TH+EN</option></select></label>}
-        {userId && <button className="secondary menu-toggle" aria-expanded={drawerOpen} aria-haspopup="dialog" onClick={() => setDrawerOpen(true)}>{m.navigation}</button>}
+        {userId && <button className="secondary menu-toggle" aria-expanded={drawerOpen} aria-haspopup="dialog" onClick={(event) => { drawerOpener.current = event.currentTarget; setDrawerOpen(true); }}>{m.navigation}</button>}
       </div>
     </header>
 
@@ -306,7 +307,7 @@ export default function App() {
         <a href="#dashboard" aria-current={route.page === 'dashboard' ? 'page' : undefined}>{m.studio}</a>
         <a href="#stories" aria-current={route.page === 'stories' || route.page === 'story' ? 'page' : undefined}>{m.createContent}</a>
         <a href="#queue" aria-current={route.page === 'queue' ? 'page' : undefined}>{m.queue}</a>
-        <button type="button" aria-haspopup="dialog" aria-expanded={drawerOpen} onClick={() => setDrawerOpen(true)}>{m.more}</button>
+        <button type="button" aria-haspopup="dialog" aria-expanded={drawerOpen} onClick={(event) => { drawerOpener.current = event.currentTarget; setDrawerOpen(true); }}>{m.more}</button>
       </nav>
       <div className={`drawer-overlay ${drawerOpen ? 'drawer-open' : ''}`} onClick={() => setDrawerOpen(false)} aria-hidden="true" />
       <div id="navigation-drawer" className={`drawer-content ${drawerOpen ? 'drawer-open' : ''}`} role="dialog" aria-modal="true" aria-label={m.navigation}>
@@ -325,7 +326,7 @@ export default function App() {
           <button className="secondary" disabled={disabled} onClick={() => { setDrawerOpen(false); void logout(); }} style={{ marginTop: 'auto' }}>{m.logout}</button>
         </nav>
       </div>
-      {pickerOpen && <Modal title={m.projectPicker} closeLabel={m.closeDialog} onClose={() => setPickerOpen(false)}>
+      {pickerOpen && <Modal title={m.projectPicker} closeLabel={m.closeDialog} fallbackFocus={drawerOpener} onClose={() => setPickerOpen(false)}>
         <p>{m.editorPickerInfo}</p>
         {baseLoading ? <p role="status">{m.loading}</p> : projects.length ? <div className="stack">{projects.map((item) => <a key={item.id} className="button secondary picker-project" href={`#story/${encodeURIComponent(item.id)}/clips`} onClick={() => setPickerOpen(false)}><span>{item.name}</span><span className="badge">{stageLabels[locale][item.status]}</span></a>)}</div> : <><p>{m.noProjectsForEditor}</p><a className="button" href="#stories" onClick={() => setPickerOpen(false)}>{m.createStory}</a></>}
       </Modal>}
