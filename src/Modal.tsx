@@ -1,8 +1,9 @@
-import { useEffect, useId, useRef, type KeyboardEvent, type ReactNode } from 'react';
+import { useEffect, useId, useRef, type KeyboardEvent, type ReactNode, type RefObject } from 'react';
 
 // Native modal dialogs keep the background inert; the Tab loop also prevents browser-chrome focus.
-export default function Modal({ title, closeLabel, className = '', onClose, children }: {
+export default function Modal({ title, closeLabel, className = '', onClose, children, fallbackFocus }: {
   title: string; closeLabel: string; className?: string; onClose: () => void; children: ReactNode;
+  fallbackFocus?: RefObject<HTMLElement | null>;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const titleId = useId();
@@ -31,13 +32,16 @@ export default function Modal({ title, closeLabel, className = '', onClose, chil
   }
   useEffect(() => {
     const previous = document.activeElement;
+    const fallback = fallbackFocus?.current;
     const element = dialog.current;
     element?.showModal();
     return () => {
       element?.close();
-      if (previous instanceof HTMLElement && previous.isConnected) previous.focus();
+      const target = previous instanceof HTMLElement && previous !== document.body && previous.isConnected && previous.getClientRects().length
+        ? previous : fallback;
+      if (target?.isConnected && target.getClientRects().length) target.focus();
     };
-  }, []);
+  }, [fallbackFocus]);
   return <dialog ref={dialog} tabIndex={-1} className={`modal ${className}`} aria-labelledby={titleId} onKeyDownCapture={cycleFocus}
     onCancel={(event) => { event.preventDefault(); onClose(); }}
     onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}>
