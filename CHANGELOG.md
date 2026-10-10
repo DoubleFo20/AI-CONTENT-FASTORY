@@ -2,6 +2,8 @@
 
 ## 2026-10-10 — V1 Release Candidate
 
+- Published release checkpoint8434c84 normally with verified remote SHA; [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2) targets main and remains draft/unmerged. Final documentation commits preserve verified sourceb271855.
+
 - Final source b271855: full145tests/144passes/1Windows skip; build/lint/typechecks/PWA and48viewport cases passed.
 - Fixed recovered polling alert without hiding owner-command failure; retained reproducible browser regression. Restored tablet nav icons and mobile focused headings with scopedCSS.
 - Actual live OpenAI one-call diagnosis still429/insufficient_quota; no retry, key leak, billing or Owner data mutation.

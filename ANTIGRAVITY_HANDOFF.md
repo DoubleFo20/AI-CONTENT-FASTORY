@@ -5,6 +5,8 @@ DESIGN_DELIVERY_STATUS: DESIGN_READY_FOR_CODEX
 PHASE_0A_STATUS: STABLE
 DESIGN_REFERENCE_QA: PASS_WITH_DOCUMENTED_LIMITS
 VISUAL_QA_STATUS: PASS
+APP_IMPLEMENTATION_VISUAL_QA: PENDING
+RELEASE_PR: [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2)
 Updated: 2026-10-10 (Asia/Bangkok)
 
 The approved Premium Cinematic V2 and reviewed integration are now in `release/v1-real-world` with the latest

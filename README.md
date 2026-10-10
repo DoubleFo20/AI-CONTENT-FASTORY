@@ -1,5 +1,7 @@
 # AI Content Factory
 
+Release Candidate: [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2) รอ Antigravity visual QA และ final integration review; main ยังไม่ merge.
+
 A TH/EN short-story production workspace with a working local lane and prepared cloud adapters. V1 moves from a brief to ten ideas,
 one selected story, bibles/scenes, English Google Flow prompts, imported clips and MP4.
 The release candidate retains Premium Cinematic V2 and connects the studio UI to the

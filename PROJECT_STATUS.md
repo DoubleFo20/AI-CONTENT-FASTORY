@@ -5,7 +5,7 @@ CURRENT_PHASE: LOCAL_V1_REAL_WORLD_RELEASE
 ANTIGRAVITY_STATUS: READY_FOR_IMPLEMENTATION_VISUAL_QA
 Updated: 2026-10-10 (Asia/Bangkok)
 
-Source checkpoint: `b271855dfa535bf4a1b18afef5917f8b1280c925`; branch `release/v1-real-world`, worktree `.worktrees/release-v1`. Reviewed integration cfa6554 + Premium Cinematic V2 be29e0a; main dfe2b2c และ Draft PR#1 ยังไม่ merge. RELEASE_PR: _RELEASE_PR_PENDING_.
+Source checkpoint: `b271855dfa535bf4a1b18afef5917f8b1280c925`; branch `release/v1-real-world`, worktree `.worktrees/release-v1`. Reviewed integration cfa6554 + Premium Cinematic V2 be29e0a; main dfe2b2c และ Draft PR#1 ยังไม่ merge. RELEASE_PR: [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2).
 
 แก้ Ideas blocker จากงานจริงที่ล้มเหลวเพราะ quota และ stale UI state แล้ว สำรอง SQLite แบบ consistent + integrity_check ก่อนกู้โปรเจกต์เดิมเป็น 10 Mock ideas/completed100; ไม่มี active job บัญชี/session/media/schema และ 3 failed records เดิมอยู่ครบ ไม่มีการเลือกหรือขยายเรื่องแทน Owner.
 

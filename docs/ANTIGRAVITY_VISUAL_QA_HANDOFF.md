@@ -4,7 +4,7 @@ ANTIGRAVITY_STATUS: READY_FOR_IMPLEMENTATION_VISUAL_QA
 APP_IMPLEMENTATION_VISUAL_QA: PENDING
 Updated: 2026-10-10 (Asia/Bangkok)
 
-ให้ตรวจแอปจาก branch `release/v1-real-world`, source checkpoint `b271855dfa535bf4a1b18afef5917f8b1280c925`, worktree `.worktrees/release-v1`. RELEASE_PR: _RELEASE_PR_PENDING_. Draft PR#1 และ main ยังไม่ merge; บันทึก HEAD ที่รันจริงทุกครั้ง เพราะ commit เอกสารอาจอยู่หลัง source checkpoint.
+ให้ตรวจแอปจาก branch `release/v1-real-world`, source checkpoint `b271855dfa535bf4a1b18afef5917f8b1280c925`, worktree `.worktrees/release-v1`. RELEASE_PR: [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2). Draft PR#1 และ main ยังไม่ merge; บันทึก HEAD ที่รันจริงทุกครั้ง เพราะ commit เอกสารอาจอยู่หลัง source checkpoint.
 
 ฐานที่รวมแล้วคือ reviewed integration cfa6554 + Premium Cinematic V2 be29e0a พร้อม backend/core เดิมของ main dfe2b2c ไม่มี redesign หรือ migration. ตรวจแอปที่รวมแล้วเทียบ [UI_SPEC](UI_SPEC.md), [DESIGN_SYSTEM](DESIGN_SYSTEM.md), [MOBILE_UX](MOBILE_UX.md), [MOTION_SPEC](MOTION_SPEC.md) และ [VISUAL_QA](VISUAL_QA.md). PASS ของ prototype/design branch ไม่ใช่ acceptance ของ candidate นี้.
 

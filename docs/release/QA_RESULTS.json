@@ -52,7 +52,8 @@
       "command": "npm.cmd run validate:secrets",
       "exitCode": 0,
       "sourceCheckpointTrackedFiles": 135,
-      "valuesPrinted": false
+      "valuesPrinted": false,
+      "finalCandidateTrackedFiles": 139
     },
     {
       "command": "git diff --cached --check",
@@ -264,7 +265,15 @@
     "forcePush": false,
     "publicDeployment": false,
     "contentPublished": false,
-    "automaticDevelopmentScheduler": false
+    "automaticDevelopmentScheduler": false,
+    "pullRequest": "https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2",
+    "pullRequestNumber": 2,
+    "state": "OPEN",
+    "isDraft": true,
+    "targetBranch": "main",
+    "initialPublishedCommit": "8434c847f447cc6719bbf7c8e37224b0daf7e840",
+    "initialRemoteShaVerified": true,
+    "configuredGithubStatusChecks": 0
   },
   "changedPathsSinceMain": [
     "AGENTS.md",
@@ -286,7 +295,11 @@
     "docs/integration/preview-1440-en.png",
     "docs/integration/scenes-768-en.png",
     "docs/release/EXTERNAL_INTEGRATIONS.md",
+    "docs/release/LOCAL_OWNER_RUN.md",
+    "docs/release/QA_RESULTS.json",
     "docs/release/V1_READINESS.md",
+    "docs/release/clips-360-th.png",
+    "docs/release/preview-768-en.png",
     "package.json",
     "scripts/integration-qa-server.mjs",
     "scripts/release-qa-server.mjs",
@@ -338,5 +351,12 @@
     "tests/project-storage.test.ts",
     "tests/request-lifecycle.test.ts",
     "tests/shutdown.test.ts"
-  ]
+  ],
+  "finalEvidenceValidation": {
+    "requiredDocumentArtifacts": 27,
+    "additionalReleaseLocalLinks": 22,
+    "screenshotDimensionsVerified": 2,
+    "downloadedMp4Reprobed": true,
+    "stagedWhitespacePassed": true
+  }
 }

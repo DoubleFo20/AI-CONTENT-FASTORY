@@ -4,7 +4,7 @@ STATUS: LOCAL_V1_RC_VERIFIED_EXTERNAL_GATES_PENDING
 ANTIGRAVITY_STATUS: READY_FOR_IMPLEMENTATION_VISUAL_QA
 Updated: 2026-10-10 (Asia/Bangkok)
 
-Source checkpoint `b271855dfa535bf4a1b18afef5917f8b1280c925` on `release/v1-real-world` in `D:\xampp\htdocs\Ai-content-factory\.worktrees\release-v1`. Preserve root main dfe2b2c and every other dirty worktree. Reviewed integration cfa6554/Premium V2 be29e0a are retained. Draft PR#1 stays unmerged. RELEASE_PR: _RELEASE_PR_PENDING_.
+Source checkpoint `b271855dfa535bf4a1b18afef5917f8b1280c925` on `release/v1-real-world` in `D:\xampp\htdocs\Ai-content-factory\.worktrees\release-v1`. Preserve root main dfe2b2c and every other dirty worktree. Reviewed integration cfa6554/Premium V2 be29e0a are retained. Draft PR#1 stays unmerged. RELEASE_PR: [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2).
 
 Actual Owner storage: `D:\xampp\htdocs\Ai-content-factory-premium-v2\storage`. Original root storage is empty and must not be substituted. Latest Owner proceed authorized the pending original-storage recovery. Verified consistent backup `.tmp/owner-backup-j6CByS/factory.sqlite` + ignored BACKUP.json. Recovered 10 labelled Mock concepts/completed100 without changing account/session/media/schema or old3 quota failures; no Owner selection/expansion. Recovery and live-probe scripts/evidence remain private/ignored.
 
@@ -20,7 +20,7 @@ Synthetic QA fixture `.tmp/release-qa-7thsIz` is QA_ONLY-marked; resume with ACF
 
 NEXT_TASK: Antigravity actual-app visual QA → final integration review; Owner confirms OpenAI quota correction, provisions OAuth via private environment and authorizes consent; Owner selects host/Supabase and approves schema/cutover before deployment or pairing work. Then run live10shortideas→ownerselectedexpansion in a new isolated project, Drive small-file checksum roundtrip, and deployed/mobile/notebook-disconnected proof in dependency order. Keep cached Mock concepts and original data. Paired Local Worker/WAITING_FOR_WORKER bridge, direct Flow/Meta automation remain NOT_IMPLEMENTED.
 
-No force push, main merge, publishing, public deployment, billing purchase or data reset occurred. Normal candidate push/PR are authorized. New external input or invocation is needed for blocked work; do not claim automatic resumption.
+No force push, main merge, publishing, public deployment, billing purchase or data reset occurred. Candidate 8434c847f447cc6719bbf7c8e37224b0daf7e840 ถูก push ปกติและตรวจ remote SHA ตรงแล้ว; [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2) เป็น OPEN/DRAFT เป้าหมาย main. GitHub ไม่มี configured PR status checks ณ เวลาตรวจ; ผลทดสอบในเอกสารรัน local จริง. New external input or invocation is needed for blocked work; do not claim automatic resumption.
 
 ## บันทึก checkpoint ก่อนหน้า (historical)
 

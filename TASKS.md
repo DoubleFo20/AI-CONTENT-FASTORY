@@ -16,7 +16,7 @@ Updated: 2026-10-10 (Asia/Bangkok)
 | RC-09 | Request-lifecycle shutdown/auth/file/OAuth/queue safety review | RC-03,RC-08 | VERIFIED; independent review accepted |
 | RC-10 | THEN/48viewport cases/PWA/restart/read-error recovery; critical tablet/mobile repairs | RC-05,RC-07 | VERIFIED; visual/physical-device acceptance pending |
 | RC-11 | Full regressions/typecheck/lint/build/PWA/docs/secrets | RC-09,RC-10 | 144pass/0fail/1POSIXskip; checks passed |
-| RC-12 | Storage-preserving local3006 activation; normal release push/draft PR | RC-11 | LOCAL_ACTIVE; _RELEASE_PR_PENDING_ |
+| RC-12 | Storage-preserving local3006 activation; normal release push/draft PR | RC-11 | VERIFIED; [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2) |
 | RC-13 | Antigravity actual combined UI visual QA + final integration review | RC-12 | READY_FOR_REVIEW; acceptance PENDING |
 | RC-14 | Live AI10/selected expansion canary after quota fix | Owner billing/access | BLOCKED; actual HTTP429 insufficient_quota |
 | RC-15 | Live Drive OAuth/checksum upload/download/restore | Owner Google setup+consent | BLOCKED |
