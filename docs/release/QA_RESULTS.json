@@ -172,7 +172,7 @@
       "workspaceNavigation": "Intentional overflow-x:auto; 336px rail/599TH or607EN content at360; does not expand page",
       "physicalPhones": false,
       "assistiveTechnology": false,
-      "antigravityVisualAcceptance": "PENDING"
+      "antigravityVisualAcceptance": "PUBLISHED_PASS_PRE_PATCH_3e9c1aa_CURRENT_DELTA_HANDOFF"
     },
     "networkRecovery": {
       "script": "tests/browser/network-recovery.js",
@@ -234,12 +234,13 @@
     "status": "BLOCKED",
     "specificBillingBalanceOrLimitVerified": false,
     "ownerDataTouched": false,
-    "billingChanges": false
+    "billingChanges": false,
+    "latestOwnerPolicy": "NO_REQUESTS_UNTIL_NEW_EXPLICIT_APPROVAL"
   },
   "reviews": {
     "authFileHandlingQueueDriveShutdown": "Independent Sol High read-only review accepted after regression repairs",
     "refreshErrorAndScopedCss": "Independent Luna read-only review and browser retakes accepted",
-    "antigravity": "Actual candidate review pending"
+    "antigravity": "Published PASS/ddccf9c tested3e9c1aa; current scoped frontend delta requires actual-app review"
   },
   "readiness": {
     "localV1": "VERIFIED with Mock text and owner-imported clips",
@@ -252,7 +253,7 @@
     "fullAutomation": "NOT_IMPLEMENTED"
   },
   "externalGates": [
-    "OpenAI project quota/access correction and successful new-project canary",
+    "Gemini private key + Owner verified Free Tier/billing disabled + explicit live canary; OpenAI requires new approval",
     "Real Owner-operated Flow clips/account capability verification",
     "Google OAuth values/consent and upload/download/checksum/cache-restore round trip",
     "Chosen HTTPS host/Supabase and approved schema/migration",
@@ -358,5 +359,211 @@
     "screenshotDimensionsVerified": 2,
     "downloadedMp4Reprobed": true,
     "stagedWhitespacePassed": true
+  },
+  "latestFinalReview": {
+    "applicationSource": "0b35cea82d7e7867e11c653df0d6d790a6b66f19",
+    "fullRegression": {
+      "command": "npm.cmd test",
+      "sourceCommit": "de59fe6157537feb512aea8e5535cacb709185e9",
+      "total": 145,
+      "passed": 144,
+      "failed": 0,
+      "skipped": 1,
+      "durationMs": 50785.9898
+    },
+    "subsequentChanges": "Frontend focus fallback only; build/three typechecks/full lint and actual current-source targeted browser passed",
+    "browser": {
+      "applicationSource": "0b35cea82d7e7867e11c653df0d6d790a6b66f19",
+      "modalCases": 12,
+      "passedModalCases": 12,
+      "previewCases": 2,
+      "widths": [
+        360,
+        768,
+        1440
+      ],
+      "locales": [
+        "th",
+        "en"
+      ],
+      "physicalPhone": false,
+      "cases": [
+        {
+          "type": "settings",
+          "locale": "th",
+          "width": 360,
+          "tabWrapped": true,
+          "escapeFocus": true,
+          "closeFocus": true
+        },
+        {
+          "type": "picker",
+          "locale": "th",
+          "width": 360,
+          "tabWrapped": true,
+          "escapeFocus": true,
+          "closeFocus": true
+        },
+        {
+          "type": "settings",
+          "locale": "th",
+          "width": 768,
+          "tabWrapped": true,
+          "escapeFocus": true,
+          "closeFocus": true
+        },
+        {
+          "type": "picker",
+          "locale": "th",
+          "width": 768,
+          "tabWrapped": true,
+          "escapeFocus": true,
+          "closeFocus": true
+        },
+        {
+          "type": "settings",
+          "locale": "th",
+          "width": 1440,
+          "tabWrapped": true,
+          "escapeFocus": true,
+          "closeFocus": true
+        },
+        {
+          "type": "picker",
+          "locale": "th",
+          "width": 1440,
+          "tabWrapped": true,
+          "escapeFocus": true,
+          "closeFocus": true
+        },
+        {
+          "type": "settings",
+          "locale": "en",
+          "width": 360,
+          "tabWrapped": true,
+          "escapeFocus": true,
+          "closeFocus": true
+        },
+        {
+          "type": "picker",
+          "locale": "en",
+          "width": 360,
+          "tabWrapped": true,
+          "escapeFocus": true,
+          "closeFocus": true
+        },
+        {
+          "type": "settings",
+          "locale": "en",
+          "width": 768,
+          "tabWrapped": true,
+          "escapeFocus": true,
+          "closeFocus": true
+        },
+        {
+          "type": "picker",
+          "locale": "en",
+          "width": 768,
+          "tabWrapped": true,
+          "escapeFocus": true,
+          "closeFocus": true
+        },
+        {
+          "type": "settings",
+          "locale": "en",
+          "width": 1440,
+          "tabWrapped": true,
+          "escapeFocus": true,
+          "closeFocus": true
+        },
+        {
+          "type": "picker",
+          "locale": "en",
+          "width": 1440,
+          "tabWrapped": true,
+          "escapeFocus": true,
+          "closeFocus": true
+        },
+        {
+          "type": "preview",
+          "locale": "th",
+          "width": 360,
+          "headingOk": true,
+          "horizontalOverflow": false,
+          "driveHelpDisplay": "block",
+          "viewport": 360,
+          "documentWidth": 360
+        },
+        {
+          "type": "preview",
+          "locale": "en",
+          "width": 360,
+          "headingOk": true,
+          "horizontalOverflow": false,
+          "driveHelpDisplay": "block",
+          "viewport": 360,
+          "documentWidth": 360
+        }
+      ]
+    },
+    "reusableModalRegression": {
+      "script": "tests/browser/modal-focus.js",
+      "executedVia": "Playwright CLI run-code on normally authenticated synthetic Mock fixtures",
+      "phase2Source": "de462843a2847e850334730c004f8b1d8f01e0b6",
+      "releaseSource": "0b35cea82d7e7867e11c653df0d6d790a6b66f19",
+      "phase2Passed": 12,
+      "releasePassed": 12,
+      "casesPerBranch": 12,
+      "ownerPort3006Refused": true,
+      "projectOrProviderMutation": false
+    },
+    "mp4": {
+      "actualPlayback": true,
+      "readyState": 4,
+      "durationSeconds": 4.021333,
+      "currentTimeSeconds": 3.393241,
+      "advanced": true,
+      "error": null,
+      "actualDownload": true,
+      "downloadMethod": "Root loopback HTTP GET integrity check; fresh Chrome playback separately verified by QA",
+      "downloadedBytes": 122601,
+      "sha256": "4b6c18d440dfe443dcff968b97243d6811872fb135f615b98803a387c32b37f3",
+      "sha256MatchesSource": true,
+      "source": "Fresh synthetic FFmpeg smoke, not live Flow",
+      "video": "h264",
+      "width": 720,
+      "height": 1280,
+      "audio": "aac",
+      "sampleRate": 48000,
+      "channels": 2
+    },
+    "secretGuard": {
+      "googleApiKeyPattern": true,
+      "geminiEnvironmentValue": true,
+      "syntheticNegativeCases": 2,
+      "cleanPositiveCase": true,
+      "valuesPrinted": false,
+      "independentReview": "ACCEPTED_NO_MATERIAL_REGRESSION",
+      "limit": "Tracked known formats/values only"
+    },
+    "ownerData": {
+      "baselinePreserved": true,
+      "databaseWrites": false,
+      "owners": 1,
+      "projects": 1,
+      "jobs": 4,
+      "cachedMockIdeas": 10,
+      "activeJobs": 0
+    },
+    "externalCallsThisResume": 0,
+    "usage": {
+      "source": "Codex get_usage_limits",
+      "primaryUsedPercent": 55,
+      "primaryRemainingPercent": 45,
+      "secondaryUsedPercent": 68,
+      "secondaryRemainingPercent": 32,
+      "stopAtRemainingPercent": 7,
+      "automaticResume": false
+    }
   }
 }

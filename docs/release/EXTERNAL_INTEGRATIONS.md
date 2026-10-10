@@ -6,7 +6,7 @@
 ## สถานะจากหลักฐานที่มี
 
 - Express + SQLite local lane ยังคงใช้งานและไม่ถูกเปลี่ยน. Production/editor settings, media imports, Drive private sidecar index และ endpoints ถูกเตรียมใน source; การมี implementation ไม่ใช่หลักฐานว่าบริการจริงพร้อม.
-- `OPENAI_API_KEY` เดิมได้รับอนุมัติให้reuse. Rootตรวจliveหนึ่งคำขอแยกจากOwnerเมื่อ2026-10-10T08:21:09Z ได้HTTP429/insufficient_quota (AI_QUOTA_EXCEEDED), ไม่มีretryหรือbillingchange. งานเดิมสามครั้งยังpreserve. ยังไม่แยกได้ว่าcreditbalanceหรือspendlimitจากaccountsettings จึงให้Ownerตรวจเองก่อนsuccessfullivecanary. ไม่มีGemini key.
+- Latest Owner policy: Gemini Free Tier Flash-Lite เป็น primary; private key + tier confirmation ยังไม่พร้อม. OpenAI สำรองห้ามเรียกจนมี explicit approval ใหม่. ข้อมูล historical: `OPENAI_API_KEY` เดิมเคยได้รับอนุมัติให้reuse. Rootตรวจliveหนึ่งคำขอแยกจากOwnerเมื่อ2026-10-10T08:21:09Z ได้HTTP429/insufficient_quota (AI_QUOTA_EXCEEDED), ไม่มีretryหรือbillingchange. งานเดิมสามครั้งยังpreserve. ยังไม่แยกได้ว่าcreditbalanceหรือspendlimitจากaccountsettings จึงให้Ownerตรวจเองก่อนsuccessfullivecanary. ไม่มีGemini key.
 - Google OAuth/Drive ยังไม่มี credentials/grant และ live upload/download round-trip. Drive folder/index/transfer logic เป็น PREPARED; ไม่มี verified remote storage หรือ Drive-primary cutover.
 - Supabase URL/secret ยังไม่ configured; SQL draft/adapter code ไม่ได้ถูก deploy. Hosted grants/RLS/PostgREST, multi-host concurrency และ production persistence ยังไม่มีหลักฐาน.
 - Always-on cloud host และ paired Local Worker ยังไม่ verified/implemented as a deployment path. Lease RPC/code tests ไม่พิสูจน์ laptop-offline operation หรือ worker pairing.
@@ -14,11 +14,13 @@
 
 ผลสรุป: core source เตรียมความสามารถและ contracts เพิ่มขึ้น แต่ยังไม่มี external service ที่ถือว่า live verified. คง local SQLite/auth/FFmpeg lane ไว้จน credential, hosting/schema verification และ migration ที่ Owner อนุมัติพร้อม.
 
-## AI mode และ quota gate
+## AI mode และ Owner authorization gate
 
-`POST /api/integrations/ai/mode` รับ `{mode:"mock"|"openai"}`; เปลี่ยน mode อย่างชัดเจนและบันทึกใน private state. Environment mode ยังรองรับ `openai` (default), `mock`, `auto`; mock output ต้องแสดงเป็น synthetic. `auto` fallback เฉพาะ missing configuration, quota หรือ access failure ตาม code; ไม่ fallback/refire เมื่อ refusal, invalid output, rate limit, timeout หรือ network result กำกวม. `GET /api/health.aiConfigured` มีความหมายแค่ตรวจ key presence.
+Owner app3006 ยังเป็น RC เดิมใน Mock; child process ไม่ได้รับ OpenAI key เพื่อบังคับ authorization ล่าสุดโดยไม่แก้ source ที่ผ่าน Antigravity QA. Persistent environment key ไม่ถูกลบ. ไม่เปิด Real/auto ใน RC นี้เพื่อทดลอง OpenAI.
 
-สถานะ quota ที่มีรายงานเป็น blocker ของ paid AI. ก่อนทดสอบ live ต้องแก้ project access/credits ในช่องทางที่ Owner ดูแล และ Owner อนุมัติ canary แบบจำกัด: 10 ideas → เลือกหนึ่ง → expand selected story. ไม่ควร retry ซ้ำจนกว่าจะมีหลักฐานว่า quota พร้อม. ไม่มีการเก็บหรือเปิดเผย key ในเอกสารนี้.
+Phase2 [Draft PR#3](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/3) เพิ่ม Gemini/provider selection/usage และ explicit one-request canary. ใช้ gemini-3.5-flash-lite เท่านั้น, backend GEMINI_API_KEY + ACF_GEMINI_FREE_TIER_CONFIRMED=true หลัง Owner ยืนยัน API project เป็น Free Tier และไม่มี billing. Subscription/key presence ไม่พิสูจน์เครดิตหรือ tier. Quota หมดหยุด ไม่มี retry/paid upgrade/provider fallback. OpenAI ต้องมี approval ใหม่ก่อนเปิด ACF_OPENAI_REQUESTS_APPROVED; quota correction ไม่ใช่ approval.
+
+Live acceptance เป็น new isolated ten-ideas project แล้ว Owner เลือกหนึ่งก่อน expansion; cached Mock ไม่ถูก relabel/regenerate. Canary เตรียมพร้อมและผ่าน injected HTTP tests แต่ยังไม่มี live call. อ่าน operations ในสาขา Phase2 ก่อน activation; app3006 RC ไม่ได้รองรับ Gemini. ไม่มีการซื้อเครดิต/เปิด billing ในงานนี้.
 
 ## Flow, prompts และ media production
 
@@ -38,7 +40,7 @@ Cloud endpoints และ SQL draft แยกจาก local SQLite project name
 
 ## Gates ที่เหลือ
 
-1. Resolve AI quota/project access ผ่าน owner แล้วรัน approved canary ที่จำกัด; บันทึก mode และ safe outcomes.
+1. Owner ตั้ง private Gemini key และยืนยัน Free Tier/Billing disabled แล้วรัน Phase2 isolated ten-ideas canary เพียงครั้งเดียว; ใช้ project-id เดิมเมื่อ resume. OpenAI ห้ามเรียกก่อน approval ใหม่.
 2. Owner provision Google OAuth values ผ่าน private manager, consent เอง, ตรวจ transfer round trip, checksum/ownership, interrupted transfer และ restore behavior.
 3. เลือก Supabase project/always-on host, review และ approve schema ก่อน apply; verify deployed grants/RLS/PostgREST, persistent jobs และ restart/offline behavior.
 4. Implement and review paired Local Worker protocol, enrollment/revocation, scoped credentials, lease fencing และ media bridge ก่อนเปิด cloud export ไป local.
@@ -64,4 +66,4 @@ Flow เป็นผลิตภัณฑ์เว็บและ account integr
 
 ## OpenAI diagnostic ที่ตรวจจริง
 
-หนึ่งofficialResponsesrequestได้429/insufficient_quota; ไม่ใช่ordinaryrequest-ratefailure. การretryไม่แก้credits/limits ตาม [OpenAI error guidance](https://developers.openai.com/api/docs/guides/error-codes). Ownerตรวจ [Billing](https://platform.openai.com/settings/organization/billing) และ [Limits](https://platform.openai.com/settings/organization/limits) ผ่านaccountเอง; ไม่มีการซื้อ/เพิ่มเพดานโดยCodex. ใช้defaultideasmodel gpt-6-luna; modelaccess/realoutputยังไม่ผ่านเนื่องจากquota. หลังแก้quotaให้test10shortideasในprojectใหม่และexpandเฉพาะconceptที่Ownerเลือก ไม่overwritecachedMockหรือretryเดิมโดยอัตโนมัติ.
+หนึ่งofficialResponsesrequestได้429/insufficient_quota; ไม่ใช่ordinaryrequest-ratefailure. การretryไม่แก้credits/limits ตาม [OpenAI error guidance](https://developers.openai.com/api/docs/guides/error-codes). Ownerตรวจ [Billing](https://platform.openai.com/settings/organization/billing) และ [Limits](https://platform.openai.com/settings/organization/limits) ผ่านaccountเอง; ไม่มีการซื้อ/เพิ่มเพดานโดยCodex. ใช้defaultideasmodel gpt-6-luna; modelaccess/realoutputยังไม่ผ่านเนื่องจากquota. Owner ล่าสุดเลือก Gemini Free Tier และระงับ OpenAI จนอนุมัติใหม่; การแก้ quota เพียงอย่างเดียวไม่อนุญาตให้ test OpenAI. ไม่ overwrite cached Mock หรือ retry งานเดิมโดยอัตโนมัติ.

@@ -60,10 +60,12 @@ chosen project, owner-approved schema application, verified persistence/session 
 Drive OAuth authorization, HTTPS/origins and worker credential enrollment. Cloud deployment
 and billing are external gates, not simulated acceptance.
 
-Provider policy: retain OpenAI structured output and one paid request. Mock mode produces
-visible TH/EN fixtures. Explicit auto mode may fall back only on missing configuration or
-quota/access failure, never refusals, malformed output, timeouts or ambiguous paid requests.
-Mock titles/explanations/prompts identify sample provenance even in the unchanged frontend.
+Current Owner runtime uses Mock on reviewed RC code; no OpenAI credential is passed to
+its process. Latest Owner policy chooses Gemini Free Tier Flash-Lite as primary text,
+prepared on the separate Phase2 branch with backend key and Free Tier confirmation gates.
+The RC itself has no Gemini adapter. OpenAI is a historical backup and requests remain
+prohibited until new explicit approval. Existing Mock content stays labelled and cached;
+no silent live claim, automatic paid retry, paid upgrade or provider fallback is authorized.
 Google Flow remains user-operated primary video generation; Meta AI supporting work is
 manual/unconfigured until an official supported integration is selected. Remotion is an
 optional future editing adapter; the verified FFmpeg implementation stays active.

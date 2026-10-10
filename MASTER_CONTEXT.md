@@ -21,7 +21,7 @@ The creator controls selection, paid generation and the final creative review.
   always-on Cloud Control Plane and separately authenticated Local Worker. Existing SQLite,
   account/session persistence and local media remain active until approved verified migration.
 - Persistent single-worker queue; one active operation per project; no automatic paid retries.
-- OpenAI Responses structured outputs for text; existing environment key reuse authorized.
+- Latest Owner policy: Gemini Free Tier Flash-Lite is primary text; backend key + verified Free Tier confirmation required. OpenAI key remains server-side but requests are prohibited until new explicit Owner approval. Mock remains explicit; no paid fallback or billing upgrade.
 - Google Flow remains the primary video engine with a manual prompt-pack/import boundary.
 - FFmpeg is the local final assembly engine, not a substitute video-generation engine.
 - Full TH/EN chrome; bilingual story content; scene explanation TH and Flow prompt EN.

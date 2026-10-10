@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-10-10 — Verified release and Phase2 checkpoint
+
+- แก้Drivehelp/dialogcontrast/mobileeditorfocusด้วยPremiumCinematicV2tokens;backend/schema/dependenciesคงเดิม.
+- RC regression144pass/1skip;Phase2203pass/1skip. Build/typecheck/full lintผ่าน;syntheticNodecoverageแยกจากliveproof.
+- ActualRC14targetedcasesและPhase2latest12dialogsผ่าน;ไฟล์modal-focus.jsรันจริง12/12ทั้งสองสาขา. PreviousPhase2matrix36/36ผูกsource86dbbb5.
+- MP4ใหม่4.021333s/122601bytesผ่านFFprobeและChrome playback + HTTP download/hash. Ownerdataread-onlybaselinepreserved.
+- เพิ่มGemini/Googlekeyguard;syntheticnegativeสองกรณี+cleanpositiveผ่าน ไม่มีvalueprinted. Independentread-onlyreviewยอมรับ.
+- PublishedAntigravityPASSผูกpre-patch3e9c1aa;currentdeltaส่งhandoffเพื่อreview ไม่claimretest.
+- usage ที่ตรวจจากบัญชีล่าสุดเหลือ 45% ในรอบ 5 ชั่วโมง และ 32% ในรอบสัปดาห์ ยังไม่ถึงเกณฑ์หยุด 7%; main/deployยังไม่อนุมัติ. PrivateGeminiFreeTier/OAuth/cloudgatesยังคงอยู่.
+
+## 2026-10-10 — Explicit resume and Phase2 preparation
+
+- Owner proceed resumed work only after authoritative remaining100%/41%; latest73%/37%, above stop threshold.
+- Restored Owner3006 on reviewed RC code with original data, Mock only and no OpenAI credential passed to its child; read-only preservation passed.
+- Prepared stacked Draft PR#3 targeting release/v1-real-world; PR#2/main remain unmerged.
+- Phase2 source86dbbb5 adds bounded one-request Gemini canary/resume, pure worker presence/reconnect and scoped Drive guide block layout; independent reviews accepted.
+- Full204 tests/203 passes/1 Windows POSIX skip; build/typechecks/lint passed. All Gemini/Drive/cloud tests are injected/prepared, not live acceptance.
+- Current external gates: private Gemini key + Free Tier confirmation; Drive OAuth/consent; approved Supabase/HTTPS host/schema. OpenAI requires new explicit approval.
+
+
+
 ## 2026-10-10 — Usage safety checkpoint
 
 - STATUS: PAUSED_FOR_USAGE_RESET; authoritative remaining1% after checkpoint began at7%. No new features/agents or automatic resume.
