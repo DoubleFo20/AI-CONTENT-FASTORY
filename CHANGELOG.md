@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-10 — Usage safety checkpoint
+
+- STATUS: PAUSED_FOR_USAGE_RESET; authoritative remaining1% after checkpoint began at7%. No new features/agents or automatic resume.
+- Published Antigravity QA ddccf9c/PASS on source3e9c1aa integrated as evidence; RC ready for Owner approval, main/deploy unchanged.
+- Final regression 180total/179pass/0fail/1POSIXskip; Owner data preserved.
+- Gemini limited to confirmed Free Tier Flash-Lite for both jobs; OpenAI requests gated by new Owner approval. Quota stops without paid fallback. Targeted TH/EN copy corrected.
+- Exact NEXT_TASK and external credential/authorization gates recorded in HANDOFF; safe checkpoint only.
+
 ## 2026-10-10 — Phase2 prepared integrations
 
 - Added official Gemini text adapter, explicit Owner provider choice, normalized reported usage and verified-rate cost estimates; no paid retries or live success claim.

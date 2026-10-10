@@ -12,6 +12,7 @@ interface ConfiguredProviderOptions {
   mode?: AiMode;
   apiKey?: string;
   openai?: AiProvider;
+  openaiApproved?: boolean;
   geminiApiKey?: string;
   gemini?: AiProvider;
   stateFile?: string;
@@ -58,7 +59,7 @@ function parseMode(value: unknown): AiMode {
 function configuredMode(mode?: AiMode): AiMode {
   if (mode !== undefined) return parseMode(mode);
   const environmentMode = process.env.ACF_AI_MODE;
-  return environmentMode === undefined ? 'openai' : parseMode(environmentMode);
+  return environmentMode === undefined ? 'gemini' : parseMode(environmentMode);
 }
 
 function isProviderError(error: unknown): error is AiProviderError {
@@ -74,7 +75,8 @@ export function createConfiguredAiProvider(options: ConfiguredProviderOptions = 
   }
   const hasApiKey = Boolean((options.apiKey ?? process.env.OPENAI_API_KEY)?.trim());
   const hasGeminiKey = Boolean((options.geminiApiKey ?? process.env.GEMINI_API_KEY)?.trim());
-  const openai = options.openai ?? createOpenAiProvider({ apiKey: options.apiKey });
+  const openaiApproved = options.openaiApproved ?? process.env.ACF_OPENAI_REQUESTS_APPROVED === 'true';
+  const openai = options.openai ?? createOpenAiProvider({ apiKey: options.apiKey, requestsApproved: openaiApproved });
   const gemini = options.gemini ?? createGeminiProvider({ apiKey: options.geminiApiKey });
   const mock = createMockProvider();
   let active: AiRuntimeStatus['active'] = mode === 'mock' || mode === 'auto' && !hasApiKey ? 'mock' : mode === 'gemini' ? 'gemini' : 'openai';
@@ -87,6 +89,7 @@ export function createConfiguredAiProvider(options: ConfiguredProviderOptions = 
   function setMode(next: 'mock' | 'openai' | 'gemini'): AiRuntimeStatus {
     if (next !== 'mock' && next !== 'openai' && next !== 'gemini') throw new AiProviderError('AI_NOT_CONFIGURED');
     if (next === 'openai' && !hasApiKey) throw new AiProviderError('AI_NOT_CONFIGURED');
+    if (next === 'openai' && !openaiApproved) throw new AiProviderError('AI_PROVIDER_NOT_APPROVED');
     if (next === 'gemini' && !hasGeminiKey) throw new AiProviderError('AI_NOT_CONFIGURED');
     if (options.stateFile) {
       mkdirSync(dirname(options.stateFile), { recursive: true });
@@ -100,6 +103,7 @@ export function createConfiguredAiProvider(options: ConfiguredProviderOptions = 
 
   async function run<T>(operation: (provider: AiProvider) => Promise<T>): Promise<T> {
     if (mode === 'mock' || mode === 'auto' && active === 'mock') return operation(mock);
+    if (mode !== 'gemini' && !openaiApproved) throw new AiProviderError('AI_PROVIDER_NOT_APPROVED');
     try {
       return await operation(mode === 'gemini' ? gemini : openai);
     } catch (error) {

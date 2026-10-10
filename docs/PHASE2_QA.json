@@ -3,10 +3,91 @@
   "releaseBase": "ba327e2364e0a14f36629e4dc9376de6b827f10e",
   "date": "2026-10-10",
   "scope": "Local integration with injected Gemini/Drive only; no successful live provider claim",
-  "tests": {"command": "npm.cmd test", "exitCode": 0, "total": 177, "passed": 176, "failed": 0, "skipped": 1, "durationMs": 190040.9389, "skipReason": "POSIX vault permissions on Windows"},
-  "checks": {"buildIncludingThreeTypechecks": "PASS", "lint": "PASS", "pwa": "PASS_9_PUBLIC_ASSETS", "docs": "PASS_27_ARTIFACTS", "secrets": "PASS_149_TRACKED_FILES_NO_VALUES_PRINTED", "whitespace": "PASS"},
-  "independentReview": {"geminiDriveUsage": "ACCEPTED", "cloudModeSwitchFinding": "FIXED_FAIL_CLOSED_AI_MODE_LOCKED", "reReviewTests": "PASS_2_OF_2", "remainingP1P2": 0},
-  "browserPhase2": "PENDING_FOCUSED_TH_EN_360_768_1440",
-  "ownerData": {"inspection": "READ_ONLY", "baselinePreserved": true, "owners": 1, "projects": 1, "jobs": 4, "activeJobs": 0, "cachedIdeas": 10, "ownerRuntimeChanged": false},
-  "live": {"openai": "BLOCKED_PREVIOUS_INSUFFICIENT_QUOTA_NO_NEW_CALL", "gemini": "UNVERIFIED_KEY_MISSING", "drive": "UNVERIFIED_OAUTH_MISSING", "driveRestore": "UNVERIFIED_NO_CANARY_EVICTION_APPROVAL", "supabaseCloudMobile": "UNVERIFIED_APPROVED_PROJECT_HOST_REQUIRED"}
+  "tests": {
+    "command": "npm.cmd test",
+    "exitCode": 0,
+    "total": 177,
+    "passed": 176,
+    "failed": 0,
+    "skipped": 1,
+    "durationMs": 190040.9389,
+    "skipReason": "POSIX vault permissions on Windows"
+  },
+  "checks": {
+    "buildIncludingThreeTypechecks": "PASS",
+    "lint": "PASS",
+    "pwa": "PASS_9_PUBLIC_ASSETS",
+    "docs": "PASS_27_ARTIFACTS",
+    "secrets": "PASS_149_TRACKED_FILES_NO_VALUES_PRINTED",
+    "whitespace": "PASS"
+  },
+  "independentReview": {
+    "geminiDriveUsage": "ACCEPTED",
+    "cloudModeSwitchFinding": "FIXED_FAIL_CLOSED_AI_MODE_LOCKED",
+    "reReviewTests": "PASS_2_OF_2",
+    "remainingP1P2": 0
+  },
+  "browserPhase2": {
+    "sourceCommit": "5559bbc4658b174d96b9d26023d449a26714a13c",
+    "result": "PASS_FOCUSED_MOCK_WORKFLOW",
+    "cases": [
+      "360_TH",
+      "768_EN",
+      "1440_EN"
+    ],
+    "workflow": "login/settings/provider-selection/ten-ideas/one-selection/expansion/scenes/usage-provenance",
+    "liveCalls": false,
+    "serverStopped": true,
+    "fullLocaleViewportMatrixRerun": false,
+    "evidence": ".tmp/phase2-qa-evidence.json",
+    "latestPolicyCopyBrowserRerun": false
+  },
+  "ownerData": {
+    "inspection": "READ_ONLY",
+    "baselinePreserved": true,
+    "owners": 1,
+    "projects": 1,
+    "jobs": 4,
+    "activeJobs": 0,
+    "cachedIdeas": 10,
+    "ownerRuntimeChanged": false
+  },
+  "live": {
+    "openai": "BLOCKED_PENDING_NEW_OWNER_APPROVAL_PREVIOUS_QUOTA_NO_NEW_CALL",
+    "gemini": "PREPARED_KEY_AND_FREE_TIER_CONFIRMATION_REQUIRED_NO_LIVE_CALL",
+    "drive": "UNVERIFIED_OAUTH_MISSING",
+    "driveRestore": "UNVERIFIED_NO_CANARY_EVICTION_APPROVAL",
+    "supabaseCloudMobile": "UNVERIFIED_APPROVED_PROJECT_HOST_REQUIRED"
+  },
+  "status": "PAUSED_FOR_USAGE_RESET",
+  "usage": {
+    "primaryUsedPercent": 99,
+    "remainingPercent": 1,
+    "secondaryUsedPercent": 59,
+    "checkpointStartedRemainingPercent": 7,
+    "automaticResume": false
+  },
+  "safetyPolicyTests": {
+    "command": "npm.cmd test",
+    "exitCode": 0,
+    "total": 180,
+    "passed": 179,
+    "failed": 0,
+    "skipped": 1,
+    "durationMs": 79216.4403,
+    "independentReReview": "ACCEPTED_NO_P1_P2",
+    "scope": "Gemini confirmed Free Tier Flash-Lite only; OpenAI explicit approval before any request; all synthetic/injected"
+  },
+  "safetyPolicyChecks": {
+    "buildIncludingThreeTypechecksAfterFinalThaiEnglishCopy": "PASS",
+    "lint": "PASS",
+    "docs": "PASS_27_ARTIFACTS",
+    "secrets": "PASS_151_TRACKED_FILES_NO_VALUES_PRINTED",
+    "ownerPreservationFinalReadOnlyCheck": "PASS_NO_DATABASE_WRITES"
+  },
+  "antigravity": {
+    "qaCommit": "ddccf9ce18a13425b480f02313f8d0ccbe6261c0",
+    "testedSource": "3e9c1aaab0143f94581ddf3ed4f0b2046e60b137",
+    "result": "PASS_LOCAL_V1_NO_LIVE_PROVIDER_CLAIM"
+  }
 }

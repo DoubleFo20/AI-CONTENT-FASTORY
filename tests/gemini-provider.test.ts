@@ -48,7 +48,7 @@ function safeError(code: string): (error: unknown) => boolean {
 test('Gemini sends one fixed REST request with header key, logging disabled and the documented schema subset', async () => {
   let calls = 0;
   let captured!: CapturedRequest;
-  const provider = createGeminiProvider({ apiKey: key, fetch: async (url, init) => {
+  const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async (url, init) => {
     calls += 1;
     assert.equal(url, 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent');
     assert.doesNotMatch(String(url), /test-only|\?/);
@@ -84,8 +84,8 @@ test('Gemini expansion uses only whitelisted selected fields and preserves reque
     let captured!: CapturedRequest;
     const requested = { ...privateInput, targetDurationSeconds };
     const story = await createMockProvider().expandStory({ ...input, targetDurationSeconds: targetDurationSeconds === 61 ? 60 : targetDurationSeconds }, selected);
-    const provider = createGeminiProvider({ apiKey: key, fetch: async (url, init) => {
-      assert.equal(url, 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent');
+    const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async (url, init) => {
+      assert.equal(url, 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent');
       captured = JSON.parse(String(init?.body)) as CapturedRequest;
       return jsonResponse(envelope(story));
     } });
@@ -110,15 +110,56 @@ test('Gemini validates configuration, model paths and outgoing inputs before mak
   ];
   for (const configuration of configurations) {
     let calls = 0;
-    const provider = createGeminiProvider({ apiKey: key, ...configuration, fetch: async () => { calls += 1; return jsonResponse(envelope({ ideas })); } });
+    const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, ...configuration, fetch: async () => { calls += 1; return jsonResponse(envelope({ ideas })); } });
     await assert.rejects(provider.generateIdeas(input), safeError('AI_NOT_CONFIGURED'));
     assert.equal(calls, 0);
   }
   let calls = 0;
-  const provider = createGeminiProvider({ apiKey: key, fetch: async () => { calls += 1; return jsonResponse(envelope({ ideas })); } });
+  const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => { calls += 1; return jsonResponse(envelope({ ideas })); } });
   await assert.rejects(provider.generateIdeas({ ...input, brief: 'short' }), safeError('INVALID_INPUT'));
   await assert.rejects(provider.expandStory(input, { ...selected, title: { th: '', en: 'Umbrella' } }), safeError('INVALID_INPUT'));
   assert.equal(calls, 0);
+});
+
+test('Gemini requires explicit Free Tier confirmation and blocks every model outside the Flash-Lite allowlist', async () => {
+  const previousConfirmation = process.env.ACF_GEMINI_FREE_TIER_CONFIRMED;
+  delete process.env.ACF_GEMINI_FREE_TIER_CONFIRMED;
+  let calls = 0;
+  const requestFetch: typeof fetch = async () => { calls += 1; return jsonResponse(envelope({ ideas })); };
+  try {
+    for (const freeTierConfirmed of [undefined, false]) {
+      const provider = createGeminiProvider({ apiKey: key, freeTierConfirmed, fetch: requestFetch });
+      await assert.rejects(provider.generateIdeas(input), safeError('AI_NOT_CONFIGURED'));
+      await assert.rejects(provider.expandStory(input, selected), safeError('AI_NOT_CONFIGURED'));
+    }
+    for (const model of ['gemini-3.8-flash', 'gemini-3.1-pro-preview', 'gemini-3.5-flash-lite-preview', 'gemini-3.5-flash-lite-image', 'gemini-2.5-flash-lite']) {
+      const provider = createGeminiProvider({ apiKey: key, freeTierConfirmed: true, ideasModel: model, expansionModel: model, fetch: requestFetch });
+      await assert.rejects(provider.generateIdeas(input), safeError('AI_NOT_CONFIGURED'));
+      await assert.rejects(provider.expandStory(input, selected), safeError('AI_NOT_CONFIGURED'));
+    }
+    assert.equal(calls, 0);
+    process.env.ACF_GEMINI_FREE_TIER_CONFIRMED = 'true';
+    const disabled = createGeminiProvider({ apiKey: key, freeTierConfirmed: false, fetch: requestFetch });
+    await assert.rejects(disabled.generateIdeas(input), safeError('AI_NOT_CONFIGURED'));
+    assert.equal(calls, 0);
+    const confirmed = createGeminiProvider({ apiKey: key, fetch: requestFetch });
+    assert.deepEqual(await confirmed.generateIdeas(input), ideas);
+    assert.equal(calls, 1);
+  } finally {
+    if (previousConfirmation === undefined) delete process.env.ACF_GEMINI_FREE_TIER_CONFIRMED;
+    else process.env.ACF_GEMINI_FREE_TIER_CONFIRMED = previousConfirmation;
+  }
+});
+
+test('Gemini stops after one quota response without retry or model fallback', async () => {
+  let calls = 0;
+  const provider = createGeminiProvider({ apiKey: key, freeTierConfirmed: true, fetch: async (url) => {
+    calls += 1;
+    assert.equal(url, 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent');
+    return jsonResponse({ error: { details: [{ '@type': 'type.googleapis.com/google.rpc.ErrorInfo', domain: 'googleapis.com', reason: 'QUOTA_EXCEEDED' }] } }, 429);
+  } });
+  await assert.rejects(provider.generateIdeas(input), safeError('AI_QUOTA_EXCEEDED'));
+  assert.equal(calls, 1);
 });
 
 test('Gemini retains complete local Zod and semantic validation after reducing the remote schema', async () => {
@@ -130,7 +171,7 @@ test('Gemini retains complete local Zod and semantic validation after reducing t
     { ideas, private: 'extra field' },
   ];
   for (const payload of badIdeas) {
-    const provider = createGeminiProvider({ apiKey: key, fetch: async () => jsonResponse(envelope(payload)) });
+    const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => jsonResponse(envelope(payload)) });
     await assert.rejects(provider.generateIdeas(input), safeError('AI_INVALID_OUTPUT'));
   }
   const story = await createMockProvider().expandStory(input, selected);
@@ -144,14 +185,14 @@ test('Gemini retains complete local Zod and semantic validation after reducing t
     { ...story, scenes: Array.from({ length: 10 }, (_, index) => ({ ...story.scenes[0], id: `scene_${index}`, order: index + 1, durationSeconds: 20 })) },
   ];
   for (const payload of badStories) {
-    const provider = createGeminiProvider({ apiKey: key, fetch: async () => jsonResponse(envelope(payload)) });
+    const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => jsonResponse(envelope(payload)) });
     await assert.rejects(provider.expandStory(input, selected), safeError('AI_INVALID_OUTPUT'));
   }
 });
 
 test('Gemini excludes thought parts while concatenating text parts from the single completed candidate', async () => {
   const text = JSON.stringify({ ideas });
-  const provider = createGeminiProvider({ apiKey: key, fetch: async () => jsonResponse({ candidates: [{
+  const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => jsonResponse({ candidates: [{
     finishReason: 'STOP', content: { role: 'model', parts: [
       { text: 'PRIVATE_THOUGHT_NOT_JSON', thought: true, thoughtSignature: 'opaque-signature' },
       { text: text.slice(0, 20), thought: false }, { text: text.slice(20), thoughtSignature: 'opaque-signature' },
@@ -174,11 +215,11 @@ test('Gemini rejects ambiguous, incomplete, non-text and malformed candidates wi
   ];
   for (const body of bodies) {
     let calls = 0;
-    const provider = createGeminiProvider({ apiKey: key, fetch: async () => { calls += 1; return jsonResponse(body); } });
+    const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => { calls += 1; return jsonResponse(body); } });
     await assert.rejects(provider.generateIdeas(input), safeError('AI_INVALID_OUTPUT'));
     assert.equal(calls, 1);
   }
-  const provider = createGeminiProvider({ apiKey: key, fetch: async () => new Response('sensitive malformed json', { status: 200 }) });
+  const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => new Response('sensitive malformed json', { status: 200 }) });
   await assert.rejects(provider.generateIdeas(input), safeError('AI_INVALID_OUTPUT'));
 });
 
@@ -190,10 +231,10 @@ test('Gemini maps prompt and candidate policy blocks to the safe refusal code', 
     { candidates: [{ finishReason: 'STOP', safetyRatings: [{ blocked: true }] }] },
   ];
   for (const body of bodies) {
-    const provider = createGeminiProvider({ apiKey: key, fetch: async () => jsonResponse(body) });
+    const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => jsonResponse(body) });
     await assert.rejects(provider.generateIdeas(input), safeError('AI_REFUSED'));
   }
-  const provider = createGeminiProvider({ apiKey: key, fetch: async () => jsonResponse(envelope({ ideas }, { promptFeedback: { blockReason: 'BLOCK_REASON_UNSPECIFIED' } })) });
+  const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => jsonResponse(envelope({ ideas }, { promptFeedback: { blockReason: 'BLOCK_REASON_UNSPECIFIED' } })) });
   assert.deepEqual(await provider.generateIdeas(input), ideas);
 });
 
@@ -214,23 +255,23 @@ test('Gemini maps safe HTTP errors and distinguishes reliable quota reasons from
   ];
   for (const [status, body, expected] of cases) {
     let calls = 0;
-    const provider = createGeminiProvider({ apiKey: key, fetch: async () => { calls += 1; return jsonResponse(body, status); } });
+    const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => { calls += 1; return jsonResponse(body, status); } });
     await assert.rejects(provider.generateIdeas(input), safeError(expected));
     assert.equal(calls, 1);
   }
-  const provider = createGeminiProvider({ apiKey: key, fetch: async () => new Response('private malformed error body', { status: 429 }) });
+  const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => new Response('private malformed error body', { status: 429 }) });
   await assert.rejects(provider.generateIdeas(input), safeError('AI_RATE_LIMITED'));
 });
 
 test('Gemini reports normalized reliable usage including reasoning before validating paid output', async () => {
   const usage: AiUsage[] = [];
-  const provider = createGeminiProvider({ apiKey: key, ideasModel: 'gemini-test-ideas', expansionModel: 'gemini-test-expand', fetch: async () => jsonResponse(envelope({ ideas: [] }, { usageMetadata: validMetadata })) });
+  const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, ideasModel: 'gemini-3.5-flash-lite', expansionModel: 'gemini-3.5-flash-lite', fetch: async () => jsonResponse(envelope({ ideas: [] }, { usageMetadata: validMetadata })) });
   await assert.rejects(provider.generateIdeas(input, { onUsage: receipt => usage.push(receipt) }), safeError('AI_INVALID_OUTPUT'));
-  assert.deepEqual(usage, [{ provider: 'gemini', operation: 'ideas', model: 'gemini-test-ideas', inputTokens: 100, outputTokens: 250, totalTokens: 350, cachedInputTokens: 20, reasoningTokens: 50 }]);
+  assert.deepEqual(usage, [{ provider: 'gemini', operation: 'ideas', model: 'gemini-3.5-flash-lite', inputTokens: 100, outputTokens: 250, totalTokens: 350, cachedInputTokens: 20, reasoningTokens: 50 }]);
   await assert.rejects(provider.expandStory(input, selected, { onUsage: receipt => usage.push(receipt) }), safeError('AI_INVALID_OUTPUT'));
   assert.equal(usage[1].operation, 'expand');
-  assert.equal(usage[1].model, 'gemini-test-expand');
-  const blocked = createGeminiProvider({ apiKey: key, fetch: async () => jsonResponse({ promptFeedback: { blockReason: 'SAFETY' }, usageMetadata: validMetadata }) });
+  assert.equal(usage[1].model, 'gemini-3.5-flash-lite');
+  const blocked = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => jsonResponse({ promptFeedback: { blockReason: 'SAFETY' }, usageMetadata: validMetadata }) });
   await assert.rejects(blocked.generateIdeas(input, { onUsage: receipt => usage.push(receipt) }), safeError('AI_REFUSED'));
   assert.equal(usage.length, 3);
 });
@@ -238,7 +279,7 @@ test('Gemini reports normalized reliable usage including reasoning before valida
 test('Gemini omits unreported optional usage fields and discards unreliable metadata', async () => {
   const usage: AiUsage[] = [];
   const metadata = { promptTokenCount: 100, candidatesTokenCount: 200, totalTokenCount: 300 };
-  const provider = createGeminiProvider({ apiKey: key, fetch: async () => jsonResponse(envelope({ ideas }, { usageMetadata: metadata })) });
+  const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => jsonResponse(envelope({ ideas }, { usageMetadata: metadata })) });
   await provider.generateIdeas(input, { onUsage: receipt => usage.push(receipt) });
   assert.deepEqual(usage, [{ provider: 'gemini', operation: 'ideas', model: 'gemini-3.5-flash-lite', inputTokens: 100, outputTokens: 200, totalTokens: 300 }]);
   const badMetadata = [
@@ -249,7 +290,7 @@ test('Gemini omits unreported optional usage fields and discards unreliable meta
     { ...metadata, thoughtsTokenCount: null }, { promptTokenCount: 100, totalTokenCount: 300 },
   ];
   for (const usageMetadata of badMetadata) {
-    const invalid = createGeminiProvider({ apiKey: key, fetch: async () => jsonResponse(envelope({ ideas }, { usageMetadata })) });
+    const invalid = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => jsonResponse(envelope({ ideas }, { usageMetadata })) });
     assert.deepEqual(await invalid.generateIdeas(input, { onUsage: receipt => usage.push(receipt) }), ideas);
     assert.equal(usage.length, 1);
   }
@@ -259,7 +300,7 @@ test('Gemini times out stalled fetch and body reads, including mocks that ignore
   for (const stallBody of [false, true]) {
     let calls = 0;
     let signal!: AbortSignal;
-    const provider = createGeminiProvider({ apiKey: key, timeoutMs: 10, fetch: async (_url, init) => {
+    const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, timeoutMs: 10, fetch: async (_url, init) => {
       calls += 1;
       signal = init?.signal as AbortSignal;
       if (!stallBody) return new Promise<Response>(() => {});
@@ -277,13 +318,13 @@ test('Gemini supports pre-abort and mid-request cancellation without duplicate r
   let calls = 0;
   const pre = new AbortController();
   pre.abort();
-  const provider = createGeminiProvider({ apiKey: key, fetch: async () => { calls += 1; return jsonResponse(envelope({ ideas })); } });
+  const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => { calls += 1; return jsonResponse(envelope({ ideas })); } });
   await assert.rejects(provider.generateIdeas(input, { signal: pre.signal }), safeError('AI_TIMEOUT'));
   assert.equal(calls, 0);
   const controller = new AbortController();
   let resolveFetch!: (response: Response) => void;
   const usage: AiUsage[] = [];
-  const pending = createGeminiProvider({ apiKey: key, fetch: async () => {
+  const pending = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => {
     calls += 1;
     return new Promise<Response>(resolve => { resolveFetch = resolve; });
   } }).generateIdeas(input, { signal: controller.signal, onUsage: receipt => usage.push(receipt) });
@@ -299,7 +340,7 @@ test('Gemini supports pre-abort and mid-request cancellation without duplicate r
 test('Gemini maps network and fetch abort errors safely and never retries', async () => {
   for (const [name, expected] of [['Error', 'AI_REQUEST_FAILED'], ['AbortError', 'AI_TIMEOUT'], ['TimeoutError', 'AI_TIMEOUT']]) {
     let calls = 0;
-    const provider = createGeminiProvider({ apiKey: key, fetch: async () => {
+    const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => {
       calls += 1;
       const error = new Error(`private ${key}`);
       error.name = name;

@@ -19,6 +19,7 @@ interface ProviderOptions {
   expandModel?: string;
   fetchImpl?: typeof fetch;
   timeoutMs?: number;
+  requestsApproved?: boolean;
 }
 
 const EnvelopeSchema = z.object({
@@ -69,8 +70,10 @@ export function createOpenAiProvider(options: ProviderOptions = {}): AiProvider 
   const expandModel = options.expandModel ?? process.env.OPENAI_EXPAND_MODEL ?? 'gpt-6.1-sol';
   const requestFetch = options.fetchImpl ?? fetch;
   const timeoutMs = options.timeoutMs ?? 120_000;
+  const optionsApproval = options.requestsApproved;
 
   async function request(name: string, schema: z.ZodType, prompt: string, model: string, budget: number, options?: AiRequestOptions): Promise<unknown> {
+    if (!(optionsApproval ?? process.env.ACF_OPENAI_REQUESTS_APPROVED === 'true')) throw new AiProviderError('AI_PROVIDER_NOT_APPROVED');
     if (!apiKey?.trim()) throw new AiProviderError('AI_NOT_CONFIGURED');
     let response: Response;
     try {

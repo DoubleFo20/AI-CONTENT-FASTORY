@@ -15,7 +15,7 @@ type TestResponse = Omit<Response, 'json'> & { json(): Promise<TestPayload> };
 test('owner chooses Gemini via CSRF API, caches ten ideas, expands exactly one and persists provider usage', async t => {
   await mkdir(resolve('.tmp'), { recursive: true }); const dir = await mkdtemp(join(resolve('.tmp'), 'ai-integration-'));
   const mock = createMockProvider(); let ideasCalls = 0; let expandCalls = 0; let selectedId = '';
-  const ai = createConfiguredAiProvider({ mode: 'mock', apiKey: '', geminiApiKey: 'synthetic-only-key', gemini: {
+  const ai = createConfiguredAiProvider({ openaiApproved: true, mode: 'mock', apiKey: '', geminiApiKey: 'synthetic-only-key', gemini: {
     async generateIdeas(input, options) { ideasCalls++; options?.onUsage?.({ provider: 'gemini', operation: 'ideas', model: 'synthetic-model', inputTokens: 100, outputTokens: 200, totalTokens: 300 }); return mock.generateIdeas(input); },
     async expandStory(input, idea, options) { expandCalls++; selectedId = idea.id; assert.equal('ideas' in input, false); options?.onUsage?.({ provider: 'gemini', operation: 'expand', model: 'synthetic-model', inputTokens: 150, outputTokens: 400, totalTokens: 550 }); return mock.expandStory(input, idea); },
   } });
@@ -53,7 +53,7 @@ test('owner chooses Gemini via CSRF API, caches ten ideas, expands exactly one a
 
 test('configured cloud integration locks shared provider changes even before a claim', async t => {
   await mkdir(resolve('.tmp'), { recursive: true }); const dir = await mkdtemp(join(resolve('.tmp'), 'cloud-mode-lock-'));
-  const ai = createConfiguredAiProvider({ mode: 'mock', geminiApiKey: 'synthetic-only-key', gemini: createMockProvider() });
+  const ai = createConfiguredAiProvider({ openaiApproved: true, mode: 'mock', geminiApiKey: 'synthetic-only-key', gemini: createMockProvider() });
   const origin = 'http://127.0.0.1:5173';
   const application = createApplication({ dataDir: dir, provider: ai.provider, startWorker: false, integrations: { aiStatus: ai.status, setAiMode: ai.setMode, cloudRepository: new MemoryCloudRepository() }, allowedOrigins: [origin] });
   const server = createServer(application.app); await new Promise<void>(yes => server.listen(0, '127.0.0.1', yes));

@@ -9,6 +9,7 @@ import type { AiProvider, AiRequestOptions } from './types.js';
 
 interface GeminiProviderOptions {
   apiKey?: string;
+  freeTierConfirmed?: boolean;
   ideasModel?: string;
   expansionModel?: string;
   fetch?: typeof fetch;
@@ -91,13 +92,16 @@ function apiErrorReason(body: unknown): string | undefined {
 
 export function createGeminiProvider(options: GeminiProviderOptions = {}): AiProvider {
   const apiKey = options.apiKey ?? process.env.GEMINI_API_KEY;
+  // Owner must confirm this key's API project is Free Tier with billing disabled.
+  // The API has no free-tier request parameter; possession of a key is insufficient.
+  const freeTierConfirmed = options.freeTierConfirmed ?? (process.env.ACF_GEMINI_FREE_TIER_CONFIRMED === 'true');
   const ideasModel = options.ideasModel ?? process.env.GEMINI_IDEAS_MODEL ?? 'gemini-3.5-flash-lite';
-  const expansionModel = options.expansionModel ?? process.env.GEMINI_EXPANSION_MODEL ?? 'gemini-3.8-flash';
+  const expansionModel = options.expansionModel ?? process.env.GEMINI_EXPANSION_MODEL ?? 'gemini-3.5-flash-lite';
   const requestFetch = options.fetch ?? fetch;
   const timeoutMs = options.timeoutMs ?? 120_000;
 
   async function request(operation: AiUsage['operation'], schema: z.ZodType, prompt: string, model: string, budget: number, requestOptions?: AiRequestOptions): Promise<unknown> {
-    if (!apiKey?.trim() || !/^gemini-[a-zA-Z0-9][a-zA-Z0-9_.-]{0,92}$/.test(model)
+    if (!freeTierConfirmed || !apiKey?.trim() || model !== 'gemini-3.5-flash-lite'
         || !Number.isInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 120_000) throw new AiProviderError('AI_NOT_CONFIGURED');
     if (requestOptions?.signal?.aborted) throw new AiProviderError('AI_TIMEOUT');
     const controller = new AbortController();

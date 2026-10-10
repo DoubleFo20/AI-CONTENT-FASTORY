@@ -41,7 +41,7 @@ function response(payload: unknown, status = 'completed'): Response {
 test('ideas request declares strict JSON schema with exactly ten entries and makes one request', async () => {
   let calls = 0;
   let requestBody!: CapturedRequest;
-  const provider = createOpenAiProvider({ apiKey: 'test-only-key-not-a-real-secret', fetchImpl: async (_url, init) => {
+  const provider = createOpenAiProvider({ requestsApproved: true, apiKey: 'test-only-key-not-a-real-secret', fetchImpl: async (_url, init) => {
     calls += 1;
     requestBody = JSON.parse(String(init?.body)) as CapturedRequest;
     return response({ ideas: outputIdeas });
@@ -56,7 +56,7 @@ test('ideas request declares strict JSON schema with exactly ten entries and mak
 
 test('expansion prompt contains the selected idea alone and validates its package', async () => {
   let requestBody!: CapturedRequest;
-  const provider = createOpenAiProvider({ apiKey: 'test-only-key-not-a-real-secret', fetchImpl: async (_url, init) => {
+  const provider = createOpenAiProvider({ requestsApproved: true, apiKey: 'test-only-key-not-a-real-secret', fetchImpl: async (_url, init) => {
     requestBody = JSON.parse(String(init?.body)) as CapturedRequest;
     return response(outputStory);
   } });
@@ -71,7 +71,7 @@ test('expansion prompt contains the selected idea alone and validates its packag
 
 test('provider strips project state and alternative ideas from the outgoing brief prompt', async () => {
   let requestBody!: CapturedRequest;
-  const provider = createOpenAiProvider({ apiKey: 'test-only-key-not-a-real-secret', fetchImpl: async (_url, init) => {
+  const provider = createOpenAiProvider({ requestsApproved: true, apiKey: 'test-only-key-not-a-real-secret', fetchImpl: async (_url, init) => {
     requestBody = JSON.parse(String(init?.body)) as CapturedRequest;
     return response(outputStory);
   } });
@@ -96,7 +96,7 @@ test('provider failures are mapped to safe codes without retries or leaked detai
     ['network error', async () => { throw new Error('test-only-key-not-a-real-secret network detail'); }, 'AI_REQUEST_FAILED'],
   ] as const) {
     let calls = 0;
-    const provider = createOpenAiProvider({ apiKey: 'test-only-key-not-a-real-secret', fetchImpl: async () => { calls += 1; return fetchImpl(); } });
+    const provider = createOpenAiProvider({ requestsApproved: true, apiKey: 'test-only-key-not-a-real-secret', fetchImpl: async () => { calls += 1; return fetchImpl(); } });
     await assert.rejects(provider.generateIdeas(input), (error: unknown) => {
       assert.ok(error instanceof AiProviderError, label);
       assert.equal(error.code, expected, label);
@@ -116,7 +116,7 @@ test('provider maps quota, rate-limit, and access failures to known localized er
   ];
   for (const [label, status, body, expected] of responses) {
     let calls = 0;
-    const provider = createOpenAiProvider({ apiKey: 'test-only-key-not-a-real-secret', fetchImpl: async () => {
+    const provider = createOpenAiProvider({ requestsApproved: true, apiKey: 'test-only-key-not-a-real-secret', fetchImpl: async () => {
       calls += 1;
       return new Response(JSON.stringify(body), { status });
     } });
