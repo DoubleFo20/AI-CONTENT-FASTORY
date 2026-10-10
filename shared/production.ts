@@ -29,6 +29,7 @@ export const SceneProductionSchema = z.strictObject({
 });
 export type SceneProduction = z.infer<typeof SceneProductionSchema>;
 export interface AudioAsset { id: string; projectId: string; originalName: string; durationSeconds: number; createdAt: string }
+export interface ImageAsset { id: string; projectId: string; originalName: string; width: number; height: number; createdAt: string }
 export interface ProductionState {
-  flow: FlowSettings; editor: EditorSettings; scenes: Record<string, SceneProduction>; audio: AudioAsset[];
+  flow: FlowSettings; editor: EditorSettings; scenes: Record<string, SceneProduction>; audio: AudioAsset[]; images: ImageAsset[];
 }

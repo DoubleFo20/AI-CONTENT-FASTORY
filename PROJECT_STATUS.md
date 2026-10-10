@@ -1,5 +1,29 @@
 # Project status
 
+STATUS: V1_RELEASE_CANDIDATE_FINAL_VERIFICATION
+CURRENT_PHASE: LOCAL_V1_REAL_WORLD_RELEASE
+ANTIGRAVITY_STATUS: READY_FOR_IMPLEMENTATION_VISUAL_QA
+Updated: 2026-10-10 (Asia/Bangkok)
+
+Current branch: `release/v1-real-world`; worktree `.worktrees/release-v1`. Base is reviewed integration `cfa6554` plus approved Premium Cinematic V2 `be29e0a`. Main `dfe2b2c` and Draft PR#1 remain unmerged. Original worktrees and dirty writer changes are preserved.
+
+งานหลักที่เสร็จ: quota/stale-state recovery, observable queue/cancel/timeout/restart fences, persisted explicit Mock/Real mode, variable-duration selected-only pipeline, scene/Flow continuity/reference/status/credit estimate, confirmed batch clip matching, private audio/image imports, deterministic FFmpeg settings/preview/download และ Drive private project-media index พร้อม verified-retry/restore. ใช้ React/Vite + Express/SQLite เดิม ไม่มี FastAPI rewrite หรือ populated schema migration.
+
+กู้โปรเจกต์ Owner เดิมได้ 10 Mock ideas และ completed100 หลัง consistent SQLite backup + integrity_check. ไม่มี active job. ตรวจ invariant ว่าบัญชี/session/media/schema และ 3 quota-failed records เดิมยังอยู่ครบ; ไม่เลือกหรือขยายเรื่องแทน Owner และไม่เรียก paid provider.
+
+ผล browser จริง: wrong/valid login, ten ideas, saved idea9 มีผลเหนือ unsaved idea7, selected expansion, 4 bibles, 3 scenes/12 seconds, English clipboardพร้อมrefs + Thai explanations, configured synthetic credit estimate, 3 real synthetic clips + audio/image, settingsก่อนexport, MP4 play/download, server/browser restart persistence และ prompt pack ผ่าน. FFprobe: H.264720×1280 yuv420p + AAC48k stereo,12.021029s. Offline/public-shell/reconnect/logout private-resource401 ผ่าน; cache9 public assets/0 private และ localStorage2 public preferences. นี่ไม่ใช่ live Flow/AI/Drive/cloud test.
+
+Final `npm.cmd test`:145 total,144 passed,0 failed,1 POSIX-permission skip on Windows (85.25s). `npm.cmd run lint`, `npm.cmd run build` (client/server/tests typechecks), `validate:pwa` และ `validate:docs` ผ่านจริง. รัน full suite แบบเรียงลำดับในคำสั่งมาตรฐาน หลังรอบที่รันหลาย processเกิด image-probe timeout; narrow image4/4และfull serialized145casesผ่าน. Independent high-risk reviewยอมรับ worker/storage/Drive/auth/file/queue/request lifecycle รวม SQLite shutdown และ late-Multer cleanup หลังแก้และ retake. Responsive retake และ staged secret/whitespace checks กำลังปิดรอบสุดท้าย.
+
+Local candidate ใช้ original populated storage บน `http://127.0.0.1:3006`, bind loopback only, explicit persisted Mock. Started hidden app process14516; health200, existing-owner setupRequired=false และ anonymous project401/no-store ผ่าน. ใช้บัญชีเดิม;ไม่มี shipped/default credentials. Original root's empty storage ไม่ถูกเปลี่ยนและเดิม3001/5173ไม่ได้ถูก force-displace.
+
+External gates: live OpenAI quota, Google OAuth/round trip, Flow account/real clips, Supabase/HTTPS deployment/approved migration, paired Local Worker + notebook-offline mobile test. ไม่มี billing/deploy/publishing/main merge. ดู [readiness matrix](docs/release/V1_READINESS.md), [API](docs/API_CONTRACT.md), [Drive setup](docs/DRIVE_STORAGE.md).
+
+NEXT_TASK: finish responsive retake + staged hygiene; checkpoint/push/draft release PR and actual-app Antigravity visual QA handoff.
+
+## บันทึก checkpoint ก่อนหน้า (historical)
+
+
 STATUS: DESIGN_RESTORED_PREMIUM_V2
 CURRENT_PHASE: V1_UI_CORE_INTEGRATION
 NEXT_ACTION: READY_FOR_OWNER_REVIEW

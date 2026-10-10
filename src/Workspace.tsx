@@ -1,8 +1,13 @@
-import { useState, type FormEvent, type KeyboardEvent } from 'react';
+import { useCallback, useState, type FormEvent, type KeyboardEvent } from 'react';
 import type { Clip, Job, Locale, Project, Scene } from '../shared/contracts';
 import Modal from './Modal';
-import { CopyButton, formatDate, isActive } from './components';
+import { CopyButton, formatDate, isActive, JobDetails, WorkerStatus, type WorkerRuntimeStatus } from './components';
 import { stageLabels, type Messages } from './i18n';
+import type { AiRuntimeStatus } from '../shared/integrations';
+import ProductionPanel, { ClipMatcher, type ProductionResponse } from './ProductionPanel';
+import EditorPanel from './EditorPanel';
+import StoragePanel from './StoragePanel';
+import { RequestError } from './api';
 
 type Operation = 'ideas' | 'expand' | 'export';
 interface Props {
@@ -11,6 +16,11 @@ interface Props {
   upload: (sceneId: string, file: File) => Promise<boolean>;
   download: (path: string, name: string) => void;
   videoError: () => void;
+  ai: AiRuntimeStatus | null; modeBlocked: boolean;
+  worker: WorkerRuntimeStatus | null;
+  setAiMode: (mode: 'mock' | 'openai') => void;
+  retry: (id: string) => void; cancel: (id: string) => void;
+  csrf: string | null; onError: (error: unknown) => void;
 }
 
 function DisplayText({ content, mode }: { content: Record<'th'|'en', string>; mode: 'th'|'en'|'th+en' }) {
@@ -23,17 +33,18 @@ function DisplayText({ content, mode }: { content: Record<'th'|'en', string>; mo
   return <span lang={mode} className="preserve">{content[mode]}</span>;
 }
 
-function ClipImport({ scene, clip, locale, contentMode, m, disabled, upload, videoError }: { scene: Scene; clip: Clip | undefined; locale: Locale; contentMode: 'th'|'en'|'th+en'; m: Messages; disabled: boolean; upload: Props['upload']; videoError: Props['videoError'] }) {
+function ClipImport({ scene, clip, locale, contentMode, m, disabled, upload, videoError, onError }: { scene: Scene; clip: Clip | undefined; locale: Locale; contentMode: 'th'|'en'|'th+en'; m: Messages; disabled: boolean; upload: Props['upload']; videoError: Props['videoError']; onError: Props['onError'] }) {
   const [file, setFile] = useState<File | null>(null);
   const [inputKey, setInputKey] = useState(0);
   async function submit(event: FormEvent) {
     event.preventDefault();
+    if (!file) { onError(new RequestError('INVALID_MEDIA')); return; }
     if (file && await upload(scene.id, file)) { setFile(null); setInputKey((key) => key + 1); }
   }
   return <article className="card"><h3>{scene.order}. <DisplayText content={scene.title} mode={contentMode} /></h3>
     {clip ? <><p><strong>{m.latestClip}</strong>: {clip.originalName} · {clip.durationSeconds.toFixed(1)} {m.seconds}</p>
       <video controls preload="none" src={`/api/clips/${encodeURIComponent(clip.id)}/file`} aria-label={`${m.latestClip}: ${scene.title[locale]}`} onError={videoError} /></> : <p>{m.noClip}</p>}
-    <form className="stack" onSubmit={(event) => void submit(event)}><label>{clip ? m.replaceClip : m.importClip}<span className="sr-only">{m.chooseClip}</span>
+    <form className="stack" noValidate onSubmit={(event) => void submit(event)}><label>{clip ? m.replaceClip : m.importClip}<span className="sr-only">{m.chooseClip}</span>
       <input key={inputKey} type="file" aria-label={`${clip ? m.replaceClip : m.importClip}: ${scene.order}. ${scene.title[locale]}`} accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov" disabled={disabled} required onChange={(event) => setFile(event.target.files?.[0] ?? null)} /></label>
       <p className="muted">{m.uploadInfo} · {m.fileSizeLimit}</p>
       <div className="actions"><button disabled={disabled || !file}>{m.upload}</button></div>
@@ -41,11 +52,13 @@ function ClipImport({ scene, clip, locale, contentMode, m, disabled, upload, vid
   </article>;
 }
 
-export default function Workspace({ project, jobs, locale, contentMode, section, m, disabled, operate, select, upload, download, videoError }: Props) {
+export default function Workspace({ project, jobs, locale, contentMode, section, m, disabled, ai, worker, modeBlocked, setAiMode, retry, cancel, csrf, onError, operate, select, upload, download, videoError }: Props) {
   const [choice, setChoice] = useState(project.selectedIdeaId ?? '');
   const [bibleTab, setBibleTab] = useState<'story'|'characters'|'locations'|'continuity'>('story');
 
   const [reviewOpen, setReviewOpen] = useState(false);
+  const [production, setProduction] = useState<ProductionResponse | null>(null);
+  const updateProduction = useCallback((data: ProductionResponse) => setProduction(data), []);
   const bibleTabs = ['story', 'characters', 'locations', 'continuity'] as const;
   function navigateBible(event: KeyboardEvent<HTMLButtonElement>, index: number) {
     const next = event.key === 'Home' ? 0 : event.key === 'End' ? bibleTabs.length - 1 : event.key === 'ArrowRight' ? (index + 1) % bibleTabs.length : event.key === 'ArrowLeft' ? (index + bibleTabs.length - 1) % bibleTabs.length : null;
@@ -68,6 +81,10 @@ export default function Workspace({ project, jobs, locale, contentMode, section,
 
   const sections = ['brief', 'ideas', 'bibles', 'scenes', 'clips', 'preview'] as const;
   const activeSection = sections.find((value) => value === section) ?? 'brief';
+  const orderedJobs = [...jobs].sort((first, second) => second.createdAt.localeCompare(first.createdAt) || second.updatedAt.localeCompare(first.updatedAt));
+  const latestJob = orderedJobs.find(isActive) ?? orderedJobs.find((job) => activeSection === 'brief' || (activeSection === 'ideas' ? job.type === 'ideas' || job.type === 'expand' : activeSection === 'bibles' || activeSection === 'scenes' ? job.type === 'expand' : job.type === 'export'));
+  const quotaFailure = latestJob?.status === 'failed' && latestJob.errorCode === 'AI_QUOTA_EXCEEDED';
+  const source = activeSection === 'ideas' ? project.generation?.ideas : project.generation?.expansion;
 
   return <>
     <header className="page-heading">
@@ -86,7 +103,18 @@ export default function Workspace({ project, jobs, locale, contentMode, section,
       ))}
     </nav>
 
-    {active && <p className="notice" role="status">{m.activeJob} <a href="#queue">{m.queue}</a></p>}
+    {latestJob && <section className="workspace-job" aria-label={m.latestJob}>
+      <h2>{m.latestJob}</h2>
+      <WorkerStatus worker={worker} locale={locale} m={m} />
+      <JobDetails job={latestJob} locale={locale} m={m} disabled={disabled} active={active} retry={retry} cancel={cancel} />
+      {quotaFailure && <div className="notice quota-recovery">
+        <p>{m.quotaRecovery}</p>
+        {ai?.mode === 'mock' ? <p role="status">{m.mockSelected}</p> : <div className="actions"><button className="secondary" disabled={disabled || modeBlocked || !ai} onClick={() => setAiMode('mock')}>{m.useMockMode}</button></div>}
+        {!ai && <p className="muted">{m.modeUnavailable}</p>}
+        {modeBlocked && <p className="muted">{m.modeBlocked}</p>}
+      </div>}
+    </section>}
+    {((activeSection === 'ideas' && project.ideas.length > 0) || ((activeSection === 'bibles' || activeSection === 'scenes') && pack)) && <p className="notice content-source"><strong>{m.resultSource}:</strong> {source === 'mock' ? m.sourceMock : source === 'openai' ? m.sourceOpenai : m.sourceUnknown}</p>}
 
     {activeSection === 'brief' && <section tabIndex={-1} id="workspace-brief" className="card glass">
       <h2>{m.brief}</h2><p className="preserve">{project.brief}</p>
@@ -175,12 +203,13 @@ export default function Workspace({ project, jobs, locale, contentMode, section,
 
     {activeSection === 'scenes' && <section tabIndex={-1} id="workspace-scenes">
       <h2>{m.scenes}</h2>
+      {pack && <ProductionPanel project={project} locale={locale} csrf={csrf} disabled={blocked} onError={onError} onUpdate={updateProduction} />}
 
       {!pack ? <div className="empty"><p>{m.emptyPackage}</p><a className="button secondary" href={`#story/${encodeURIComponent(project.id)}/ideas`}>{m.ideas}</a></div> : <>
         <div className="card" style={{ marginBottom: '24px' }}>
           <h3>{m.reviewProductionPlan}</h3>
           <p className="muted">{m.flowInfo}</p>
-          <p className="subdued">{m.estimateUnavailable}</p>
+          <p className="subdued">{production?.estimate.estimatedCredits !== null && production?.estimate.estimatedCredits !== undefined ? `${production.estimate.estimatedCredits} ${m.credits}` : m.estimateUnavailable}</p>
           <div className="actions">
             <button type="button" disabled={active} onClick={() => setReviewOpen(true)}>{m.reviewPlan}</button>
             <button className="secondary" disabled={disabled} onClick={() => download(`/projects/${encodeURIComponent(project.id)}/prompt-pack`, 'flow-prompt-pack.json')}>{m.downloadPack}</button>
@@ -202,8 +231,8 @@ export default function Workspace({ project, jobs, locale, contentMode, section,
 
               <h4 style={{marginTop: '16px'}}>{m.flowPromptEn}</h4>
               <div className="prompt-panel">
-                <p lang="en" className="preserve muted" style={{marginBottom: '16px'}}>{scene.flowPromptEn}</p>
-                <CopyButton text={scene.flowPromptEn} m={m} />
+                <p lang="en" className="preserve muted" style={{marginBottom: '16px'}}>{production?.scenes.find(item => item.id === scene.id)?.promptEn ?? scene.flowPromptEn}</p>
+                <CopyButton text={production?.scenes.find(item => item.id === scene.id)?.promptEn ?? scene.flowPromptEn} m={m} />
               </div>
             </div>
           </div>
@@ -214,7 +243,9 @@ export default function Workspace({ project, jobs, locale, contentMode, section,
     {activeSection === 'clips' && <section tabIndex={-1} id="workspace-clips">
       <h2>{m.clips}</h2>
       {!pack ? <div className="empty"><p>{m.noScenes}</p><a className="button secondary" href={`#story/${encodeURIComponent(project.id)}/ideas`}>{m.ideas}</a></div> : <>
-        <div className="stack">{pack.scenes.map((scene) => <ClipImport key={scene.id} scene={scene} clip={currentClips.get(scene.id)} locale={locale} contentMode={contentMode} m={m} disabled={blocked} upload={upload} videoError={videoError} />)}</div>
+        <ClipMatcher project={project} locale={locale} csrf={csrf} disabled={blocked} onError={onError} upload={upload} />
+        <EditorPanel project={project} locale={locale} csrf={csrf} disabled={blocked} onError={onError} operate={() => operate('export')} />
+        <div className="stack">{pack.scenes.map((scene) => <ClipImport key={scene.id} scene={scene} clip={currentClips.get(scene.id)} locale={locale} contentMode={contentMode} m={m} disabled={blocked} upload={upload} videoError={videoError} onError={onError} />)}</div>
         <div className="card" style={{marginTop: '24px'}}>
           <h3>{m.autoEdit}</h3>
           <p className="muted">{m.editInfo}</p>
@@ -225,10 +256,10 @@ export default function Workspace({ project, jobs, locale, contentMode, section,
           </> : <p className="badge success" style={{marginBottom: '16px'}}>{m.allClips}</p>}
           <div className="actions">
             {project.export && <a className="button secondary" href={`#story/${encodeURIComponent(project.id)}/preview`}>{m.preview}</a>}
-            <button disabled={blocked || missing.length > 0 || pack.scenes.length === 0} onClick={() => operate('export')}>{m.autoEdit}</button>
           </div>
         </div>
       </>}
+      <StoragePanel project={project} locale={locale} csrf={csrf} disabled={blocked} onError={onError} />
     </section>}
 
     {activeSection === 'preview' && <section tabIndex={-1} id="workspace-preview">
@@ -240,13 +271,14 @@ export default function Workspace({ project, jobs, locale, contentMode, section,
           <button disabled={disabled} onClick={() => download(`/exports/${encodeURIComponent(project.export!.id)}/file`, 'story.mp4')}>{m.downloadVideo}</button>
         </div>
       </div> : <div className="empty"><p>{m.emptyExport}</p></div>}
+      <StoragePanel project={project} locale={locale} csrf={csrf} disabled={blocked} onError={onError} />
     </section>}
     {reviewOpen && pack && <Modal title={m.reviewProductionPlan} closeLabel={m.closeDialog} onClose={() => setReviewOpen(false)}>
       {selected && <p><strong>{m.selectedIdeaSummary}:</strong> <DisplayText content={selected.title} mode={contentMode} /></p>}
       <p>{m.scene}: {pack.scenes.length} · {m.duration}: {pack.scenes.reduce((total, scene) => total + scene.durationSeconds, 0)} {m.seconds}</p>
       <p>{m.reviewSections}</p>
       <div className="actions"><a className="button secondary" href={`#story/${encodeURIComponent(project.id)}/bibles`} onClick={() => setReviewOpen(false)}>{m.bibles}</a><a className="button secondary" href={`#story/${encodeURIComponent(project.id)}/scenes`} onClick={() => setReviewOpen(false)}>{m.scenes}</a></div>
-      <p className="notice">{m.estimateUnavailable}</p>
+      <p className="notice">{production?.estimate.estimatedCredits !== null && production?.estimate.estimatedCredits !== undefined ? `${production.estimate.estimatedCredits} ${m.credits}` : m.estimateUnavailable}</p>
       <p>{m.reviewAcknowledgment}</p>
       <p className="muted">{m.flowOpensExternally}</p>
       <div className="actions"><a className="button" href="https://labs.google/fx/tools/flow" target="_blank" rel="noopener noreferrer" onClick={() => setReviewOpen(false)}>{m.confirmPlanAndOpenFlow}</a><button type="button" className="secondary" onClick={() => setReviewOpen(false)}>{m.cancel}</button></div>

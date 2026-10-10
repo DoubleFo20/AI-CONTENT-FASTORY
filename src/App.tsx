@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { AuthState, Dashboard, Job, Locale, Project, ProjectInput, ProjectSummary } from '../shared/contracts';
 import { download, jsonBody, request, RequestError } from './api';
-import { AuthForm, isActive, Jobs, ProjectCards, ProjectForm } from './components';
+import { AiModeForm, AuthForm, isActive, Jobs, ProjectCards, ProjectForm, WorkerStatus, type WorkerRuntimeStatus } from './components';
 import { dictionaries, errorMessages, stageLabels } from './i18n';
 import Workspace from './Workspace';
 import Modal from './Modal';
 import { FACTORY_MODULES } from '../shared/modules';
-import type { DriveStatus, RuntimeCapabilities } from '../shared/integrations';
+import type { AiRuntimeStatus, DriveStatus, RuntimeCapabilities } from '../shared/integrations';
 
 type ContentMode = 'th' | 'en' | 'th+en';
 function readContentMode(): ContentMode {
@@ -46,19 +46,25 @@ export default function App() {
   const [error, setError] = useState<UiError>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [capabilities, setCapabilities] = useState<RuntimeCapabilities | null>(null);
   const [drive, setDrive] = useState<DriveStatus | null>(null);
+  const [worker, setWorker] = useState<WorkerRuntimeStatus | null>(null);
   const session = useRef(new AbortController());
+  const actionPending = useRef(false);
+  const refreshVersion = useRef(0);
   const m = dictionaries[locale];
   const userId = auth?.user?.id;
   const projectId = route.page === 'story' ? route.projectId : undefined;
+  const routeProject = useRef(projectId); routeProject.current = projectId;
   const activeJobs = jobs.some(isActive);
   const disabled = !online || busy !== null;
 
   const clearPrivate = useCallback(() => {
     session.current.abort(); session.current = new AbortController();
+    actionPending.current = false;
     setDashboard(null); setProjects([]); setJobs([]); setProject(null); setBusy(null);
-    setBaseLoading(false); setProjectLoading(false); setDrawerOpen(false); setPickerOpen(false); setCapabilities(null); setDrive(null);
+    setBaseLoading(false); setProjectLoading(false); setDrawerOpen(false); setPickerOpen(false); setSettingsOpen(false); setCapabilities(null); setDrive(null); setWorker(null);
   }, []);
   const handleError = useCallback((cause: unknown) => {
     const code = cause instanceof RequestError ? cause.code : 'INTERNAL_ERROR';
@@ -102,20 +108,39 @@ export default function App() {
 
   const refresh = useCallback(async (signal: AbortSignal, id?: string) => {
     const ownerSession = session.current;
-    const [nextDashboard, nextProjects, nextJobs, nextProject, nextCapabilities, nextDrive] = await Promise.all([
+    const version = ++refreshVersion.current;
+    const current = () => !signal.aborted && session.current === ownerSession && version === refreshVersion.current;
+    const integrationError = (cause: unknown) => {
+      if (current() && cause instanceof RequestError && (cause.code === 'AUTH_REQUIRED' || cause.code === 'CSRF_INVALID')) handleError(cause);
+    };
+    // Optional services reconcile independently so a slow Drive request never holds the workspace open.
+    void request<{ capabilities: RuntimeCapabilities }>('/integrations/capabilities', { signal })
+      .then((result) => { if (current()) setCapabilities(result.capabilities); })
+      .catch((cause: unknown) => { if (current()) setCapabilities(null); integrationError(cause); });
+    void request<{ storage: DriveStatus }>('/integrations/drive/status', { signal })
+      .then((result) => { if (current()) setDrive(result.storage); })
+      .catch((cause: unknown) => { if (current()) setDrive(null); integrationError(cause); });
+    void request<{ worker: WorkerRuntimeStatus }>('/queue/status', { signal })
+      .then((result) => { if (current()) setWorker(result.worker); })
+      .catch((cause: unknown) => { if (current()) setWorker(null); integrationError(cause); });
+    const results = await Promise.allSettled([
       request<Dashboard>('/dashboard', { signal }),
       request<{ projects: ProjectSummary[] }>('/projects', { signal }),
       request<{ jobs: Job[] }>('/jobs', { signal }),
       id ? request<{ project: Project }>(`/projects/${encodeURIComponent(id)}`, { signal }) : Promise.resolve(null),
-      request<{ capabilities: RuntimeCapabilities }>('/integrations/capabilities', { signal }),
-      request<{ storage: DriveStatus }>('/integrations/drive/status', { signal }),
     ]);
-    if (!signal.aborted && session.current === ownerSession) {
-      setDashboard(nextDashboard); setProjects(nextProjects.projects); setJobs(nextJobs.jobs);
-      setCapabilities(nextCapabilities.capabilities); setDrive(nextDrive.storage);
-      if (nextProject) setProject(nextProject.project);
-    }
-  }, []);
+    if (signal.aborted || session.current !== ownerSession || version !== refreshVersion.current) return;
+    // Authentication failures invalidate all private data, including otherwise successful responses.
+    const authFailure = results.find((result) => result.status === 'rejected' && result.reason instanceof RequestError && (result.reason.code === 'AUTH_REQUIRED' || result.reason.code === 'CSRF_INVALID'));
+    if (authFailure?.status === 'rejected') throw authFailure.reason;
+    const [nextDashboard, nextProjects, nextJobs, nextProject] = results;
+    if (nextDashboard.status === 'fulfilled') setDashboard(nextDashboard.value);
+    if (nextProjects.status === 'fulfilled') setProjects(nextProjects.value.projects);
+    if (nextJobs.status === 'fulfilled') setJobs(nextJobs.value.jobs);
+    if (nextProject.status === 'fulfilled' && nextProject.value && id === routeProject.current) setProject(nextProject.value.project);
+    const coreFailure = results.find((result) => result.status === 'rejected');
+    if (coreFailure?.status === 'rejected') throw coreFailure.reason;
+  }, [handleError]);
   useEffect(() => {
     if (!userId || !online) return;
     const controller = new AbortController();
@@ -135,15 +160,15 @@ export default function App() {
     return () => controller.abort();
   }, [userId, online, projectId, handleError]);
   useEffect(() => {
-    if (!userId || !online || !activeJobs) return;
+    if (!userId || !online) return;
     const controller = new AbortController();
     let timer: ReturnType<typeof setTimeout>;
     async function poll() {
       try { await refresh(controller.signal, projectId); }
       catch (cause) { if (!controller.signal.aborted) handleError(cause); }
-      if (!controller.signal.aborted) timer = setTimeout(() => void poll(), 3000);
+      if (!controller.signal.aborted) timer = setTimeout(() => void poll(), activeJobs ? 3000 : 10000);
     }
-    timer = setTimeout(() => void poll(), 3000);
+    timer = setTimeout(() => void poll(), activeJobs ? 3000 : 10000);
     return () => { controller.abort(); clearTimeout(timer); };
   }, [userId, online, activeJobs, projectId, refresh, handleError]);
   useEffect(() => {
@@ -156,12 +181,13 @@ export default function App() {
   }, [route.page, route.section, projectId, project?.id, userId]);
 
   async function action(key: string, task: (signal: AbortSignal) => Promise<void>): Promise<boolean> {
-    if (busy || !online) return false;
+    if (actionPending.current || !online) return false;
     const controller = session.current;
+    actionPending.current = true;
     setBusy(key); setError(null);
     try { await task(controller.signal); return !controller.signal.aborted; }
     catch (cause) { if (!controller.signal.aborted) handleError(cause); return false; }
-    finally { if (session.current === controller) setBusy(null); }
+    finally { if (session.current === controller) { actionPending.current = false; setBusy(null); } }
   }
   function signIn(username: string, password: string) {
     void action('auth', async (signal) => {
@@ -195,15 +221,17 @@ export default function App() {
     if (!projectId) return;
     void action('select', async (signal) => {
       const result = await request<{ project: Project }>(`/projects/${encodeURIComponent(projectId)}/select`, { ...jsonBody({ ideaId }), signal }, auth?.csrfToken);
-      if (!signal.aborted) setProject(result.project);
+      if (!signal.aborted && result.project.id === routeProject.current) setProject(result.project);
       await refresh(signal, projectId);
     });
   }
-  async function upload(sceneId: string, file: File): Promise<boolean> {
+  async function upload(sceneId: string, file: File, importSignal?: AbortSignal): Promise<boolean> {
     if (!projectId) return false;
     return action('upload', async (signal) => {
       const body = new FormData(); body.append('clip', file); body.append('sceneId', sceneId);
-      await request(`/projects/${encodeURIComponent(projectId)}/clips`, { method: 'POST', body, signal }, auth?.csrfToken);
+      const combined = importSignal ? AbortSignal.any([signal, importSignal]) : signal;
+      try { await request(`/projects/${encodeURIComponent(projectId)}/clips`, { method: 'POST', body, signal: combined }, auth?.csrfToken); }
+      catch (error) { if (importSignal?.aborted) return; throw error; }
       await refresh(signal, projectId);
     });
   }
@@ -211,6 +239,20 @@ export default function App() {
     void action('retry', async (signal) => {
       const result = await request<{ job: Job }>(`/jobs/${encodeURIComponent(id)}/retry`, { method: 'POST', signal }, auth?.csrfToken);
       if (!signal.aborted) setJobs((previous) => [result.job, ...previous.filter((job) => job.id !== result.job.id)]);
+      await refresh(signal, projectId);
+    });
+  }
+  function cancelJob(id: string) {
+    void action('cancel', async (signal) => {
+      const result = await request<{ job: Job }>(`/jobs/${encodeURIComponent(id)}/cancel`, { ...jsonBody({}), signal }, auth?.csrfToken);
+      if (!signal.aborted) setJobs((previous) => [result.job, ...previous.filter((job) => job.id !== result.job.id)]);
+      await refresh(signal, projectId);
+    });
+  }
+  function setAiMode(mode: 'mock' | 'openai') {
+    void action('mode', async (signal) => {
+      const result = await request<{ ai: AiRuntimeStatus }>('/integrations/ai/mode', { ...jsonBody({ mode }), signal }, auth?.csrfToken);
+      if (!signal.aborted) setCapabilities((previous) => previous ? { ...previous, ai: result.ai } : previous);
       await refresh(signal, projectId);
     });
   }
@@ -278,6 +320,10 @@ export default function App() {
         <p>{m.editorPickerInfo}</p>
         {baseLoading ? <p role="status">{m.loading}</p> : projects.length ? <div className="stack">{projects.map((item) => <a key={item.id} className="button secondary picker-project" href={`#story/${encodeURIComponent(item.id)}/clips`} onClick={() => setPickerOpen(false)}><span>{item.name}</span><span className="badge">{stageLabels[locale][item.status]}</span></a>)}</div> : <><p>{m.noProjectsForEditor}</p><a className="button" href="#stories" onClick={() => setPickerOpen(false)}>{m.createStory}</a></>}
       </Modal>}
+      {settingsOpen && <Modal title={m.settings} closeLabel={m.closeDialog} onClose={() => setSettingsOpen(false)}>
+        <AiModeForm key={capabilities?.ai.mode ?? 'unknown'} ai={capabilities?.ai ?? null} m={m} disabled={disabled} active={activeJobs || worker?.state === 'running'} setMode={setAiMode} />
+        <div className="actions"><button className="secondary" disabled={disabled} onClick={reload}>{m.refresh}</button></div>
+      </Modal>}
     </>}
 
     <main id="content" tabIndex={-1}>
@@ -292,6 +338,7 @@ export default function App() {
             {capabilities.ai.fallbackReason && <p className="muted">{m.aiFallback}: {capabilities.ai.fallbackReason === 'quota' ? m.fallbackQuota : capabilities.ai.fallbackReason === 'access' ? m.fallbackAccess : m.fallbackNotConfigured}</p>}
           </> : <p>{m.capabilitiesUnknown}</p>}
           <p>{m.storageLocal} · {drive ? drive.state === 'connected' && drive.connected ? m.driveGrantConnected : drive.state === 'failed' ? m.driveFailed : m.noDriveConnection : m.driveUnknown}</p>
+          <button type="button" className="secondary" onClick={() => setSettingsOpen(true)}>{m.settings}</button>
         </aside>
         {route.page === 'dashboard' && <>
           <section className="hero">
@@ -308,13 +355,13 @@ export default function App() {
               <div className="orb"></div>
               <div className="skyline"></div>
               <div className="rails"></div>
-              <div className="floating-note">✦ Scene 1 · The arrival</div>
+              <div className="floating-note">✦ {m.sampleScene}</div>
             </div>
           </section>
           
           <div className="studio-grid">
             <div className="section-heading" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2 style={{ marginBottom: 0 }}>Choose your creative space</h2>
+              <h2 style={{ marginBottom: 0 }}>{m.chooseCreativeSpace}</h2>
             </div>
             <div className="module-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px', marginBottom: '32px' }}>
               <button className="module story" onClick={() => { window.location.hash = 'stories'; }} style={{ textAlign: 'left', padding: '24px' }}>
@@ -341,9 +388,10 @@ export default function App() {
         </>}
         {route.page === 'queue' && <>
           <header className="page-heading"><h1>{m.queue}</h1><button className="secondary" disabled={disabled} onClick={reload}>{m.refresh}</button></header>
-          {!baseLoading && dashboard && <Jobs jobs={jobs} locale={locale} m={m} disabled={disabled} retry={retryJob} />}
+          <WorkerStatus worker={worker} locale={locale} m={m} />
+          {!baseLoading && <Jobs jobs={jobs} locale={locale} m={m} disabled={disabled} retry={retryJob} cancel={cancelJob} />}
         </>}
-        {route.page === 'story' && (projectLoading ? <p role="status">{m.loading}</p> : project && project.id === projectId ? <Workspace key={project.id} project={project} contentMode={contentMode} section={route.section} jobs={jobs.filter((job) => job.projectId === project.id)} locale={locale} m={m} disabled={disabled || !dashboard} operate={operate} select={selectIdea} upload={upload} download={downloadFile} videoError={videoError} /> : <button disabled={disabled} onClick={reload}>{m.refresh}</button>)}
+        {route.page === 'story' && (projectLoading ? <p role="status">{m.loading}</p> : project && project.id === projectId ? <Workspace key={project.id} project={project} contentMode={contentMode} section={route.section} jobs={jobs.filter((job) => job.projectId === project.id)} locale={locale} m={m} disabled={disabled} ai={capabilities?.ai ?? null} worker={worker} modeBlocked={activeJobs || worker?.state === 'running'} setAiMode={setAiMode} retry={retryJob} cancel={cancelJob} csrf={auth?.csrfToken ?? null} onError={handleError} operate={operate} select={selectIdea} upload={upload} download={downloadFile} videoError={videoError} /> : <button disabled={disabled} onClick={reload}>{m.refresh}</button>)}
       </>}
     </main>
   </div>;

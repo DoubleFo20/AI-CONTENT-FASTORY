@@ -10,7 +10,9 @@ async function response(path: string, options: RequestInit, csrf?: string | null
   const headers = new Headers(options.headers);
   if (csrf) headers.set('X-CSRF-Token', csrf);
   let result: Response;
-  try { result = await fetch(`/api${path}`, { ...options, headers, credentials: 'same-origin', cache: 'no-store' }); }
+  const deadline = AbortSignal.timeout(30_000);
+  const signal = options.signal ? AbortSignal.any([options.signal, deadline]) : deadline;
+  try { result = await fetch(`/api${path}`, { ...options, signal, headers, credentials: 'same-origin', cache: 'no-store' }); }
   catch (error) { if (options.signal?.aborted) throw error; throw new RequestError('NETWORK_ERROR'); }
   if (!result.ok) {
     const body: unknown = await result.json().catch(() => null);

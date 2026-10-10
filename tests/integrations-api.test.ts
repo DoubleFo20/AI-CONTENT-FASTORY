@@ -175,10 +175,12 @@ test('Drive backup resolves only owner media, uses private file bytes, and seria
   const f = await fixture(t, { drive }); const session = await owner(f.base);
   const project = f.app.store.createProject(sessionUserId(f, session), input);
   const ideaJob = f.app.store.enqueue(sessionUserId(f, session), project.id, 'ideas');
-  f.app.store.completeIdeas(ideaJob, ideas);
+  const ideaClaim = f.app.store.claim(); assert.equal(ideaClaim?.job.id, ideaJob.id);
+  assert.equal(f.app.store.completeIdeas(ideaClaim!.job, ideas), true);
   f.app.store.select(sessionUserId(f, session), project.id, ideas[0].id);
   const expandJob = f.app.store.enqueue(sessionUserId(f, session), project.id, 'expand');
-  f.app.store.completePackage(expandJob, story);
+  const expandClaim = f.app.store.claim(); assert.equal(expandClaim?.job.id, expandJob.id);
+  assert.equal(f.app.store.completePackage(expandClaim!.job, story), true);
   const clipFile = `${randomUUID()}.mp4`; const clipsDir = join(f.dataDir, 'clips'); await mkdir(clipsDir, { recursive: true });
   await writeFile(join(clipsDir, clipFile), 'private clip payload');
   const clip = f.app.store.addClip(sessionUserId(f, session), project.id, story.scenes[0].id, clipFile, 'private.mp4', 8);
@@ -224,10 +226,12 @@ test('second owner cannot read cloud projects/jobs or back up another owner medi
 
   const localProject = f.app.store.createProject(firstOwnerId, input);
   const ideaJob = f.app.store.enqueue(firstOwnerId, localProject.id, 'ideas');
-  f.app.store.completeIdeas(ideaJob, ideas);
+  const ideaClaim = f.app.store.claim(); assert.equal(ideaClaim?.job.id, ideaJob.id);
+  assert.equal(f.app.store.completeIdeas(ideaClaim!.job, ideas), true);
   f.app.store.select(firstOwnerId, localProject.id, ideas[0].id);
   const expandJob = f.app.store.enqueue(firstOwnerId, localProject.id, 'expand');
-  f.app.store.completePackage(expandJob, story);
+  const expandClaim = f.app.store.claim(); assert.equal(expandClaim?.job.id, expandJob.id);
+  assert.equal(f.app.store.completePackage(expandClaim!.job, story), true);
   const media = f.app.store.addClip(firstOwnerId, localProject.id, story.scenes[0].id, `${randomUUID()}.mp4`, 'owner-private.mp4', 8);
 
   const otherPassword = 'another-test-password-2026';

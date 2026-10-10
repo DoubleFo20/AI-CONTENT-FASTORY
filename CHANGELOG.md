@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-10-10 — V1 Release Candidate
+
+- Preserved Premium Cinematic V2 and React/Vite + Express/SQLite; no rewrite/migration/reset.
+- Diagnosed actual quota-failed Ideas history; backed up original data and recovered 10 labelled Mock concepts while preserving account/session/media/schema/history.
+- Added persisted explicit AI mode/provenance, job cancel/progress/deadlines/restart/manual retry and late completion fencing.
+- Added variable-duration scenes, continuity/reference-enriched English Flow prompts + Thai explanations, scene production state, verified owner-configured credit estimates and confirmed clip matching.
+- Added private audio/images and deterministic editor ordering,720p/1080p,cut/fade,normalization/music/SFX/subtitles,preview/export settings.
+- Added six-category Drive preparation, owner/project private media index, verified/idempotent transfers/progress/retry and missing-cache restore without local deletion; live OAuth gate remains.
+- Fixed request shutdown/late-Multer/filehandle races after independent review; added targeted auth/media/queue/storage regressions.
+- Corrected critical TH/EN labels/form validation and360px Drive instructions overflow; retained public-shell PWA privacy.
+- Verified synthetic 12-second MP4 playback/download and persistence/offline/auth; final combined checks and release publication are recorded in current status.
+
+
 ## 2026-10-09 — Verified UI/core integration candidate
 
 - Integrated approved Antigravity studio UI in a dedicated branch from latest main; preserved

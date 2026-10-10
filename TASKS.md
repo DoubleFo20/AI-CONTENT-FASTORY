@@ -1,5 +1,31 @@
 # Tasks and dependencies
 
+## Current V1 Release Candidate
+
+| ID | งาน | Dependency | สถานะ |
+| --- | --- | --- | --- |
+| RC-01 | inspect/fetch/compare main, PR#1 and Premium V2; preserve existing work/data | — | DONE |
+| RC-02 | dedicated release/v1-real-world + safe V2 integration | RC-01 | DONE |
+| RC-03 | actual quota/stale ideas diagnosis and fenced queue/cancel/retry/progress | RC-02 | DONE |
+| RC-04 | consistent original SQLite backup + 10 Mock ideas recovery; preserve auth/history/media/schema | RC-03, Owner proceed | DONE |
+| RC-05 | selected-only variable-duration story/bibles/scenes/EN Flow prompts/TH explanation | RC-03 | DONE_MOCK_ONLY |
+| RC-06 | Flow scene status/reference/filename matching/owner-verified credit estimate | RC-05 | DONE_ASSISTED; live Flow gate remains |
+| RC-07 | deterministic FFmpeg editor/audio/images/subtitles/order/quality/play/download | RC-05 | VERIFIED_SYNTHETIC_MEDIA |
+| RC-08 | six Drive categories, private media index/progress/idempotent uploads/verified cache restore | RC-07 | PREPARED; fake-adapter tests; OAuth/live gate remains |
+| RC-09 | cancel/drain actual HTTP handlers and late upload cleanup before Store close | RC-03,RC-08 | DONE; independent retake accepted; full regressions passed |
+| RC-10 | critical THEN/mobile/PWA/persistence regression | RC-05,RC-07 | IN_FINAL_QA |
+| RC-11 | full regressions/typecheck/lint/build/PWA/docs/secrets | RC-09,RC-10 | 144passes/1POSIXskip; lint/build/PWA/docs passed; staged hygiene pending |
+| RC-12 | safe local activation; commit/push release candidate/draft PR to main | RC-11 | LOCAL_ACTIVE3006; publication pending |
+| RC-13 | Antigravity visual QA of actual combined UI + final integration review | RC-12 | HANDOFF_PREPARED; visual acceptance PENDING |
+| RC-14 | real AI/Flow/Drive/Supabase/cloud/paired Local Worker | external owner gates | BLOCKED / PREPARED / NOT_IMPLEMENTED individually; see matrix |
+
+Root reviewed isolated Sol High core/editor and Luna UI/QA/docs output before copying owned paths. Root alone owns Git/shared/config/progress/schema. No concurrent edits of the same files; Antigravity design worktree/specifications remain preserved. New schema migration, billing, public deployment, content publishing and main merge require separate approval.
+
+Exact next task and required Owner actions are in [HANDOFF](HANDOFF.md). Current evidence supersedes historical checkpoint counts below.
+
+## บันทึก checkpoint ก่อนหน้า (historical)
+
+
 | ID | Task | Depends on | Owner | State |
 | --- | --- | --- | --- | --- |
 | P0-01 | Workspace/runtime/usage discovery, Git and safe ignore rules | — | Root | DONE |

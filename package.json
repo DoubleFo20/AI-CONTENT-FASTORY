@@ -15,7 +15,7 @@
     "start": "node dist/api/server/index.js",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.server.json && tsc --noEmit -p tsconfig.tests.json",
     "lint": "eslint src server shared tests scripts vite.config.ts --max-warnings 0",
-    "test": "node --import tsx --test tests/*.test.ts",
+    "test": "node --import tsx --test --test-concurrency=1 tests/*.test.ts",
     "validate:docs": "node scripts/validate-docs.mjs",
     "validate:pwa": "node scripts/check-pwa.mjs",
     "validate:secrets": "node scripts/verify-secrets.mjs"

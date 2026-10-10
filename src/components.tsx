@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { AuthInputSchema, ProjectInputSchema, type Job, type Locale, type ProjectInput, type ProjectSummary } from '../shared/contracts';
 import { errorMessages, jobLabels, jobStatusLabels, stageLabels, type Messages } from './i18n';
 import { knownError } from './api';
+import type { AiRuntimeStatus } from '../shared/integrations';
 
 export function ProjectCards({ projects, locale, m }: { projects: ProjectSummary[]; locale: Locale; m: Messages }) {
   return projects.length === 0 ? <div className="empty"><p>{m.emptyProjects}</p></div> : <div className="card-grid">{projects.map((project) => {
@@ -23,26 +24,54 @@ export function formatDate(date: string, locale: Locale): string {
 }
 export function isActive(job: Job): boolean { return job.status === 'queued' || job.status === 'running'; }
 
-export function Jobs({ jobs, locale, m, disabled, retry }: { jobs: Job[]; locale: Locale; m: Messages; disabled: boolean; retry: (id: string) => void }) {
-  return jobs.length === 0 ? <div className="empty"><p>{m.queueEmpty}</p></div> : <div className="stack">{jobs.map((job) => {
+interface JobActions { retry: (id: string) => void; cancel: (id: string) => void }
+export interface WorkerRuntimeStatus { state: 'idle' | 'running' | 'stopped' | 'failed'; activeJobId: string | null; lastErrorCode: string | null }
+export function WorkerStatus({ worker, locale, m }: { worker: WorkerRuntimeStatus | null; locale: Locale; m: Messages }) {
+  const error = knownError(worker?.lastErrorCode);
+  const labels = { idle: m.workerIdle, running: m.workerRunning, stopped: m.workerStopped, failed: m.workerFailed };
+  return <div className="notice worker-status" role="status">
+    <p><strong>{m.workerStatus}:</strong> {worker ? labels[worker.state] : m.workerUnknown}</p>
+    {worker?.lastErrorCode && <p className="error">{error ? errorMessages[locale][error] : m.unexpectedError}<span className="job-error-code">{worker.lastErrorCode}</span></p>}
+  </div>;
+}
+export function JobDetails({ job, locale, m, disabled, active, retry, cancel }: { job: Job; locale: Locale; m: Messages; disabled: boolean; active: boolean } & JobActions) {
     const error = knownError(job.errorCode);
     const progress = Math.min(100, Math.max(0, Number.isFinite(job.progress) ? job.progress : 0));
     let statusClass = 'badge';
     if (job.status === 'running') statusClass += ' active';
     else if (job.status === 'completed') statusClass += ' success';
     else if (job.status === 'failed') statusClass += ' error';
-    return <article className="card" key={job.id}>
-      <h3><a href={`#story/${encodeURIComponent(job.projectId)}`}>{job.projectName}</a></h3>
+    return <article className="card job-details">
       <p className="muted" style={{marginBottom: '16px'}}>{jobLabels[locale][job.type]} · <span className={statusClass}>{jobStatusLabels[locale][job.status]}</span></p>
       <label className="progress-label"><span>{m.progress}</span> <span>{new Intl.NumberFormat(locale).format(progress)}%</span></label>
       <progress value={progress} max={100} aria-label={`${job.projectName}: ${jobLabels[locale][job.type]} — ${m.progress}`} />
+      <p className="subdued">{m.created}: {formatDate(job.createdAt, locale)} · {m.updated}: {formatDate(job.updatedAt, locale)}</p>
       {job.status === 'failed' && <div style={{marginTop: '16px'}}>
-        <p className="alert" role="alert">{error ? errorMessages[locale][error] : m.unexpectedError}</p>
+        <p className="alert" role="alert">{error ? errorMessages[locale][error] : m.unexpectedError}{job.errorCode && <span className="job-error-code">{job.errorCode}</span>}</p>
         <p className="muted">{m.retryInfo}</p>
-        <div className="actions"><button disabled={disabled || jobs.some((other) => other.projectId === job.projectId && isActive(other))} onClick={() => retry(job.id)}>{m.retry}</button></div>
+        <div className="actions"><button disabled={disabled || active} onClick={() => retry(job.id)}>{m.retry}</button></div>
       </div>}
+      {isActive(job) && <><p className="muted">{m.cancelJobInfo}</p><div className="actions"><button className="secondary" disabled={disabled} onClick={() => cancel(job.id)}>{m.cancelJob}</button></div></>}
     </article>;
-  })}</div>;
+}
+
+export function Jobs({ jobs, locale, m, disabled, retry, cancel }: { jobs: Job[]; locale: Locale; m: Messages; disabled: boolean } & JobActions) {
+  return jobs.length === 0 ? <div className="empty"><p>{m.queueEmpty}</p></div> : <div className="stack">{jobs.map((job) => <div key={job.id}>
+    <h3><a href={`#story/${encodeURIComponent(job.projectId)}`}>{job.projectName}</a></h3>
+    <JobDetails job={job} locale={locale} m={m} disabled={disabled} active={jobs.some((other) => other.projectId === job.projectId && isActive(other))} retry={retry} cancel={cancel} />
+  </div>)}</div>;
+}
+
+export function AiModeForm({ ai, m, disabled, active, setMode }: { ai: AiRuntimeStatus | null; m: Messages; disabled: boolean; active: boolean; setMode: (mode: 'mock' | 'openai') => void }) {
+  const [mode, selectMode] = useState<'mock' | 'openai'>(ai?.active ?? 'openai');
+  return <form className="stack" onSubmit={(event) => { event.preventDefault(); if (ai && !disabled && !active) setMode(mode); }}>
+    <p>{m.aiModeHelp}</p>
+    <label>{m.chooseAiMode}<select value={mode} disabled={disabled || active || !ai} onChange={(event) => selectMode(event.target.value as 'mock' | 'openai')}><option value="openai">OpenAI</option><option value="mock">Mock</option></select></label>
+    {!ai && <p className="notice" role="status">{m.modeUnavailable}</p>}
+    {active && <p className="notice" role="status">{m.modeBlocked}</p>}
+    <p className="muted">{m.aiModeSaved}</p>
+    <div className="actions"><button disabled={disabled || active || !ai || ai.mode === mode}>{m.applyAiMode}</button></div>
+  </form>;
 }
 
 export function AuthForm({ setup, m, disabled, submit }: { setup: boolean; m: Messages; disabled: boolean; submit: (username: string, password: string) => void }) {
@@ -57,7 +86,7 @@ export function AuthForm({ setup, m, disabled, submit }: { setup: boolean; m: Me
     if (valid) submit(username, password);
   }
   return <section className="auth card"><h1>{setup ? m.setup : m.login}</h1><p className="muted">{setup ? m.setupInfo : m.loginInfo}</p>
-    <form onSubmit={onSubmit} className="stack">
+    <form noValidate onSubmit={onSubmit} className="stack">
       <label>{m.username}<input name="username" required value={username} maxLength={32} minLength={setup ? 3 : 1} autoComplete="username" autoCapitalize="none" spellCheck={false} onChange={(event) => setUsername(event.target.value)} /></label>
       <label>{m.password}<input name="password" type={passwordVisible ? 'text' : 'password'} required value={password} minLength={setup ? 12 : 1} maxLength={128} autoComplete={setup ? 'new-password' : 'current-password'} onChange={(event) => setPassword(event.target.value)} /></label>
       <button type="button" className="secondary" aria-pressed={passwordVisible} onClick={() => setPasswordVisible(!passwordVisible)}>{passwordVisible ? m.hidePassword : m.showPassword}</button>
@@ -82,12 +111,13 @@ export function ProjectForm({ m, disabled, submit }: { m: Messages; disabled: bo
         <h2 style={{ marginBottom: 0 }}>{m.storyDirection}</h2>
         <span className="chip">{m.aiStoryFactoryLabel}</span>
       </div>
-      <form className="form-grid" onSubmit={onSubmit}>
+      <form noValidate className="form-grid" onSubmit={onSubmit}>
         <label className="full">{m.name}<input required maxLength={120} value={input.name} onChange={(event) => setInput({ ...input, name: event.target.value })} /></label>
         <label className="full">{m.brief}<textarea required minLength={10} maxLength={4000} rows={5} value={input.brief} aria-describedby="brief-help" onChange={(event) => setInput({ ...input, brief: event.target.value })} /><span id="brief-help" className="muted">{m.briefHelp}</span></label>
         <label>{m.genre}<input required maxLength={100} value={input.genre} onChange={(event) => setInput({ ...input, genre: event.target.value })} /></label>
         <label>{m.audience}<input required maxLength={120} value={input.audience} onChange={(event) => setInput({ ...input, audience: event.target.value })} /></label>
         <label className="full">{m.aspectRatio}<select value={input.aspectRatio} onChange={(event) => setInput({ ...input, aspectRatio: event.target.value as ProjectInput['aspectRatio'] })}><option>9:16</option><option>16:9</option><option>1:1</option></select></label>
+        <label className="full">{m.targetDuration}<input type="number" min={12} max={180} step={1} value={input.targetDurationSeconds ?? ''} onChange={(event) => setInput({ ...input, targetDurationSeconds: event.target.value ? Number(event.target.value) : undefined })} /></label>
         
         <div className="full notice" style={{ display: 'flex', gap: '12px', background: 'rgba(138,239,203,0.1)', padding: '16px', borderRadius: '8px', color: 'var(--text)' }}>
           <span style={{ fontSize: '20px' }}>✦</span>
@@ -95,7 +125,7 @@ export function ProjectForm({ m, disabled, submit }: { m: Messages; disabled: bo
         </div>
         
         {invalid && <p className="full error" role="alert">{m.invalidForm}</p>}
-        <div className="full actions"><button className="primary" disabled={disabled}>{m.tenShortIdeas}</button></div>
+        <div className="full actions"><button className="primary" disabled={disabled}>{m.create}</button></div>
       </form>
     </section>
     

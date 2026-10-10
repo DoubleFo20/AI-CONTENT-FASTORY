@@ -76,13 +76,15 @@ export function createMockProvider(): AiProvider {
           en: `${MOCK_EN}: A fictional, quiet station in soft morning light.`,
         },
       }];
-      const scenes = [1, 2, 3].map((order) => ({
+      const target = input.targetDurationSeconds ?? 24;
+      const sceneCount = Math.max(3, Math.ceil(target / 20));
+      const scenes = Array.from({ length: sceneCount }, (_, index) => index + 1).map((order) => ({
         id: `mock_scene_${order}`,
         order,
         title: { th: `${MOCK_TH} • ฉาก ${order}`, en: `${MOCK_EN} • Scene ${order}` },
-        durationSeconds: 8,
+        durationSeconds: Math.floor(target / sceneCount) + (order <= target % sceneCount ? 1 : 0),
         explanationTh: `${MOCK_TH}: มะลิเปิดสมุดที่ ${projectName} และพบเบาะแสใหม่ในฉาก ${order}`,
-        flowPromptEn: `${MOCK_EN}: Mali opens her notebook at ${projectName}; a gentle visual clue appears in scene ${order}. Maintain the same blue jacket and quiet station.`,
+        flowPromptEn: `${MOCK_EN}: Mali opens her notebook at the small station; a gentle visual clue appears in scene ${order}. Maintain the same blue jacket and quiet station.`,
         narration: {
           th: `${MOCK_TH}: เรื่องราวค่อย ๆ เดินหน้าผ่านฉาก ${order}`,
           en: `${MOCK_EN}: The story moves forward in scene ${order}.`,

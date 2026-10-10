@@ -1,5 +1,28 @@
 # Handoff
 
+STATUS: V1_RELEASE_CANDIDATE_FINAL_VERIFICATION
+ANTIGRAVITY_STATUS: READY_FOR_IMPLEMENTATION_VISUAL_QA
+Updated: 2026-10-10 (Asia/Bangkok)
+
+Worktree: `D:\xampp\htdocs\Ai-content-factory\.worktrees\release-v1`; branch `release/v1-real-world`. Reviewed base integration cfa6554 and Premium V2 be29e0a; root main dfe2b2c remains unchanged. Preserve all other dirty worktrees. Draft PR#1 is open/unmerged; release PR will target main separately.
+
+Owner's latest proceed continued the pending original-storage recovery. Actual populated storage is `D:\xampp\htdocs\Ai-content-factory-premium-v2\storage`, not root's empty storage. Verified consistent backup: `.tmp/owner-backup-j6CByS/factory.sqlite` + private BACKUP.json. Do not reset accounts or delete original data. Only target original project received 10 labelled Mock ideas/completed100; old3 quota failures stay. Private recovery script/evidence remain ignored. No Owner selection/expansion performed.
+
+Backend now has explicit persisted Mock/Real mode, provenance, deadline/cancel/restart/error fences, isolated production sidecars, enhanced Flow prompts and owner credit estimation, verified media import, persisted FFmpeg editor, private Drive index with explicit nonduplicate retry/cache restore. Request lifecycle tracks real handlers and aborts admissions/probes; immediate post-await guards protect SQLite/private catalog. Multer completion cleans files arriving after socket/body completion. HTTP socket drain10s + actual-handler drain5s are separate; noncompliant late callbacks stay fenced and cleanup when they return. No DB DDL, new runtime dependency, env/lockfile/CI change.
+
+Synthetic QA server: `node scripts/release-qa-server.mjs`, port3004 default. Creates ignored database and uses an injected quota error + Mock, never a paid request. `ACF_QA_DATA_DIR='.tmp/release-qa-7thsIz'` may resume only this existing QA_ONLY-marked fixture inside release .tmp; normal QA account login required. Restart/browser persisted exported project,3clips,audio,image,settings,mode. Do not use this harness for the original Owner DB. For fresh visual QA use another free loopback port through ACF_QA_PORT.
+
+Verified browser: normal wrong/valid login, cached10 ideas, exactlyone saved selection, bibles/scenes/ENprompts/TH explanations/copy+pack, real synthetic imports and H.264720×1280 + AAC12.021029s playback/download, restart/relogin, offline/public cache/reconnect/logout401. Final npm.cmd test145total144pass0fail1POSIXskip; final lint/build/all3typechecks/PWA/docs passed. Responsive retake/staged hygiene/publication still pending. [Readiness matrix](docs/release/V1_READINESS.md) separates live and mock.
+
+Compiled Owner candidate is running at `http://127.0.0.1:3006` (hidden app PID14516, private runtime record `.tmp/release-owner-process.json`). It uses original populated storage, existing account and persistedMock mode. Health200/setupRequired=false/private401 passed. Keep this normal local app running for Owner; do not kill or reset data. Stop/restart only this verified process if code changes require it; never expose dev API publicly. No automatic Codex development scheduler is configured.
+
+NEXT_TASK: finish responsive retake and staged secret/whitespace validation; update status/visual handoff; commit and normally push release/v1-real-world; create draft release PR without merging main. Then Owner/Antigravity reviews the actual combined UI and external credential/hosting gates.
+
+After local release: Owner chooses/saves one concept and obtains real Flow clips manually. Live OpenAI requires quota/project access resolution; Drive requires OAuth values/consent and checksum roundtrip; cloud requires chosen host/Supabase + approved SQL/migration and real notebook-offline/mobile test. Paired Local Worker/WAITING_FOR_WORKER bridge and Meta/directFlow automation are not implemented. No automatic resumption/scheduler is configured; new invocation is required for blocked external work after owner setup.
+
+## บันทึก checkpoint ก่อนหน้า (historical)
+
+
 STATUS: INTEGRATION_ENGINEERING_VERIFIED_REVIEW_PENDING
 ANTIGRAVITY_STATUS: READY_FOR_IMPLEMENTATION_VISUAL_QA
 Updated: 2026-10-09 (Asia/Bangkok)
