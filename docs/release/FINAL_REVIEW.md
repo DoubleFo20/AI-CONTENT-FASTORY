@@ -1,30 +1,37 @@
 # Final local V1 release review — 2026-10-10
 
 RELEASE_STATUS: READY_FOR_OWNER_APPROVAL
-STATUS: PAUSED_FOR_USAGE_RESET
-ANTIGRAVITY_STATUS: QA_COMPLETED_PASS
+STATUS: LOCAL_V1_READY_FOR_OWNER_APPROVAL
+ANTIGRAVITY_STATUS: PUBLISHED_PASS_FOR_PRE_PATCH_RELEASE_3e9c1aa
 
-ตรวจ Draft PR #2 และ fetch แล้ว: main `dfe2b2c`, release `3e9c1aa`, integration `cfa6554`, Premium Cinematic V2 `be29e0a`. Source code ล่าสุดคือ `b271855`; commit หลังจากนั้นเปลี่ยนเฉพาะเอกสาร. ไม่มีการ merge main หรือเปลี่ยน runtime ของ Owner ในรอบนี้.
+Local V1 พร้อมตรวจอนุมัติใน [Draft PR#2](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/2). ใช้ React/Vite + Express/SQLite/FFmpeg และ Premium Cinematic V2 เดิม; main dfe2b2c, design be29e0aไม่เปลี่ยน. Backend baseline b271855คงเดิม; latest application source 0b35cea82d7e7867e11c653df0d6d790a6b66f19 แก้เพียงCSS8linesและApp/Modal focus fallback. เพิ่ม browser regression และ secret guardสำหรับGeminiโดยไม่เปลี่ยนruntime/schema/dependencies.
 
-ทดสอบซ้ำจาก `3e9c1aa` ใน isolated `.worktrees/v1-final-qa`:
+## ผลตรวจที่รันจริง
 
-| คำสั่ง/การตรวจ | ผลจริง |
+| การตรวจ | ผล / source scope |
 | --- | --- |
-| `npm.cmd test` | 145 total / 144 passed / 0 failed / 1 POSIX permission skip บน Windows; 188.264s |
-| `npm.cmd run typecheck` | ผ่าน client/server/tests |
-| `npm.cmd run lint` | ผ่าน |
-| `npm.cmd run build` | ผ่าน server/Vite/PWA |
-| `npm.cmd run validate:pwa` | ผ่าน 9 public assets |
-| Synthetic editor API + FFprobe smoke | H.264 720×1280 + AAC 48k stereo; 4.021333s |
-| Actual Chrome/Playwright playback | readyState=4, paused=false, currentTime=0.556371s, advanced=true, error=null |
-| Read-only Owner database/media preservation | 1 owner / 1 project / 4 jobs / 10 cached Mock ideas / 0 active jobs; schema/account/record/media baseline captured, no database writes |
+| npm.cmd test | 145total /144passed /0failed /1POSIXpermission skipบนWindows;50.7859898s ที่CSScommitde59fe6 |
+| npm.cmd run build / typecheck | ผ่านclient/server/testsและVite/PWA หลังfocusfix0b35cea |
+| npm.cmd run lint | ผ่าน รวมbrowserregressionและsecretguard |
+| Current actual browser | 12dialogcases + Preview360TH/ENสองcases; source0b35cea |
+| tests/browser/modal-focus.js via Playwright CLI | รันจริง12/12ทั้งRC3014และPhase23012; contrast15.49:1, Tab/Escape/Close/focusreturn ผ่าน |
+| Synthetic editor API + FFprobe | H.264720×1280 + AAC48kstereo;4.021333s/122601bytes |
+| Chrome playback + HTTP download integrity | readyState=4;advanced=true;error=null;122601bytes/SHA256ตรงต้นฉบับ |
+| Owner preservation | read-onlybaselinepreserved;1owner/1project/4jobs/10cachedMockideas/0activejobs;ไม่มีDBwrites |
+| Docs / PWA / secrets / whitespace | 27requiredartifacts/9publicassets/privateAPIexcluded; stagedscannerและdiff-checkผ่าน |
 
-MP4 smoke ใช้ไฟล์สังเคราะห์ใหม่และฐานข้อมูลแยก; preview server ที่127.0.0.1:3010 ปิดแล้ว. หลักฐาน script/video อยู่ใน ignored QA `.tmp`, ภาพ playback อยู่ใน `.playwright-cli`. ผลนี้ยืนยัน FFmpeg และ browser playback ไม่ใช่ Google Flow live generation.
+Testsทั้งหมดใช้isolatedsyntheticDB/media; runtimeQAล้างprovidercredentials. Historical48route×locale×widthcases, workflow/restart/auth/isolation/pollrecovery และ12.021029sMP4อยู่ใน [QA_RESULTS](QA_RESULTS.json); ไม่ได้อ้างว่าrerun48casesทั้งหมดในรอบนี้. Browserviewportsimulationไม่ใช่physicalphone/assistivetechnologyproof. เพิ่มsecretguardsจับGoogleAPIkeyรูปแบบที่รู้จักและค่าจากprivateenvironment;ทดสอบsyntheticnegativeสองกรณี+cleanpositiveผ่าน ไม่ใช่scannerทุกsecretชนิด.
 
-ผล browser workflow/auth/TH/EN/48 responsive cases ที่360/768/1440 และ targeted layout/read-error retakes จาก code เดียวกันคงอยู่ใน [QA_RESULTS](QA_RESULTS.json). ไม่ได้อ้างว่า rerun 48 cases ในรอบ final review นี้. Premium Cinematic V2 source ไม่มีการแก้ใน Phase A.
+## Visual evidence และ Owner data
 
-Owner ส่ง published evidence แล้ว: fetch `qa/v1-visual-review` commit `ddccf9ce18a13425b480f02313f8d0ccbe6261c0`; อ่าน [QA_VISUAL_REPORT](QA_VISUAL_REPORT.md) และ [handoff](../ANTIGRAVITY_VISUAL_QA_HANDOFF.md). QA PASS ที่ tested source `3e9c1aa`; ตรวจ diff กับ releaseba327e2 แล้ว source/server/client/shared/public/package ไม่เปลี่ยน. Root ตรวจภาพ TH360/EN768 ที่อ้างอิงใน report แล้ว; ไม่มี screenshot ใหม่ใน QA commit. รวมเฉพาะสองไฟล์ evidence และรักษา progress docs ล่าสุด. Local V1 READY_FOR_OWNER_APPROVAL; main/deploy ยังไม่อนุญาต. Final regression rerun หลังรับ evidence: npm.cmd test exit0,145total/144pass/0fail/1POSIXskip,75.7481601s; sourceเดิมไม่เปลี่ยน.
+Fetch/read publishedQA commit ddccf9ce18a13425b480f02313f8d0ccbe6261c0 ที่testedsource3e9c1aaแล้ว: [QA_VISUAL_REPORT](QA_VISUAL_REPORT.md), [handoff](../ANTIGRAVITY_VISUAL_QA_HANDOFF.md). PublishedPASSนั้นเป็นpre-patch;RootพบDrivehelpถูกบีบเป็นสามคอลัมน์/dialogสีขาวและmobilefocusloss จึงแก้ด้วยapprovedtokens/nativebehavior. ไม่มีredesignหรือAntigravityretestclaim. ให้ตรวจactuallatestdeltaก่อนfinalOwnerapproval/mainmerge.
 
-Phase 2 แยกใน `codex/phase2-real-integrations`: Gemini/provider selection/usage และ explicit Drive live verifier. ไม่เปลี่ยน release source ที่ผ่านการทดสอบหรือเปิดบริการ paid/public. Real AI quota, Gemini key, Drive OAuth/round trip, Supabase/host/migration/paired worker/disconnected-device acceptance เป็น gates แยกตาม [readiness](V1_READINESS.md).
+ภาพactualRCล่าสุดที่Rootตรวจ: [Settings TH360](final-evidence/settings-360-th.png), [Settings EN360](final-evidence/settings-360-en.png), [Preview TH360](final-evidence/preview-360-th.png), [Preview EN360](final-evidence/preview-360-en.png). Evidenceมาจากfixtureสังเคราะห์ ไม่ใช่prototypeหรือข้อมูลOwner.
 
-NEXT_TASK: PAUSED_FOR_USAGE_RESET (latest remaining1%). หลัง reset/new invocation ตรวจ usage แล้วรับ Owner review/approval PR#2; Phase2 live Gemini ต้อง private key+Free Tier confirmation และ Drive ต้อง OAuth. ไม่มี automatic resume; main/deploy ต้องรอ explicit approval.
+Owner app http://127.0.0.1:3006 ใช้ original populated storage,บัญชีเดิมและMock โดยไม่ส่งOpenAIcredentialไปchild. Clientrebuildแล้ว;APIprocessใช้backendเดิม. Preservedschema/accounts/records/mediaด้วยread-onlydigest ไม่มีreset/migration/deletion/selection/expansionแทนOwner. ใช้ [คู่มือเปิดข้อมูลเดิม](LOCAL_OWNER_RUN.md) ก่อนrestart. QAserversปิดหลังตรวจ;Owner3006คงทำงาน.
+
+## External gates
+
+Phase2แยกใน [Draft PR#3](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/3) targetrelease. Geminiadapter/Ownerprovider/usage/explicitcanaryเป็นPREPARED;ยังไม่มีprivatekey/FreeTierconfirmation/liveproof. OpenAIถูกระงับจนapprovalใหม่;historicalquota429ยังเป็นประวัติ. Driveยังไม่มีOAuth/liveupload/download/approvedrestore;cloudไม่มีapprovedproject/HTTPShost/deployment/disconnectedtest. ดู [readiness](V1_READINESS.md). Mock/injectedtestsไม่ถือเป็นliveacceptance.
+
+NEXT_TASK: OwnerreviewPR#2/UIdelta;Phase2canaryเมื่อprivatekey+verifiedFreeTierพร้อม ตามคู่มือPhase2. usage ที่ตรวจจากบัญชีล่าสุดเหลือ 45% ในรอบ 5 ชั่วโมง และ 32% ในรอบสัปดาห์ ยังไม่ถึงเกณฑ์หยุด 7%. ยังไม่merge main/deploy/publish/billing;ไม่มีautomaticresume.

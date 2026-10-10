@@ -1,21 +1,34 @@
 # Task dependency plan
 
-STATUS: PAUSED_FOR_USAGE_RESET
+STATUS: PHASE2_PREPARED_LIVE_GATES_PENDING
 RELEASE_READINESS: READY_FOR_OWNER_APPROVAL
-ANTIGRAVITY_STATUS: QA_COMPLETED_PASS
+ANTIGRAVITY_STATUS: PUBLISHED_PASS_FOR_PRE_PATCH_RELEASE_3e9c1aa
 Updated: 2026-10-10 (Asia/Bangkok)
 
-หยุดตาม authoritative usage: เริ่ม checkpoint ที่เหลือ7%; ตรวจล่าสุด primary99% used (เหลือ1%), secondary59% used. ไม่เริ่ม feature/agent ใหม่ ไม่มี automatic resume หรือ scheduler.
+Antigravity เผยแพร่ QA commit ddccf9c/PASS ที่ source3e9c1aa แล้ว หลักฐานสองไฟล์ถูกเก็บใน release. RC sourceปัจจุบัน 0b35cea82d7e7867e11c653df0d6d790a6b66f19 เพิ่มเฉพาะ Drive help แบบ block, dialog สีตาม Premium Cinematic V2 และ focus กลับปุ่มเมนูมือถือ; backend baseline b271855 คงเดิม ไม่มีการย้าย schema. Published PASS เดิมไม่ได้ครอบคลุม UI delta นี้ จึงเตรียม handoff ให้ตรวจ actual latest RC ก่อนอนุมัติขั้นสุดท้าย.
 
-Antigravity evidence published qa/v1-visual-review ddccf9c, tested source3e9c1aa, PASS; release source ไม่เปลี่ยนจาก source ที่ผ่าน QA. รวมรายงานโดยรักษาเอกสารล่าสุด. Final release regression: npm.cmd test145total/144pass/0fail/1POSIXskip75.748s; typecheck/lint/build/PWA ผ่านก่อนหน้านี้จาก code เดียวกัน. MP4 smoke ใหม่4.021333s และ actual Chrome playback/error=null ผ่าน. Owner database/media read-only baseline preserved; original app3006/บัญชี/10Mockideasอยู่เดิม. Main ไม่ merge/deploy.
+ผลจริง RC: Node regression 145 total/144 passed/0 failed/1 POSIX permission skip บน Windows ที่de59fe6 (50.786s); หลัง frontend focus fixผ่าน build/สาม typechecks และ lint. Browserปัจจุบัน0b35ceaผ่าน12 dialog cases + Preview360 TH/ENสอง cases. Regressionไฟล์ modal-focus.js รันจริงแยกทั้งRC/Phase2 ผ่าน12/12ต่อสาขา รวม contrast, Tab, Escape/Close และ focus กลับ opener. MP4สังเคราะห์ใหม่ผ่าน FFprobe: H.264720×1280 + AAC48k stereo,4.021333s/122601bytes; Chrome เล่นได้; แยกตรวจ HTTP download ด้วยขนาด/hash ตรงต้นฉบับ. ไม่ใช่ Flow live generation.
 
-Phase2 เตรียม Gemini official adapter, Owner provider selection/provenance/usage และ manual Drive integrity verifier. Final policy regression180total/179pass/0fail/1POSIXskip79.216s. Independent safety re-review ไม่พบ P1/P2. Browser ที่5559bbc ผ่าน workflow Mock และ focused360TH/768EN/1440EN; ไม่ได้ทดสอบทุก locale×viewport ใหม่หลัง policy-copy change. Gemini PRIMARY: ideas/expansion gemini-3.5-flash-lite เท่านั้น, ต้องมี private key และ ACF_GEMINI_FREE_TIER_CONFIRMED=true หลัง Owner ยืนยัน API project ไม่มี billing. Quotaหมดหยุด/no paid fallback/no auto retry. OpenAI สำรองถูกปิดจนได้รับ explicit approval ใหม่; ACF_OPENAI_REQUESTS_APPROVED ต้องไม่เปิดก่อน approval. ไม่มี live Gemini/Drive/cloud verification หรือ billing action.
+Owner app3006ใช้ original storage และ Mock; client rebuildแล้ว, API/backendเดิมคงอยู่. Read-only baselineยืนยันบัญชี/โปรเจกต์/ประวัติ4jobs/10cachedMockideas/0activejobsและสื่อเดิมยังอยู่ ไม่มี database writes/reset/migration. Child processไม่ได้รับ OpenAI credential; keyในenvironmentที่Ownerเก็บถาวรไม่ถูกแก้.
 
-Owner requests ที่ยังรอ: private Gemini key+Free Tier project confirmation; Google OAuth credentials/consent; app-specific Supabase+HTTPS host และ schema/deployment approval. ไม่ส่ง secrets ในแชต. Local V1 VERIFIED, Mock text MOCK_ONLY, Gemini/Drive/cloud foundation PREPARED, OpenAI BLOCKED, notebook-offline/full automation NOT_IMPLEMENTED.
+Phase2 source de462843a2847e850334730c004f8b1d8f01e0b6 อยู่ใน stacked Draft PR#3 target release/v1-real-world. Gemini Free Tier gate/provider selection/usage, Drive verifier และ one-request Gemini canaryพร้อม injected tests; pure worker presence/reconnectพร้อม10tests ยังไม่มี authenticated broker/durable CAS/active waiting UI. Full regressionที่86dbbb5:204total/203passed/0failed/1POSIXskip,91.243s; หลังแก้ frontendผ่านbuild/typechecks/lintและbrowsertargeted. Matrix36/36ที่86dbbb5 + latest12dialogที่de46284ผ่าน, TH/EN×360/768/1440 ไม่มีpage overflow. RuntimeขณะQAล้างcredentialsและใช้ฐานข้อมูลสังเคราะห์ ไม่มี live provider calls.
 
-NEXT_TASK: หลัง usage reset และมี invocation ใหม่ ตรวจ usage/Git checkpoint ก่อน; Owner review PR#2 โดยยังไม่ merge main. เมื่อ Gemini private key+Free Tier confirmation พร้อม ทำ isolated10ideas→Ownerเลือกหนึ่ง→expand live canaryครั้งเดียว บันทึก usage และหยุดเมื่อ quotaหมด. จากนั้น Drive OAuth/verified upload-download-restore canary ที่ได้รับอนุมัติ. Cloud ต้องผ่าน host/schema approval และ disconnected-device proof ก่อนกล่าวว่าใช้งานได้.
+Geminiเป็นprimarytextเฉพาะ Flash-Lite; ต้อง private backend keyและ ACF_GEMINI_FREE_TIER_CONFIRMED=true หลังOwnerตรวจว่าAPIprojectใช้FreeTier/Billingdisabled. Quotaหมดหยุด ไม่มีpaidupgrade/retry/providerfallback. OpenAIต้องapprovalใหม่ก่อนเรียก. Google Flowเป็นprimaryvideoแบบOwner-operated; Driveต้องOAuth/consentและliveupload/download/approvedrestoreก่อนcutover. Cloudยังต้องapprovedSupabase/HTTPShost/schema, owner-scopedclaim, frozenprovider/mediareceiptและdisconnected-deviceproof.
 
-หลักฐาน: [Final review](docs/release/FINAL_REVIEW.md), [Visual QA](docs/release/QA_VISUAL_REPORT.md), [Phase2 operations](docs/PHASE2_OPERATIONS.md), [Phase2 QA](docs/PHASE2_QA.json).
+usage ที่ตรวจจากบัญชีล่าสุดเหลือ 45% ในรอบ 5 ชั่วโมง และ 32% ในรอบสัปดาห์ ยังไม่ถึงเกณฑ์หยุด 7%; checkpointหยุด1%ก่อนหน้าคงเป็นประวัติ. ไม่มีschedulerหรือautomaticresume. ไม่มีmerge main/deploy/billing/publish.
+
+NEXT_TASK: Ownerreview PR#2และPR#3; ตรวจUIdeltaจริงผ่านAntigravityhandoff. เมื่อprivateGeminiKeyและFreeTierconfirmationพร้อมให้รันPhase2runtimeแยก→canary10ideasหนึ่งครั้ง; resumeด้วยproject-idเดิม ไม่regenerate และOwnerเลือกหนึ่งก่อนexpand. หลังDriveOAuthconsentตรวจsmall-fileroundtrip/checksumและrestoreที่Ownerอนุมัติ; cloudต้องapprovalก่อนเปิดใช้งาน.
+
+ดู [ผล final review](docs/release/FINAL_REVIEW.md), [readiness matrix](docs/release/V1_READINESS.md), [published QA](docs/release/QA_VISUAL_REPORT.md). Localauth/persistence/editor/MP4 VERIFIED; storytext MOCK_ONLY; Gemini/Drive/cloudfoundation PREPARED; notebook-offline/fullautomation NOT_IMPLEMENTED.
+
+| งาน | สถานะ / dependency |
+| --- | --- |
+| RC regression/current dialogs/MP4/data preservation | VERIFIED; Owner approval และ UI delta review pending |
+| Phase2 injected regression + TH/EN responsive QA | VERIFIED within synthetic/injected scope |
+| Gemini canary | PREPARED; private key + verified Free Tier project required |
+| Drive round trip / verified restore | BLOCKED; OAuth/consentและrestore approval |
+| Worker presence helper | PREPARED; broker/auth/durable CAS/media bridgeยังไม่มี |
+| Notebook-offline cloud acceptance | NOT_IMPLEMENTED; approved host/project/deployment required |
 
 ## Historical checkpoints — superseded by the current status above
 

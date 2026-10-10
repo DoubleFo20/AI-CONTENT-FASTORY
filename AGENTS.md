@@ -22,6 +22,12 @@ separate design branch and never force push.
 The Owner explicitly chose to reuse the existing environment OPENAI_API_KEY.
 Keep it server-side; never write it into source, client bundles, logs, commits or messages.
 
+The Owner's later 2026-10-10 policy supersedes permission to call OpenAI: Gemini API
+Free Tier Flash-Lite is the primary text provider. Require private backend key and
+explicit Free Tier confirmation after the Owner verifies billing is disabled. Stop
+on quota exhaustion; no paid upgrade, automatic retry or provider fallback. OpenAI
+requests are prohibited until new explicit Owner approval, regardless of key/quota presence.
+
 ## Delivery and orchestration
 
 The Owner's later integration assignment authorizes combining the approved design and core

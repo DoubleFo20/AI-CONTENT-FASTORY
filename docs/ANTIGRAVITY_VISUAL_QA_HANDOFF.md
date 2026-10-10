@@ -46,4 +46,8 @@ Owner app3006 ใช้ original populated data และบัญชีเด�
 | Retest หลังแก้ | N/A (ไม่มีบั๊กต้องแก้เพิ่มเติม) |
 | Actual candidate visual acceptance | **PASS** (ระบบและ UI ทำงานร่วมกันได้สมบูรณ์) |
 
-Root integration note: รับ official QA evidence จาก `qa/v1-visual-review` commit `ddccf9ce18a13425b480f02313f8d0ccbe6261c0` แล้ว; tested source `3e9c1aa` ตรง release code (หลังจากนั้นเปลี่ยนเฉพาะ docs). Visual acceptance: PASS. อ่าน [Final Visual QA report](release/QA_VISUAL_REPORT.md). ภาพที่อ้างอิงคือ synthetic actual-app evidence เดิม ไม่ใช่ live provider proof. ไม่ได้ส่งข้อความภายนอก และยังไม่ merge main/deploy; รอ explicit Owner approval.
+Root integration note (checkpoint fb172b6 ก่อน UI repairs ล่าสุด): รับ official QA evidence จาก `qa/v1-visual-review` commit `ddccf9ce18a13425b480f02313f8d0ccbe6261c0` แล้ว; tested source `3e9c1aa` ตรง release code ณ checkpoint นั้น (ก่อน CSS/focus repairs ที่ระบุด้านล่าง). Visual acceptance: PASS. อ่าน [Final Visual QA report](release/QA_VISUAL_REPORT.md). ภาพที่อ้างอิงคือ synthetic actual-app evidence เดิม ไม่ใช่ live provider proof. ไม่ได้ส่งข้อความภายนอก และยังไม่ merge main/deploy; รอ explicit Owner approval.
+
+## Current release patch requiring source review
+
+Latest RC source 0b35cea82d7e7867e11c653df0d6d790a6b66f19 adds scoped Drive help block layout, native modal dark tokens/bounds and visible menu opener focus fallback. Server/shared/public/dependencies/schema are unchanged. Published PASS/ddccf9c remains tested3e9c1aa; engineering latest tests and actual-app retakes are in [Final review](release/FINAL_REVIEW.md). Please inspect the actual latest RC delta before final Owner approval; this handoff does not claim an Antigravity retest or send an external message.

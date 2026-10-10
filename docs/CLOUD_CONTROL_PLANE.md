@@ -13,6 +13,14 @@ verified always-on host, its provider credentials, monitoring and recovery polic
 
 ## Owned implementation and contracts
 
+- [Worker presence](../server/cloud/presence.ts) and [contract](../shared/worker.ts) are
+  PREPARED pure transitions: authenticated-broker principal prerequisite, server-issued
+  connection epoch, monotonic heartbeat sequence, server timestamps, revocation and
+  90-second TTL. A first accepted heartbeat is required before eligibility. Derived
+  WAITING_FOR_WORKER applies only to queued local exports without an eligible same-owner
+  worker. Running/cloud/terminal jobs stay unchanged; presence never renews a job lease
+  or replays generation. Ten injected tests passed, including repository lease expiry.
+  There is no broker/enrollment/route, durable atomic presence CAS or active waiting UI.
 - [Supabase adapter](../server/cloud/supabase.ts): `SupabaseCloudRepository` implements
   the frozen `CloudRepository` in [integrations](../shared/integrations.ts). Injectable
   fetch is the test seam; no SDK/dependency is added.
@@ -102,6 +110,13 @@ is the safe recovery path. Repository errors during claim surface to the caller;
 must supervise them without automatically replaying paid provider calls.
 
 ## SQL access and deployment gates
+
+The Phase2 audit leaves three gates before activation: atomic owner-filtered claims
+behind hashed/scoped/revocable worker credentials; actual media receipt verification
+and receipt lookup on reconnect; durable provider/model/provenance frozen per AI job
+across restart. Current service claim is a trusted executor seam, exportId is only a
+foundation receipt and process-local mode locking does not prove cross-restart routing.
+These are preparation gaps, not deployed capabilities. No schema was changed/applied.
 
 The draft creates only the custom `factory_cloud` schema. Tables enable and force RLS,
 and no policies/grants permit `public`, `anon` or `authenticated` access. All RPC/helper

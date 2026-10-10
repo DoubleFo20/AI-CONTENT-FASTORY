@@ -3,8 +3,8 @@ import { readFileSync } from 'node:fs';
 
 const files = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' }).split('\0').filter(Boolean);
 const patterns = [/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/, /sk-proj-[A-Za-z0-9_-]{24,}/,
-  /sb_secret_[A-Za-z0-9_-]{24,}/, /GOCSPX-[A-Za-z0-9_-]{16,}/];
-const knownKeys = ['OPENAI_API_KEY', 'SUPABASE_SECRET_KEY', 'SUPABASE_SERVICE_ROLE_KEY',
+  /sb_secret_[A-Za-z0-9_-]{24,}/, /GOCSPX-[A-Za-z0-9_-]{16,}/, /AIza[0-9A-Za-z_-]{35}/];
+const knownKeys = ['OPENAI_API_KEY', 'GEMINI_API_KEY', 'GOOGLE_API_KEY', 'SUPABASE_SECRET_KEY', 'SUPABASE_SERVICE_ROLE_KEY',
   'GOOGLE_CLIENT_SECRET', 'ACF_TOKEN_ENCRYPTION_KEY'].map(name => process.env[name]).filter(value => value && value.length > 16);
 const failures = [];
 for (const file of files) {
