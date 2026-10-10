@@ -89,7 +89,7 @@ export function createApplication(options: ApplicationOptions) {
     next();
   });
   app.use('/api', express.json({ limit: '32kb', strict: true }));
-  app.get('/api/health', (_req, res) => res.json({ ok: true, aiConfigured: Boolean(process.env.OPENAI_API_KEY?.trim()) }));
+  app.get('/api/health', (_req, res) => res.json({ ok: true, aiConfigured: Boolean(process.env.OPENAI_API_KEY?.trim() || process.env.GEMINI_API_KEY?.trim()) }));
   app.get('/api/auth/status', (req, res) => res.json(auth.state(req)));
   app.post('/api/auth/setup', async (req, res) => {
     if (!['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(req.socket.remoteAddress ?? '')) throw new AppError('SETUP_LOCAL_ONLY', 403);
@@ -125,7 +125,10 @@ export function createApplication(options: ApplicationOptions) {
   registerProduction(app, store, worker, projectFiles, projectStorage, lifecycle);
   registerProjectStorage(app, store, projectFiles, projectStorage);
   app.post('/api/integrations/ai/mode', (req, res) => {
-    const input = z.strictObject({ mode: z.enum(['mock', 'openai']) }).parse(req.body);
+    const input = z.strictObject({ mode: z.enum(['mock', 'openai', 'gemini']) }).parse(req.body);
+    // Cloud's trusted shared executor has no frozen provider per job yet. Fail closed
+    // rather than allow a mode change to alter an already queued paid operation.
+    if (options.integrations?.cloudRepository) throw new AppError('AI_MODE_LOCKED', 409);
     if (worker.hasOutstanding() || store.listJobs(owner(res)).some(job => job.status === 'queued' || job.status === 'running')) throw new AppError('CONFLICT', 409);
     if (!options.integrations?.setAiMode) throw new AppError('AI_NOT_CONFIGURED', 409);
     try { res.json({ ai: options.integrations.setAiMode(input.mode) }); }

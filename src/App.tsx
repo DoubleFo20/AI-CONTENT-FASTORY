@@ -258,7 +258,7 @@ export default function App() {
       await refresh(signal, projectId);
     });
   }
-  function setAiMode(mode: 'mock' | 'openai') {
+  function setAiMode(mode: 'mock' | 'openai' | 'gemini') {
     void action('mode', async (signal) => {
       const result = await request<{ ai: AiRuntimeStatus }>('/integrations/ai/mode', { ...jsonBody({ mode }), signal }, auth?.csrfToken);
       if (!signal.aborted) setCapabilities((previous) => previous ? { ...previous, ai: result.ai } : previous);
@@ -343,7 +343,7 @@ export default function App() {
 
         {baseLoading && <p role="status">{m.loading}</p>}
         <aside className="capability-info" aria-label={m.capabilities}>
-          {capabilities ? <><p><strong>{m.aiProvider}:</strong> {capabilities.ai.active === 'mock' ? m.mockContent : m.openaiProvider} <span className="muted">({m.aiMode}: {capabilities.ai.mode})</span></p>
+          {capabilities ? <><p><strong>{m.aiProvider}:</strong> {capabilities.ai.active === 'mock' ? m.mockContent : capabilities.ai.active === 'gemini' ? m.geminiProvider : m.openaiProvider} <span className="muted">({m.aiMode}: {capabilities.ai.mode})</span></p>
             {capabilities.ai.fallbackReason && <p className="muted">{m.aiFallback}: {capabilities.ai.fallbackReason === 'quota' ? m.fallbackQuota : capabilities.ai.fallbackReason === 'access' ? m.fallbackAccess : m.fallbackNotConfigured}</p>}
           </> : <p>{m.capabilitiesUnknown}</p>}
           <p>{m.storageLocal} · {drive ? drive.state === 'connected' && drive.connected ? m.driveGrantConnected : drive.state === 'failed' ? m.driveFailed : m.noDriveConnection : m.driveUnknown}</p>

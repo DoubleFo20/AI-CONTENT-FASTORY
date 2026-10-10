@@ -13,7 +13,7 @@ API อยู่บน same origin ใต้ `/api`; ต้องมี owner se
 | POST `/auth/setup` | `{username,password}` | AuthState และ session cookie; first owner only, loopback only |
 | POST `/auth/login` | `{username,password}` | AuthState และ session cookie |
 | POST `/auth/logout` | empty body + CSRF | `{ok:true}` และล้าง cookie |
-| POST `/integrations/ai/mode` | `{mode:"mock"|"openai"}` + CSRF | `{ai:AiRuntimeStatus}`; เลือก provider อย่างชัดเจนและบันทึกใน private data directory |
+| POST `/integrations/ai/mode` | `{mode:"mock"|"openai"|"gemini"}` + CSRF | `{ai:AiRuntimeStatus}`; เลือก provider อย่างชัดเจนและบันทึกใน private data directory |
 | GET `/dashboard` | session | `Dashboard` |
 | GET `/projects` | session | `{projects:ProjectSummary[]}` |
 | POST `/projects` | `ProjectInput` | 201 `{project:Project}` |
@@ -30,7 +30,7 @@ API อยู่บน same origin ใต้ `/api`; ต้องมี owner se
 | POST `/jobs/:id/retry` | empty body + CSRF | 202 `{job}`; retry เฉพาะ failed job ที่ prerequisites ยังครบ และเป็นการกระทำโดยเจตนา |
 | GET `/clips/:id/file`, `/exports/:id/file` | session | stream/download ที่ตรวจ ownership; รองรับ Range ตามชนิดไฟล์ |
 
-`ProjectInput` รับ `name`, `brief`, `genre`, `audience`, `aspectRatio` (`9:16`, `16:9`, `1:1`) และ `targetDurationSeconds` ซึ่ง optional และต้องเป็นจำนวนเต็ม 12–180. `ProjectSummary.generation` เป็น optional provenance ของ idea/expansion (`mock` หรือ `openai`) ไม่ใช่การยืนยันคุณภาพหรือ billing.
+`ProjectInput` รับ `name`, `brief`, `genre`, `audience`, `aspectRatio` (`9:16`, `16:9`, `1:1`) และ `targetDurationSeconds` ซึ่ง optional และต้องเป็นจำนวนเต็ม 12–180. `ProjectSummary.generation` เป็น optional provenance ของ idea/expansion (`mock`, `openai`, `gemini`) ไม่ใช่การยืนยันคุณภาพหรือ billing. Optional `aiUsage` เป็น50receiptsล่าสุดที่providerรายงาน: provider/operation/model/tokencounts/jobId/recordedAt/estimatedCostUsd(nullable)/rateVerifiedAt(nullable); ไม่คืน private `_aiUsage` หรือ secret.
 
 Production state แยกจาก stage ของ project. Stage คือ `draft → ideas_ready → selected → expanded → clips_ready → exported`; งาน queued/running และ progress อยู่ใน Job แยกต่างหาก. เมื่อ process หยุด งานที่ active ถูกทำเครื่องหมาย interrupted; ไม่มี automatic paid retry. ความล้มเหลวไม่แทนที่เนื้อหาที่ valid. การเปลี่ยน idea หลัง expand เป็น conflict.
 
@@ -80,7 +80,7 @@ Drive transfer state มี ID, kind/media ID, queued/running/completed/failed, 
 
 Auth setup ลงชื่อเข้าใช้ owner ใหม่ทันที ใช้ cookie flags เดียวกับ login และ session อายุ 12 ชั่วโมง. Mutation ใช้ CSRF token จาก AuthState และ same-origin/allowed Origin policy. OAuth callback เป็นข้อยกเว้นเพราะ browser redirect อาจไม่ส่ง Strict cookie; ใช้ state แบบใช้ครั้งเดียว ผูก hash ของ session owner และตรวจ session ยังใช้งานอยู่. API ไม่ส่ง API key, OAuth token, lease proof, private path หรือ raw upstream response.
 
-`GET /health.aiConfigured` ยังคงมีความหมาย legacy ว่าพบ `OPENAI_API_KEY` เท่านั้น. AI runtime mode มี `mock`, `openai`, หรือ environment `auto`; endpoint เปลี่ยน mode รับเฉพาะ `mock`/`openai`. `auto` ใช้ mock เมื่อไม่มี config หรือ quota/access fallback ที่ระบุ; refusal, invalid output, rate limit, timeout และ ambiguous network failure ไม่ fallback. ขณะนี้ live OpenAI generation มีหลักฐาน quota failure ที่รายงานจาก owner; อย่าตีความ key presence ว่าใช้งานได้.
+`GET /health.aiConfigured` หมายถึงพบ `OPENAI_API_KEY` หรือ `GEMINI_API_KEY` ไม่ใช่ successful live verification. AI modeมี `mock`, `openai`, `gemini`, หรือ environment `auto`; endpointเลือกexplicitmodeสามค่าแรก. `auto` ยังคง OpenAI→labelledMock เฉพาะsafe missingconfig/quota/access ไม่เลือกGeminiอัตโนมัติ; refusal/invalidoutput/ratelimit/timeout/ambiguousfailureไม่fallbackหรือretry. เมื่อ CloudRepository configured, capability `ai.modeChangeLocked:true` และPOSTmodeคืน409/AI_MODE_LOCKED จนcloudมีfrozenproviderperjob. ขณะlocaljobs/outstandingคืน409/CONFLICT. ดู [Phase2 operations](PHASE2_OPERATIONS.md) สำหรับenv/livegates/usage.
 
 Shared source of truth: `shared/contracts.ts`, `shared/production.ts`, `shared/integrations.ts`; route implementations: `server/app.ts`, `server/production.ts`, `server/project-storage.ts`, `server/integrations.ts`.
 

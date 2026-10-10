@@ -2,6 +2,7 @@ import { AiModeSchema, type AiMode, type AiRuntimeStatus } from '../../shared/in
 import type { Idea, ProjectInput } from '../../shared/contracts.js';
 import { AiProviderError, createOpenAiProvider } from './provider.js';
 import { createMockProvider } from './mock.js';
+import { createGeminiProvider } from './gemini.js';
 import { existsSync, readFileSync, mkdirSync, writeFileSync, renameSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { randomUUID } from 'node:crypto';
@@ -11,13 +12,15 @@ interface ConfiguredProviderOptions {
   mode?: AiMode;
   apiKey?: string;
   openai?: AiProvider;
+  geminiApiKey?: string;
+  gemini?: AiProvider;
   stateFile?: string;
 }
 
 interface ConfiguredAiProvider {
   provider: AiProvider;
   status: () => AiRuntimeStatus;
-  setMode: (mode: 'mock' | 'openai') => AiRuntimeStatus;
+  setMode: (mode: 'mock' | 'openai' | 'gemini') => AiRuntimeStatus;
 }
 
 const FALLBACK_CODES: Readonly<Record<string, AiRuntimeStatus['fallbackReason']>> = {
@@ -66,22 +69,25 @@ export function createConfiguredAiProvider(options: ConfiguredProviderOptions = 
   let mode = configuredMode(options.mode);
   if (options.stateFile && existsSync(options.stateFile)) {
     const saved: unknown = JSON.parse(readFileSync(options.stateFile, 'utf8'));
-    if (saved && typeof saved === 'object' && 'mode' in saved && (saved.mode === 'mock' || saved.mode === 'openai')) mode = saved.mode;
+    if (saved && typeof saved === 'object' && 'mode' in saved && (saved.mode === 'mock' || saved.mode === 'openai' || saved.mode === 'gemini')) mode = saved.mode;
     else throw new AiProviderError('AI_NOT_CONFIGURED');
   }
   const hasApiKey = Boolean((options.apiKey ?? process.env.OPENAI_API_KEY)?.trim());
+  const hasGeminiKey = Boolean((options.geminiApiKey ?? process.env.GEMINI_API_KEY)?.trim());
   const openai = options.openai ?? createOpenAiProvider({ apiKey: options.apiKey });
+  const gemini = options.gemini ?? createGeminiProvider({ apiKey: options.geminiApiKey });
   const mock = createMockProvider();
-  let active: AiRuntimeStatus['active'] = mode === 'mock' || mode === 'auto' && !hasApiKey ? 'mock' : 'openai';
+  let active: AiRuntimeStatus['active'] = mode === 'mock' || mode === 'auto' && !hasApiKey ? 'mock' : mode === 'gemini' ? 'gemini' : 'openai';
   let fallbackReason: AiRuntimeStatus['fallbackReason'] = mode === 'auto' && !hasApiKey ? 'not_configured' : null;
 
   function status(): AiRuntimeStatus {
     return { mode, active, fallbackReason };
   }
 
-  function setMode(next: 'mock' | 'openai'): AiRuntimeStatus {
-    if (next !== 'mock' && next !== 'openai') throw new AiProviderError('AI_NOT_CONFIGURED');
+  function setMode(next: 'mock' | 'openai' | 'gemini'): AiRuntimeStatus {
+    if (next !== 'mock' && next !== 'openai' && next !== 'gemini') throw new AiProviderError('AI_NOT_CONFIGURED');
     if (next === 'openai' && !hasApiKey) throw new AiProviderError('AI_NOT_CONFIGURED');
+    if (next === 'gemini' && !hasGeminiKey) throw new AiProviderError('AI_NOT_CONFIGURED');
     if (options.stateFile) {
       mkdirSync(dirname(options.stateFile), { recursive: true });
       const temporary = `${options.stateFile}.${randomUUID()}.tmp`;
@@ -95,7 +101,7 @@ export function createConfiguredAiProvider(options: ConfiguredProviderOptions = 
   async function run<T>(operation: (provider: AiProvider) => Promise<T>): Promise<T> {
     if (mode === 'mock' || mode === 'auto' && active === 'mock') return operation(mock);
     try {
-      return await operation(openai);
+      return await operation(mode === 'gemini' ? gemini : openai);
     } catch (error) {
       if (!isProviderError(error)) throw new AiProviderError('AI_REQUEST_FAILED');
       const reason = FALLBACK_CODES[error.code];

@@ -8,7 +8,7 @@ import type { Store } from './store.js';
 import { ProjectFiles } from './project-files.js';
 
 export interface WorkerOptions {
-  aiStatus?: () => { active: 'mock' | 'openai' };
+  aiStatus?: () => { active: 'mock' | 'openai' | 'gemini' };
   prepareExport?: (ownerId: string, project: Project, signal: AbortSignal) => Promise<void>;
   jobTimeoutMs?: number;
   aiTimeoutMs?: number;
@@ -125,8 +125,11 @@ export class Worker {
       this.store.prerequisites(project, job.type);
       const input = { name: project.name, brief: project.brief, genre: project.genre, audience: project.audience, aspectRatio: project.aspectRatio, ...(project.targetDurationSeconds !== undefined ? { targetDurationSeconds: project.targetDurationSeconds } : {}) };
       this.store.updateProgress(job.id, 15);
+      const requestOptions = { signal, onUsage: (usage: import('../shared/ai.js').AiUsage) => {
+        if (!signal.aborted) this.store.recordAiUsage(ownerId, job, usage);
+      } };
       if (job.type === 'ideas') {
-        const ideas = await this.provider.generateIdeas(input, { signal });
+        const ideas = await this.provider.generateIdeas(input, requestOptions);
         signal.throwIfAborted();
         stage = 'validation'; this.store.updateProgress(job.id, 70);
         const valid = validateIdeas(ideas);
@@ -135,7 +138,7 @@ export class Worker {
       } else if (job.type === 'expand') {
         const selected = project.ideas.find(idea => idea.id === project.selectedIdeaId);
         if (!selected) throw new AppError('SELECTION_REQUIRED', 409);
-        const story = await this.provider.expandStory(input, selected, { signal });
+        const story = await this.provider.expandStory(input, selected, requestOptions);
         signal.throwIfAborted();
         stage = 'validation'; this.store.updateProgress(job.id, 70);
         const valid = validateStoryPackage(story);

@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { ProjectInputSchema, IdeaSchema, StoryPackageSchema, ERROR_CODES, validateIdeas, validateStoryPackage } from './contracts.js';
 
-export const AiModeSchema = z.enum(['openai', 'mock', 'auto']);
+export const AiModeSchema = z.enum(['openai', 'gemini', 'mock', 'auto']);
 export type AiMode = z.infer<typeof AiModeSchema>;
-export interface AiRuntimeStatus { mode: AiMode; active: 'openai' | 'mock'; fallbackReason: 'not_configured' | 'quota' | 'access' | null }
+export interface AiRuntimeStatus { mode: AiMode; active: 'openai' | 'gemini' | 'mock'; fallbackReason: 'not_configured' | 'quota' | 'access' | null; modeChangeLocked?: boolean }
 export interface DriveStatus { provider: 'google_drive'; configured: boolean; connected: boolean; state: 'not_configured' | 'disconnected' | 'connected' | 'failed' }
 export interface RuntimeCapabilities {
   ai: AiRuntimeStatus; video: { primary: 'google_flow'; integration: 'manual'; supporting: 'meta_ai'; supportingAvailable: false };

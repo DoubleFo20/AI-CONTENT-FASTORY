@@ -3,7 +3,8 @@ import {
   IdeasResultSchema, StoryPackageSchema, validateIdeas, validateStoryPackage,
   type ErrorCode, type Idea, type ProjectInput, type StoryPackage,
 } from '../../shared/contracts.js';
-import type { AiProvider } from './types.js';
+import type { AiProvider, AiRequestOptions } from './types.js';
+import { AiUsageSchema } from '../../shared/ai.js';
 
 export class AiProviderError extends Error {
   constructor(public readonly code: ErrorCode) {
@@ -27,6 +28,26 @@ const EnvelopeSchema = z.object({
     content: z.array(z.object({ type: z.string(), text: z.string().optional() })).optional(),
   })),
 });
+const TokenCountSchema = z.number().int().min(0).max(Number.MAX_SAFE_INTEGER);
+const UsageSchema = z.object({
+  input_tokens: TokenCountSchema, output_tokens: TokenCountSchema, total_tokens: TokenCountSchema,
+  input_tokens_details: z.object({ cached_tokens: TokenCountSchema }).optional(),
+  output_tokens_details: z.object({ reasoning_tokens: TokenCountSchema }).optional(),
+});
+
+function recordUsage(raw: unknown, operation: 'ideas' | 'expand', model: string, options?: AiRequestOptions) {
+  if (!options?.onUsage || options.signal?.aborted || !raw || typeof raw !== 'object' || !('usage' in raw)) return;
+  const parsed = UsageSchema.safeParse(raw.usage);
+  if (!parsed.success) return;
+  const usage = parsed.data;
+  const receipt = AiUsageSchema.safeParse({
+    provider: 'openai', operation, model: 'model' in raw && typeof raw.model === 'string' ? raw.model : model,
+    inputTokens: usage.input_tokens, outputTokens: usage.output_tokens, totalTokens: usage.total_tokens,
+    ...(usage.input_tokens_details ? { cachedInputTokens: usage.input_tokens_details.cached_tokens } : {}),
+    ...(usage.output_tokens_details ? { reasoningTokens: usage.output_tokens_details.reasoning_tokens } : {}),
+  });
+  if (receipt.success) options.onUsage(receipt.data);
+}
 
 function outputSchema(schema: z.ZodType): Record<string, unknown> {
   const result = z.toJSONSchema(schema, { target: 'draft-7' });
@@ -49,14 +70,15 @@ export function createOpenAiProvider(options: ProviderOptions = {}): AiProvider 
   const requestFetch = options.fetchImpl ?? fetch;
   const timeoutMs = options.timeoutMs ?? 120_000;
 
-  async function request(name: string, schema: z.ZodType, prompt: string, model: string, budget: number, signal?: AbortSignal): Promise<unknown> {
+  async function request(name: string, schema: z.ZodType, prompt: string, model: string, budget: number, options?: AiRequestOptions): Promise<unknown> {
     if (!apiKey?.trim()) throw new AiProviderError('AI_NOT_CONFIGURED');
     let response: Response;
     try {
       response = await requestFetch('https://api.openai.com/v1/responses', {
         method: 'POST',
+        redirect: 'error',
         headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-        signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(timeoutMs)]) : AbortSignal.timeout(timeoutMs),
+        signal: options?.signal ? AbortSignal.any([options.signal, AbortSignal.timeout(timeoutMs)]) : AbortSignal.timeout(timeoutMs),
         body: JSON.stringify({
           model, store: false, reasoning: { effort: 'low' }, max_output_tokens: budget,
           input: [
@@ -83,7 +105,9 @@ export function createOpenAiProvider(options: ProviderOptions = {}): AiProvider 
       throw new AiProviderError('AI_REQUEST_FAILED');
     }
     try {
-      const envelope = EnvelopeSchema.parse(await response.json());
+      const raw: unknown = await response.json();
+      recordUsage(raw, name === 'story_ideas' ? 'ideas' : 'expand', model, options);
+      const envelope = EnvelopeSchema.parse(raw);
       if (envelope.output.some((item) => item.content?.some((part) => part.type === 'refusal'))) {
         throw new AiProviderError('AI_REFUSED');
       }
@@ -100,15 +124,15 @@ export function createOpenAiProvider(options: ProviderOptions = {}): AiProvider 
   }
 
   return {
-    async generateIdeas(input: ProjectInput, options?: { signal?: AbortSignal }): Promise<Idea[]> {
+    async generateIdeas(input: ProjectInput, options?: AiRequestOptions): Promise<Idea[]> {
       const prompt = `Generate exactly 10 distinct SHORT story ideas for this brief. Do not expand any story or write bibles/scenes yet. Use ids idea_1 through idea_10. Each title, logline and hook must contain Thai and English; keep loglines to 1-2 concise sentences. Brief data: ${JSON.stringify(briefData(input))}`;
-      const result = await request('story_ideas', IdeasResultSchema, prompt, ideasModel, 6000, options?.signal);
+      const result = await request('story_ideas', IdeasResultSchema, prompt, ideasModel, 6000, options);
       try { return validateIdeas(IdeasResultSchema.parse(result).ideas); }
       catch { throw new AiProviderError('AI_INVALID_OUTPUT'); }
     },
-    async expandStory(input: ProjectInput, selectedIdea: Idea, options?: { signal?: AbortSignal }): Promise<StoryPackage> {
+    async expandStory(input: ProjectInput, selectedIdea: Idea, options?: AiRequestOptions): Promise<StoryPackage> {
       const prompt = `Expand ONLY the single selected idea provided below. Produce a complete short story with a premise, beginning, arc and ending in storyBible; stable character and location bibles; continuity rules; and 3-12 ordered scenes (4-20 seconds each, total <=180 seconds). ${input.targetDurationSeconds ? `Target a total story duration of ${input.targetDurationSeconds} seconds.` : ''} Use unique ASCII ids character_1, location_1, scene_1 etc. Each scene's characterIds and locationId must reference the bibles; scene order starts at 1 without gaps. Every scene needs an explanation in Thai and a cinematic English Google Flow prompt with character appearances, setting, action, camera, lighting and continuity; bilingual narration. Character names are stable proper names. Do not expand or mention alternative ideas. Brief data: ${JSON.stringify(briefData(input))}. Selected idea data: ${JSON.stringify(selectedIdea)}`;
-      const result = await request('selected_story_package', StoryPackageSchema, prompt, expandModel, 12000, options?.signal);
+      const result = await request('selected_story_package', StoryPackageSchema, prompt, expandModel, 12000, options);
       try { return validateStoryPackage(result); }
       catch { throw new AiProviderError('AI_INVALID_OUTPUT'); }
     },

@@ -2,6 +2,8 @@
 
 STATUS: REVIEW_ONLY_CLOUD_FOUNDATION
 
+Phase2 readiness audit2026-10-10: no approved active app-specific Supabase/host selected; no deployment/schema applied. Runtime provider switching is fail-closed with AI_MODE_LOCKED whenever this repository is configured, pending a frozen provider per durable job. The current claim(workerId,target) belongs to a trusted server executor and must not become a public paired-worker endpoint; owner-scoped atomic claim and scoped credentials are prerequisites. Worker presence/reconnect/WAITING_FOR_WORKER protocol and disconnected-device acceptance gates are in [Phase2 operations](PHASE2_OPERATIONS.md).
+
 This adds a Supabase repository seam and a bounded leased worker without replacing the
 working SQLite database, cookie authentication, local queue or local files. No database,
 project, credentials, cloud host or migration was created/configured by this work. The
