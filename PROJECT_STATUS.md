@@ -1,6 +1,27 @@
 # Project status
 
-STATUS: LOCAL_V1_READY_FOR_OWNER_APPROVAL
+STATUS: PAUSED_FOR_USAGE_RESET
+
+## Gemini activation preparation — 2026-10-10
+
+Owner กำลังตั้ง private GEMINI_API_KEY และตรวจ Free Tier; ยังไม่มี live Gemini call หรือ successful live result. Backend ต้อง GEMINI_API_KEY + ACF_GEMINI_FREE_TIER_CONFIRMED=true จากแหล่งเดียวกันหลัง Owner ตรวจ API project/Billing disabled. Primarytext=gemini-3.5-flash-lite; OpenAI requestsยังไม่อนุมัติ, ไม่มีpaidfallback/retry/billingchange.
+
+เพิ่ม Windows hidden-input/DPAPI helper + isolated launcher: current-user ACL, ancestor/reparse rejection, atomicnooverwrite, freshcontainedcanary, envallowlist, boundedPID/listening/health readiness. คู่มือไฟล์และคำสั่งละเอียด: [GEMINI_LOCAL_SETUP_TH](docs/GEMINI_LOCAL_SETUP_TH.md). Helper startupไม่เรียก AI. Independentread-onlyreviewปิดP1/P2; WindowsPowerShell5 th-THregression14/14ผ่าน; PS7prepatchQA9/10 (timestampissue) เก็บไว้ตามจริง, PS7postpatchยังไม่verified. Finalindependentread-onlyreviewยอมรับboundednetstat/DateTimefix ไม่มีP1/P2. Rootหยุด4syntheticfixtureprocessesที่verifyidentity/pathแล้ว; Owner3006ยังactive.
+
+Explicit --expand-first-idea สำหรับ canaryใหม่เท่านั้น: ideas/select/expandอย่างละหนึ่งPOST แล้วตรวจสิบconcepts, selected-onlypackage/scene refs/คำอธิบายไทย/Flowpromptsอังกฤษ. ทุก --project-id resumeอ่านสถานะเท่านั้น; ไม่มีexpandjobเดิมหยุดCANARY_STATE_UNSAFE. ไม่เปลี่ยน Owner storyหรือmode. Rootรัน targeted Gemini/provider/Drive/cloud/presence regression74/74ผ่าน, three typechecks/full lintผ่าน. Testsทั้งหมดinjected/synthetic, ไม่ใช่liveproviderproof.
+
+Owner app3006 ยัง RC/Mock/PID14548; /,health,authstatus200และanonymousprojects401. Read-onlypreservationผ่าน:1owner/1project/4jobs/10ideas/0active/0clips/0exports,baselineunchanged. ไม่มี src/public/server/shared/schema/dependency/lockfile/env/CI changeในcheckpointนี้. PremiumCinematicV2/source0b35ceaยังคงเดิม. PR#2และ#3ยังOPEN/DRAFT/unmerged; mainไม่เปลี่ยน.
+
+DriveOAuth/folders/encryptedvault/upload/download/checksumverifierและcloudjobs/presence/reconnectfoundationตรวจด้วยmockต่อได้; 74testsรวมDriveverifier/cloudด้วย. ไม่มีOAuthgrant/remoteupload/approvedrestore/Supabaseproject/HTTPShost/schema/deploy; notebook-offline/fullautomationยังNOT_IMPLEMENTED. ห้ามลบlocalmedia/cutover/publish/deploy/mergeโดยไม่มีapproval.
+
+NEXT_TASK: หลังusage reset/Owner invocation ให้รัน pwsh -NoProfile -File tests/gemini-local-setup.ps1 เพื่อตรวจ PS7 th-TH หลัง timestamp DateTime/string และ bounded netstat fixes (WinPS5ล่าสุด14/14ผ่าน). เมื่อOwnerยืนยันprivateGEMINI_API_KEY+APIprojectFreeTier/Billingdisabledพร้อม จึงbuildPhase2/startfresh3013/normalcanaryaccount/verify-gemini-live --expand-first-ideaหนึ่งครั้ง (สูงสุดideas1+expand1 ไม่มีretry). ใช้UUIDเดิมอ่านสถานะหากtimeout;ไม่generateOwnerstoryเดิม. Owner3006activationต้องbackup/0active/schema check+preservesavedMock. Driveยังต้องOAuth+consent;Cloudต้องapprovedproject/HTTPS/schema/deploy. ห้ามmainmerge/publicdeploy/publish/billing.
+
+Usage authoritative ล่าสุด:เหลือ3%/26% (5hr/week), แตะthresholdแล้ว. หยุดstartingfeatures/spawns; essentialchecks/handoff/checkpointpushเท่านั้น จากนั้นหยุดจนusage resetและnewOwnerinvocation. ไม่ใช้resetcredit/ไม่มีschedulerหรือautomaticresume.
+
+---
+
+
+STATUS: PHASE2_PREPARED_LIVE_GATES_PENDING
 RELEASE_READINESS: READY_FOR_OWNER_APPROVAL
 ANTIGRAVITY_STATUS: PUBLISHED_PASS_FOR_PRE_PATCH_RELEASE_3e9c1aa
 Updated: 2026-10-10 (Asia/Bangkok)
@@ -23,10 +44,25 @@ NEXT_TASK: Ownerreview PR#2และPR#3; ตรวจUIdeltaจริงผ่�
 
 ## Historical checkpoints — superseded by the current status above
 
-STATUS: LOCAL_V1_RC_VERIFIED_EXTERNAL_GATES_PENDING
-CURRENT_PHASE: LOCAL_V1_REAL_WORLD_RELEASE
+STATUS: PHASE2_PREPARED_LIVE_GATES_PENDING
+CURRENT_PHASE: REAL_AI_DRIVE_CLOUD_READINESS
 ANTIGRAVITY_STATUS: OWNER_REPORTED_READY_EVIDENCE_PENDING
 Updated: 2026-10-10 (Asia/Bangkok)
+
+Phase2 source `5559bbc4658b174d96b9d26023d449a26714a13c`, branch `codex/phase2-real-integrations`, base final-reviewed release `ba327e2`. เพิ่ม Gemini official adapter/Owner selection/explicitprovenance, reliableusage receipts+optionalverifiedcostrates และ manualDrivechecksumverifier โดยไม่ rewrite backend/UI/schema หรือเปลี่ยน Owner runtime3006. Independentreview พบ cloudmode race และแก้ fail-closed AI_MODE_LOCKED+THENcontrols; re-reviewยอมรับ. Full177tests/176pass/0fail/1POSIXskip190.041s,3typechecks/lint/build/PWA/docs/secretsผ่าน; focusedbrowserQAกำลังตรวจ. [Phase2 QA](docs/PHASE2_QA.json), [operations/Owner setup](docs/PHASE2_OPERATIONS.md).
+
+| Capability | Readiness | หลักฐาน/ข้อจำกัด |
+| --- | --- | --- |
+| Local auth/persistence/editor/MP4 | VERIFIED | Regression + actual synthetic playback; original Owner data preserved |
+| Story text in Mock Mode | MOCK_ONLY | Ten ideas/selected-only fullpipeline; ไม่ใช่liveAI |
+| Gemini/Ownerprovider/usage integration | PREPARED | Injectedtests; privateGeminikey/livecanaryยังไม่มี |
+| OpenAI live text | BLOCKED | Lastlive429insufficient_quota; ไม่ยิงซ้ำ |
+| Flow assisted production | PREPARED | Prompt/reference/status/import/editorพร้อม; realFlowclips/creativeacceptanceยังต้องOwner |
+| GoogleDrive storage | PREPARED | OAuth/encryptedvault/index/upload/restore+tests; missingconsent/liveroundtrip |
+| Cloud foundation | PREPARED | Review-onlySQL/repository/leases; approvedactiveproject+HTTPShostยังไม่มี |
+| Mobile notebook-offline / fullautomation | NOT_IMPLEMENTED | Pairing/media bridge/owner-scopedclaim/disconnecteddeviceproofยังไม่มี |
+
+NEXT_TASK_PHASE2: รับ private Gemini readiness หรือ OpenAI quota correction, Drive configuration+Owner consent และ Antigravity final evidence/SHA; runlivecanaryเมื่อauthorizedพร้อม. Cloudต้องOwnerเลือกproject/hostและอนุมัติschema/deploymentก่อนcutover. ไม่มีCodexscheduler/automaticresume.
 
 Final release review ซ้ำที่ `3e9c1aa`: 145 tests/144pass/0fail/1Windows skip (188.264s), typecheck/lint/build/PWA ผ่าน; MP4 smoke ใหม่4.021333s เล่นจริงใน Chrome/error=null. Owner data ตรวจ read-only ยังครบ. Owner รายงาน Antigravity READY FOR OWNER APPROVAL แต่ local QA branch ยังไม่มี final report/screenshots ที่ตรวจรับได้; ขอ evidence แล้วและคง Draft PR#2/main unmerged. ดู [FINAL_REVIEW](docs/release/FINAL_REVIEW.md). Phase 2 ดำเนินต่อในสาขาแยกโดยไม่เปลี่ยน release source/Owner runtime.
 

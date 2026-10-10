@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-10 — Gemini limited pipeline and private backend setup (usage paused)
+
+- เพิ่มexplicitselected-onlypipelinecanary/observation-onlyresume;25verifiertestsผ่าน. RoottargetedGemini/provider/Drive/cloud/presence74/74,three typechecks/full lintผ่าน;ทั้งหมดinjectedไม่live.
+- เพิ่มhidden-inputWindowsDPAPI/atomicnooverwrite/privateACL/envallowlist/freshcanary/PID+healthlauncherและคู่มือThai;independentreviewปิดP1/P2,WindowsPowerShell5 th-TH14checksผ่าน; PS7prepatch9/10timestampfailureและpostpatchยังรอตรวจ. แก้idempotentACL/firstNode/invarianttypedtimestamp/boundednetstat;independentreviewยอมรับ.
+- ตรวจOwner3006/publicAPI/anonymousdenialและread-onlydata preservationผ่าน;PremiumUI/server/schema/dependenciesคงเดิม,main/PR2/PR3ยังunmerged.
+- PrivateGeminiKey+OwnerFreeTierconfirmation/OAuth/cloudexternalgatesยังรอ ไม่มีbilling/livecalls/publicdeploy/contentpublish.
+- Authoritativeusageเหลือ3%/26% จึงSTATUS:PAUSED_FOR_USAGE_RESET; checkpoint/essentialchecksแล้วหยุด ไม่มีautomaticresume/resetcredituse. ExactNEXT_TASKอยู่HANDOFF.
+
+
 ## 2026-10-10 — Verified release and Phase2 checkpoint
 
 - แก้Drivehelp/dialogcontrast/mobileeditorfocusด้วยPremiumCinematicV2tokens;backend/schema/dependenciesคงเดิม.
@@ -25,8 +34,16 @@
 
 - STATUS: PAUSED_FOR_USAGE_RESET; authoritative remaining1% after checkpoint began at7%. No new features/agents or automatic resume.
 - Published Antigravity QA ddccf9c/PASS on source3e9c1aa integrated as evidence; RC ready for Owner approval, main/deploy unchanged.
-- Final regression 145total/144pass/0fail/1POSIXskip; Owner data preserved.
+- Final regression 180total/179pass/0fail/1POSIXskip; Owner data preserved.
+- Gemini limited to confirmed Free Tier Flash-Lite for both jobs; OpenAI requests gated by new Owner approval. Quota stops without paid fallback. Targeted TH/EN copy corrected.
 - Exact NEXT_TASK and external credential/authorization gates recorded in HANDOFF; safe checkpoint only.
+
+## 2026-10-10 — Phase2 prepared integrations
+
+- Added official Gemini text adapter, explicit Owner provider choice, normalized reported usage and verified-rate cost estimates; no paid retries or live success claim.
+- Added explicit normal-auth tiny Drive canary verifier; preserves local media and reports restoration untested rather than evicting cache.
+- Fixed independent-review Cloud provider switching risk with fail-closed lock and localized UI/error; preserved local React/Vite/Express/SQLite/FFmpeg and PremiumV2.
+- Full regressions177total/176pass/0fail/1Windows skip, build/typechecks/lint/PWA passed. OAuth/key/cloud approvals remain external gates.
 
 ## 2026-10-10 — Final release review
 

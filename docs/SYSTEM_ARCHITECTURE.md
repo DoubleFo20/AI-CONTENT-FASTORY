@@ -2,6 +2,11 @@
 
 STATUS: LOCAL_V1_RELEASE_CANDIDATE
 
+The Owner's current app remains on the reviewed RC with original SQLite/media and
+explicit Mock text; that RC has no Gemini adapter and receives no OpenAI credential.
+This branch prepares Gemini and worker helpers separately. It does not activate them
+in the Owner app, migrate data or deploy a cloud service.
+
 ## Local release amendment — 2026-10-10
 
 The active release keeps React/Vite + Express/SQLite and Premium Cinematic V2. No FastAPI
@@ -32,6 +37,8 @@ Cloud adapters/SQL are prepared and opt-in, with no hosted deployment or approve
 Paired worker enrollment/heartbeat/media bridge and cloud WAITING_FOR_WORKER rendering are
 not implemented. The PWA persists public shell/preferences only; notebook-offline mobile
 cloud operation remains blocked on hosting/database/pairing and actual end-to-end proof.
+Phase2 adds pure worker presence/reconnect transitions as PREPARED code; these have no
+authenticated broker, durable presence CAS, deployment or active waiting-state UI.
 See [readiness matrix](release/V1_READINESS.md) and [API contract](API_CONTRACT.md).
 
 ## Engineering amendment — 2026-10-09
@@ -60,12 +67,14 @@ chosen project, owner-approved schema application, verified persistence/session 
 Drive OAuth authorization, HTTPS/origins and worker credential enrollment. Cloud deployment
 and billing are external gates, not simulated acceptance.
 
-Current Owner runtime uses Mock on reviewed RC code; no OpenAI credential is passed to
-its process. Latest Owner policy chooses Gemini Free Tier Flash-Lite as primary text,
-prepared on the separate Phase2 branch with backend key and Free Tier confirmation gates.
-The RC itself has no Gemini adapter. OpenAI is a historical backup and requests remain
-prohibited until new explicit approval. Existing Mock content stays labelled and cached;
-no silent live claim, automatic paid retry, paid upgrade or provider fallback is authorized.
+Provider policy (Owner update 2026-10-10): Gemini is primary for text, using only
+`gemini-3.5-flash-lite` for ten ideas and selected-only expansion. Requests require a
+server-only key and explicit Free Tier confirmation after the Owner verifies the API
+project has no paid billing. A key alone does not prove the billing tier. Quota exhaustion
+stops the job without retry, paid upgrade or another provider. OpenAI is a prepared backup
+and cannot be invoked until new explicit Owner approval enables its server-side gate.
+Mock mode remains explicit, with saved provenance; existing Mock output is never relabelled
+as live AI. Legacy auto routing is gated by OpenAI approval and is not the Gemini path.
 Google Flow remains user-operated primary video generation; Meta AI supporting work is
 manual/unconfigured until an official supported integration is selected. Remotion is an
 optional future editing adapter; the verified FFmpeg implementation stays active.
@@ -90,7 +99,8 @@ flowchart LR
   API --> DB[(SQLite)]
   API --> Files[Private local files]
   Worker[Single persistent queue worker] --> DB
-  Worker -->|structured text| OpenAI[OpenAI Responses API]
+  Worker -->|confirmed Free Tier text| Gemini[Gemini Flash-Lite]
+  Worker -->|explicit test mode| Mock[Mock provider]
   Worker --> FFmpeg[FFprobe / FFmpeg]
   FFmpeg --> Files
   Web -->|English prompt pack| Flow[User-operated Google Flow]

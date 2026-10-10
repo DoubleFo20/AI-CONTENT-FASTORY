@@ -62,15 +62,17 @@ export function Jobs({ jobs, locale, m, disabled, retry, cancel }: { jobs: Job[]
   </div>)}</div>;
 }
 
-export function AiModeForm({ ai, m, disabled, active, setMode }: { ai: AiRuntimeStatus | null; m: Messages; disabled: boolean; active: boolean; setMode: (mode: 'mock' | 'openai') => void }) {
-  const [mode, selectMode] = useState<'mock' | 'openai'>(ai?.active ?? 'openai');
-  return <form className="stack" onSubmit={(event) => { event.preventDefault(); if (ai && !disabled && !active) setMode(mode); }}>
+export function AiModeForm({ ai, m, disabled, active, setMode }: { ai: AiRuntimeStatus | null; m: Messages; disabled: boolean; active: boolean; setMode: (mode: 'mock' | 'openai' | 'gemini') => void }) {
+  const [mode, selectMode] = useState<'mock' | 'openai' | 'gemini'>(ai?.active ?? 'openai');
+  const locked = ai?.modeChangeLocked === true;
+  return <form className="stack" onSubmit={(event) => { event.preventDefault(); if (ai && !disabled && !active && !locked) setMode(mode); }}>
     <p>{m.aiModeHelp}</p>
-    <label>{m.chooseAiMode}<select value={mode} disabled={disabled || active || !ai} onChange={(event) => selectMode(event.target.value as 'mock' | 'openai')}><option value="openai">OpenAI</option><option value="mock">Mock</option></select></label>
+    <label>{m.chooseAiMode}<select value={mode} disabled={disabled || active || !ai || locked} onChange={(event) => selectMode(event.target.value as 'mock' | 'openai' | 'gemini')}><option value="openai">OpenAI</option><option value="gemini">Gemini</option><option value="mock">Mock</option></select></label>
     {!ai && <p className="notice" role="status">{m.modeUnavailable}</p>}
     {active && <p className="notice" role="status">{m.modeBlocked}</p>}
+    {locked && <p className="notice" role="status">{m.cloudModeLocked}</p>}
     <p className="muted">{m.aiModeSaved}</p>
-    <div className="actions"><button disabled={disabled || active || !ai || ai.mode === mode}>{m.applyAiMode}</button></div>
+    <div className="actions"><button disabled={disabled || active || !ai || locked || ai.mode === mode}>{m.applyAiMode}</button></div>
   </form>;
 }
 

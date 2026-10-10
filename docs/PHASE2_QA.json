@@ -1,0 +1,873 @@
+{
+  "sourceCommit": "de462843a2847e850334730c004f8b1d8f01e0b6",
+  "releaseBase": "ba327e2364e0a14f36629e4dc9376de6b827f10e",
+  "date": "2026-10-10",
+  "scope": "Reviewed Phase2 preparations with synthetic/injected regression and isolated browser QA; no live AI/Drive/cloud proof",
+  "tests": {
+    "command": "npm.cmd test",
+    "exitCode": 0,
+    "total": 204,
+    "passed": 203,
+    "failed": 0,
+    "skipped": 1,
+    "durationMs": 91242.6994,
+    "skipReason": "POSIX vault permissions on Windows",
+    "sourceNote": "Full204 at semantic additions86dbbb5; later only CSS/native-dialog/frontend focus repairs, followed by build/three typechecks/scopedlint and targeted browser tests. No backend/shared change after full204."
+  },
+  "checks": {
+    "buildIncludingThreeTypechecks": "PASS_AFTER_FINAL_MODAL_FOCUS_REPAIR",
+    "lint": "PASS_FULL_INCLUDING_FINAL_BROWSER_REGRESSION_AND_SECRET_GUARD",
+    "pwa": "PASS_9_PUBLIC_ASSETS_PRIVATE_API_EXCLUDED",
+    "docs": "PASS_27_ARTIFACTS",
+    "secrets": "PASS_STAGED_FILES_AND_TWO_SYNTHETIC_NEGATIVE_CASES_PLUS_CLEAN_POSITIVE_NO_VALUES_PRINTED",
+    "whitespace": "PASS_FINAL_STAGED_DIFF_CHECK"
+  },
+  "independentReview": {
+    "geminiDriveUsage": "ACCEPTED",
+    "cloudModeSwitchFinding": "FIXED_FAIL_CLOSED_AI_MODE_LOCKED",
+    "reReviewTests": "PASS_2_OF_2",
+    "remainingP1P2": 0,
+    "geminiCanary": "ACCEPTED_NO_P1_P2; unchanged verifier after review;14tests incl actual HTTP with injected Gemini",
+    "workerPresence": "ACCEPTED_NO_P1_P2;10tests; no routes/auth/durableCAS"
+  },
+  "browserPhase2": {
+    "sourceCommit": "86dbbb58727ae38e7ebc3d01f127cfc6c3389adf",
+    "result": "PASS_36_OF_36",
+    "pages": [
+      "settings",
+      "ideas",
+      "bibles",
+      "scenes",
+      "preview",
+      "login"
+    ],
+    "interfaceLocales": [
+      "th",
+      "en"
+    ],
+    "contentMode": "TH+EN",
+    "widthsCssPx": [
+      360,
+      768,
+      1440
+    ],
+    "caseCount": 36,
+    "passed": 36,
+    "horizontalOverflowCases": 0,
+    "settingsVerified": "Actual dialog heading and provider controls, not hash alone",
+    "drivePreview360": "Block layout302px in336pxparent; Root inspected TH/EN images",
+    "liveCalls": false,
+    "serverStopped": true,
+    "limits": "Browser viewport simulation; no physical mobile or live provider proof",
+    "cases": [
+      {
+        "view": "settings",
+        "locale": "th",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "th",
+        "contentMode": "th+en",
+        "providerControls": 1
+      },
+      {
+        "view": "ideas",
+        "locale": "th",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "bibles",
+        "locale": "th",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "scenes",
+        "locale": "th",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "preview",
+        "locale": "th",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "settings",
+        "locale": "th",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "th",
+        "contentMode": "th+en",
+        "providerControls": 1
+      },
+      {
+        "view": "ideas",
+        "locale": "th",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "bibles",
+        "locale": "th",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "scenes",
+        "locale": "th",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "preview",
+        "locale": "th",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "settings",
+        "locale": "th",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "th",
+        "contentMode": "th+en",
+        "providerControls": 1
+      },
+      {
+        "view": "ideas",
+        "locale": "th",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "bibles",
+        "locale": "th",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "scenes",
+        "locale": "th",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "preview",
+        "locale": "th",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "settings",
+        "locale": "en",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "en",
+        "contentMode": "th+en",
+        "providerControls": 1
+      },
+      {
+        "view": "ideas",
+        "locale": "en",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "bibles",
+        "locale": "en",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "scenes",
+        "locale": "en",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "preview",
+        "locale": "en",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "settings",
+        "locale": "en",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "en",
+        "contentMode": "th+en",
+        "providerControls": 1
+      },
+      {
+        "view": "ideas",
+        "locale": "en",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "bibles",
+        "locale": "en",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "scenes",
+        "locale": "en",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "preview",
+        "locale": "en",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "settings",
+        "locale": "en",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "en",
+        "contentMode": "th+en",
+        "providerControls": 1
+      },
+      {
+        "view": "ideas",
+        "locale": "en",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "bibles",
+        "locale": "en",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "scenes",
+        "locale": "en",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "preview",
+        "locale": "en",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "login",
+        "locale": "th",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "login",
+        "locale": "th",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "login",
+        "locale": "th",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "login",
+        "locale": "en",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "login",
+        "locale": "en",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "login",
+        "locale": "en",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      }
+    ]
+  },
+  "ownerData": {
+    "baselinePreserved": true,
+    "databaseWrites": false,
+    "owners": 1,
+    "projects": 1,
+    "jobs": 4,
+    "cachedMockIdeas": 10,
+    "activeJobs": 0
+  },
+  "live": {
+    "openai": "BLOCKED_PENDING_NEW_OWNER_APPROVAL_PREVIOUS_QUOTA_NO_NEW_CALL",
+    "gemini": "PREPARED_KEY_AND_FREE_TIER_CONFIRMATION_REQUIRED_NO_LIVE_CALL",
+    "drive": "UNVERIFIED_OAUTH_MISSING",
+    "driveRestore": "UNVERIFIED_NO_CANARY_EVICTION_APPROVAL",
+    "supabaseCloudMobile": "UNVERIFIED_APPROVED_PROJECT_HOST_REQUIRED"
+  },
+  "status": "PHASE2_PREPARED_LIVE_GATES_PENDING",
+  "usage": {
+    "source": "Codex get_usage_limits",
+    "primaryUsedPercent": 55,
+    "primaryRemainingPercent": 45,
+    "secondaryUsedPercent": 68,
+    "secondaryRemainingPercent": 32,
+    "stopAtRemainingPercent": 7,
+    "automaticResume": false
+  },
+  "safetyPolicyTests": {
+    "command": "npm.cmd test",
+    "exitCode": 0,
+    "total": 180,
+    "passed": 179,
+    "failed": 0,
+    "skipped": 1,
+    "durationMs": 79216.4403,
+    "independentReReview": "ACCEPTED_NO_P1_P2",
+    "scope": "Gemini confirmed Free Tier Flash-Lite only; OpenAI explicit approval before any request; all synthetic/injected"
+  },
+  "safetyPolicyChecks": {
+    "buildIncludingThreeTypechecksAfterFinalThaiEnglishCopy": "PASS",
+    "lint": "PASS",
+    "docs": "PASS_27_ARTIFACTS",
+    "secrets": "PASS_151_TRACKED_FILES_NO_VALUES_PRINTED",
+    "ownerPreservationFinalReadOnlyCheck": "PASS_NO_DATABASE_WRITES"
+  },
+  "antigravity": {
+    "qaCommit": "ddccf9ce18a13425b480f02313f8d0ccbe6261c0",
+    "testedSource": "3e9c1aaab0143f94581ddf3ed4f0b2046e60b137",
+    "result": "PASS_LOCAL_V1_NO_LIVE_PROVIDER_CLAIM"
+  },
+  "previousRegression": {
+    "sourceCommit": "5559bbc4658b174d96b9d26023d449a26714a13c",
+    "tests": {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "total": 177,
+      "passed": 176,
+      "failed": 0,
+      "skipped": 1,
+      "durationMs": 190040.9389,
+      "skipReason": "POSIX vault permissions on Windows"
+    },
+    "checks": {
+      "buildIncludingThreeTypechecks": "PASS",
+      "lint": "PASS",
+      "pwa": "PASS_9_PUBLIC_ASSETS",
+      "docs": "PASS_27_ARTIFACTS",
+      "secrets": "PASS_149_TRACKED_FILES_NO_VALUES_PRINTED",
+      "whitespace": "PASS"
+    }
+  },
+  "previousBrowser": {
+    "sourceCommit": "5559bbc4658b174d96b9d26023d449a26714a13c",
+    "result": "PASS_FOCUSED_MOCK_WORKFLOW",
+    "cases": [
+      "360_TH",
+      "768_EN",
+      "1440_EN"
+    ],
+    "workflow": "login/settings/provider-selection/ten-ideas/one-selection/expansion/scenes/usage-provenance",
+    "liveCalls": false,
+    "serverStopped": true,
+    "fullLocaleViewportMatrixRerun": false,
+    "evidence": ".tmp/phase2-qa-evidence.json",
+    "latestPolicyCopyBrowserRerun": false
+  },
+  "previousUsageStop": {
+    "primaryUsedPercent": 99,
+    "remainingPercent": 1,
+    "secondaryUsedPercent": 59,
+    "checkpointStartedRemainingPercent": 7,
+    "automaticResume": false
+  },
+  "releaseVisualAcceptedSource": "3e9c1aaab0143f94581ddf3ed4f0b2046e60b137",
+  "browserPolicyBeforeRepair": {
+    "sourceCommit": "04ce46c95ff2c2ff8174aa2a52a2d460fb5543cd",
+    "interfaceLocale": "th",
+    "contentMode": "TH+EN",
+    "layoutCases": 18,
+    "horizontalOverflowCases": 0,
+    "workflow": "Normal synthetic login; missing Gemini key/OpenAI approval rejected409; Mock ten ideas, one saved selection, expansion, TH explanations/EN prompts3of3",
+    "finding": "Preview360 Drive guide compressed into three columns; Root repaired storage-panel notice to block at86dbbb5",
+    "limits": "Only Thai interface; not full TH/EN matrix. Fresh synthetic data, credentials cleared, no live calls; QA browser/server stopped."
+  },
+  "workerPresence": {
+    "readiness": "PREPARED_PURE_HELPER_ONLY",
+    "ttlMs": 90000,
+    "testsPassed": 10,
+    "jobLeaseRenewal": false,
+    "automaticPaidReplay": false,
+    "deployedPairing": false,
+    "waitingUi": false,
+    "activationGates": [
+      "authenticated hashed scoped revocable worker credentials",
+      "atomic durable presence CAS",
+      "owner-filtered atomic claims",
+      "frozen durable provider/model/provenance",
+      "verified media receipt and reconnect lookup"
+    ]
+  },
+  "geminiCanary": {
+    "readiness": "PREPARED_NO_LIVE_CALL",
+    "testsPassed": 14,
+    "ideasPostsPerNewCanary": 1,
+    "cachedResumeRegenerates": false,
+    "selectsOrExpands": false,
+    "apiKeyReadByVerifier": false,
+    "limits": [
+      "Owner Free Tier/Billing disabled confirmation required; key alone proves no tier",
+      "preflight/enqueue not atomic; OpenAI approval=false and no concurrent mode changes",
+      "resumed LIVE means observing previous job completion",
+      "timeout retains canary; no retry/delete/cancel"
+    ]
+  },
+  "modalBeforeFocusRepair": {
+    "sourceCommit": "5df1fa546ab7fb9b396cd6a2a26894bb0251cd84",
+    "cases": 12,
+    "passed": 10,
+    "failed": 2,
+    "failure": "Mobile picker return focus after hidden drawer opener",
+    "contrastRatio": 15.49,
+    "fix": "Visible original Menu/More fallback repaired; latest12/12 passed on de46284"
+  },
+  "latestModalRetake": {
+    "applicationSource": "de462843a2847e850334730c004f8b1d8f01e0b6",
+    "result": "PASS_12_OF_12",
+    "cases": [
+      {
+        "type": "settings",
+        "locale": "th",
+        "width": 360,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "picker",
+        "locale": "th",
+        "width": 360,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "settings",
+        "locale": "th",
+        "width": 768,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "picker",
+        "locale": "th",
+        "width": 768,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "settings",
+        "locale": "th",
+        "width": 1440,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "picker",
+        "locale": "th",
+        "width": 1440,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "settings",
+        "locale": "en",
+        "width": 360,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "picker",
+        "locale": "en",
+        "width": 360,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "settings",
+        "locale": "en",
+        "width": 768,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "picker",
+        "locale": "en",
+        "width": 768,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "settings",
+        "locale": "en",
+        "width": 1440,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "picker",
+        "locale": "en",
+        "width": 1440,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      }
+    ],
+    "physicalPhone": false,
+    "liveCalls": false
+  },
+  "releaseLatestSource": "0b35cea82d7e7867e11c653df0d6d790a6b66f19",
+  "reusableModalRegression": {
+    "script": "tests/browser/modal-focus.js",
+    "executedVia": "Playwright CLI run-code on normally authenticated synthetic Mock fixtures",
+    "phase2Source": "de462843a2847e850334730c004f8b1d8f01e0b6",
+    "releaseSource": "0b35cea82d7e7867e11c653df0d6d790a6b66f19",
+    "phase2Passed": 12,
+    "releasePassed": 12,
+    "casesPerBranch": 12,
+    "ownerPort3006Refused": true,
+    "projectOrProviderMutation": false
+  },
+  "geminiOfficialContractReview": {
+    "result": "VALID_REQUEST_SCHEMA_AND_MODEL;_NO_ACCOUNT_OR_LIVE_VERIFICATION",
+    "urls": [
+      "https://ai.google.dev/api/generate-content",
+      "https://ai.google.dev/gemini-api/docs/logs-datasets",
+      "https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite",
+      "https://ai.google.dev/gemini-api/docs/pricing#gemini-3.5-flash-lite",
+      "https://ai.google.dev/gemini-api/docs/billing"
+    ],
+    "storeFalse": "Supported optional logging control, not zero-retention or Free Tier data-use exemption",
+    "freeTier": "Model supports Standard Free Tier; actual API project tier/access requires Owner verification"
+  },
+  "geminiActivationPreparation": {
+    "date": "2026-10-10",
+    "baseCommit": "574fe5d3c8f13fd1bf8497dce291d0eaa729a0cc",
+    "status": "PAUSED_FOR_USAGE_RESET",
+    "sourceFileSha256": {
+      "scripts/gemini-local.ps1": "4386dd0ea2fc025723509eb96c8243b6ba25f5c87ebea289f711935e2e2ae6d5",
+      "scripts/start-gemini-local.mjs": "76b9035bca197961c865625413ca3d1dc22ee424abcd15511fd5547d6c9e0203",
+      "scripts/verify-gemini-live.mjs": "f459ce274219443cebe5f641a78f9d18cc029b8ec8bc87655723db6d727409c9",
+      "tests/gemini-local-setup.ps1": "1f071e46d2bbfaf704ef9a4b3152d7af7597d88334911037898aae41ff72bcbc",
+      "tests/gemini-live-verifier.test.ts": "b5f0ecfb1d95f476694f27015efabbbf73d44dc5ce39dbc24b8e2a6286ec706d"
+    },
+    "targeted": {
+      "command": "node --import tsx --test --test-concurrency=1 tests/gemini-live-verifier.test.ts tests/gemini-provider.test.ts tests/drive-live-verifier.test.ts tests/cloud.test.ts tests/worker-presence.test.ts",
+      "exitCode": 0,
+      "total": 74,
+      "passed": 74,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 5107.41,
+      "liveProviderCalls": 0
+    },
+    "windows": {
+      "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File tests/gemini-local-setup.ps1",
+      "exitCode": 0,
+      "checksPassed": 14,
+      "culture": "th-TH forced",
+      "runtime": "Windows PowerShell 5",
+      "syntheticOnly": true,
+      "ownerDataTouched": false,
+      "PS7PrePatch": "9/10; DateTime conversion/timezone ownership failure; preserved evidence",
+      "PS7PostPatch": "NOT_RUN; exact NEXT_TASK before live activation"
+    },
+    "checks": {
+      "threeTypechecks": "PASS",
+      "fullLint": "PASS",
+      "powershellAST": "PASS_BOTH_FILES",
+      "docs": "PASS",
+      "pwa": "PASS_PUBLIC_SHELL_ONLY",
+      "secretGuard": "PASS_TRACKED_FILES_NO_VALUES_PRINTED",
+      "whitespace": "PASS"
+    },
+    "independentReview": "ACCEPTED; auth/queue/canary, DPAPI/config, listener probe/timestamp, no actionable P1/P2; read-only source review",
+    "owner3006": {
+      "runtime": "RC/Mock",
+      "pid": 14548,
+      "httpIndex": 200,
+      "health": 200,
+      "authStatus": 200,
+      "anonymousProjects": 401,
+      "originalDataPreserved": true,
+      "databaseWrites": false,
+      "activeJobs": 0,
+      "cachedTenIdeas": true
+    },
+    "syntheticFixtureProcessesStopped": 4,
+    "liveGemini": "BLOCKED_OWNER_KEY_AND_FREE_TIER_CONFIRMATION",
+    "Drive": "PREPARED_OAUTH_CONSENT_AND_LIVE_ROUNDTRIP_PENDING",
+    "Cloud": "PREPARED_NO_DEPLOYED_OFFLINE_PROOF",
+    "remainingPercent": {
+      "fiveHour": 3,
+      "weekly": 26
+    },
+    "nextTask": "NEXT_TASK: หลังusage reset/Owner invocation ให้รัน pwsh -NoProfile -File tests/gemini-local-setup.ps1 เพื่อตรวจ PS7 th-TH หลัง timestamp DateTime/string และ bounded netstat fixes (WinPS5ล่าสุด14/14ผ่าน). เมื่อOwnerยืนยันprivateGEMINI_API_KEY+APIprojectFreeTier/Billingdisabledพร้อม จึงbuildPhase2/startfresh3013/normalcanaryaccount/verify-gemini-live --expand-first-ideaหนึ่งครั้ง (สูงสุดideas1+expand1 ไม่มีretry). ใช้UUIDเดิมอ่านสถานะหากtimeout;ไม่generateOwnerstoryเดิม. Owner3006activationต้องbackup/0active/schema check+preservesavedMock. Driveยังต้องOAuth+consent;Cloudต้องapprovedproject/HTTPS/schema/deploy. ห้ามmainmerge/publicdeploy/publish/billing."
+  }
+}
