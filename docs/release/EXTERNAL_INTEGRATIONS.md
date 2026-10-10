@@ -6,7 +6,7 @@
 ## สถานะจากหลักฐานที่มี
 
 - Express + SQLite local lane ยังคงใช้งานและไม่ถูกเปลี่ยน. Production/editor settings, media imports, Drive private sidecar index และ endpoints ถูกเตรียมใน source; การมี implementation ไม่ใช่หลักฐานว่าบริการจริงพร้อม.
-- `OPENAI_API_KEY` มีอยู่ใน environment ตามการตรวจของ Root แต่ generation ล่าสุดที่รายงานโดย Owner ตอบ `AI_QUOTA_EXCEEDED` / `insufficient_quota` ครบสามครั้ง. ไม่มี Gemini key. ห้ามเริ่ม paid retry หรือกล่าวว่า AI generation ผ่านจน quota/access ได้รับการแก้และมี owner-approved canary.
+- `OPENAI_API_KEY` เดิมได้รับอนุมัติให้reuse. Rootตรวจliveหนึ่งคำขอแยกจากOwnerเมื่อ2026-10-10T08:21:09Z ได้HTTP429/insufficient_quota (AI_QUOTA_EXCEEDED), ไม่มีretryหรือbillingchange. งานเดิมสามครั้งยังpreserve. ยังไม่แยกได้ว่าcreditbalanceหรือspendlimitจากaccountsettings จึงให้Ownerตรวจเองก่อนsuccessfullivecanary. ไม่มีGemini key.
 - Google OAuth/Drive ยังไม่มี credentials/grant และ live upload/download round-trip. Drive folder/index/transfer logic เป็น PREPARED; ไม่มี verified remote storage หรือ Drive-primary cutover.
 - Supabase URL/secret ยังไม่ configured; SQL draft/adapter code ไม่ได้ถูก deploy. Hosted grants/RLS/PostgREST, multi-host concurrency และ production persistence ยังไม่มีหลักฐาน.
 - Always-on cloud host และ paired Local Worker ยังไม่ verified/implemented as a deployment path. Lease RPC/code tests ไม่พิสูจน์ laptop-offline operation หรือ worker pairing.
@@ -61,3 +61,7 @@ Flow เป็นผลิตภัณฑ์เว็บและ account integr
 - [Veo via Gemini API](https://ai.google.dev/gemini-api/docs/veo)
 - [Google OAuth web-server flow](https://developers.google.com/identity/protocols/oauth2/web-server), [Drive minimal scopes](https://developers.google.com/workspace/drive/api/guides/api-specific-auth)
 - [Supabase production checklist](https://supabase.com/docs/guides/deployment/going-into-prod), [RLS](https://supabase.com/docs/guides/database/postgres/row-level-security)
+
+## OpenAI diagnostic ที่ตรวจจริง
+
+หนึ่งofficialResponsesrequestได้429/insufficient_quota; ไม่ใช่ordinaryrequest-ratefailure. การretryไม่แก้credits/limits ตาม [OpenAI error guidance](https://developers.openai.com/api/docs/guides/error-codes). Ownerตรวจ [Billing](https://platform.openai.com/settings/organization/billing) และ [Limits](https://platform.openai.com/settings/organization/limits) ผ่านaccountเอง; ไม่มีการซื้อ/เพิ่มเพดานโดยCodex. ใช้defaultideasmodel gpt-6-luna; modelaccess/realoutputยังไม่ผ่านเนื่องจากquota. หลังแก้quotaให้test10shortideasในprojectใหม่และexpandเฉพาะconceptที่Ownerเลือก ไม่overwritecachedMockหรือretryเดิมโดยอัตโนมัติ.

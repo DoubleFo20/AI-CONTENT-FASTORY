@@ -59,7 +59,7 @@ Actual Owner Ideas failure is three quota failures with no active job; consisten
 and explicit Mock recovery produced ten ideas while preserving accounts/sessions/media/schema/history.
 Root reviewed disjoint agents' output and independent high-risk review. Full serialized
 145 tests:144 passed,0 failed,1 Windows POSIX skip; final release commands/publication and
-responsive retake are recorded in PROJECT_STATUS/HANDOFF. Local synthetic MP4 playback,
+48 layout cases with critical UI retakes are recorded in PROJECT_STATUS/HANDOFF. Local synthetic MP4 playback,
 download, persistence, owner auth and public-cache PWA passed. Live AI/Flow/Drive/cloud
 remain individual external gates. Paired Local Worker is not implemented; never claim
 notebook-offline operation from local PWA tests. Main must remain unmerged pending review.

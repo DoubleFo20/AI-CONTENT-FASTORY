@@ -28,6 +28,9 @@ the actual integrated release.
 
 ## Run locally
 
+Existing Owner on this machine: use [the original-data launch guide](docs/release/LOCAL_OWNER_RUN.md)
+for candidate port3006. Default storage in a new worktree is not the existing Owner database.
+
 ```powershell
 npm.cmd install
 npm.cmd run dev

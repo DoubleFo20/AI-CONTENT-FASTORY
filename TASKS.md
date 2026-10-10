@@ -1,27 +1,30 @@
-# Tasks and dependencies
+# Task dependency plan
 
-## Current V1 Release Candidate
+STATUS: LOCAL_V1_RC_VERIFIED_EXTERNAL_GATES_PENDING
+Updated: 2026-10-10 (Asia/Bangkok)
 
-| ID | งาน | Dependency | สถานะ |
+| ID | Task | Depends on | State |
 | --- | --- | --- | --- |
-| RC-01 | inspect/fetch/compare main, PR#1 and Premium V2; preserve existing work/data | — | DONE |
-| RC-02 | dedicated release/v1-real-world + safe V2 integration | RC-01 | DONE |
-| RC-03 | actual quota/stale ideas diagnosis and fenced queue/cancel/retry/progress | RC-02 | DONE |
-| RC-04 | consistent original SQLite backup + 10 Mock ideas recovery; preserve auth/history/media/schema | RC-03, Owner proceed | DONE |
-| RC-05 | selected-only variable-duration story/bibles/scenes/EN Flow prompts/TH explanation | RC-03 | DONE_MOCK_ONLY |
-| RC-06 | Flow scene status/reference/filename matching/owner-verified credit estimate | RC-05 | DONE_ASSISTED; live Flow gate remains |
-| RC-07 | deterministic FFmpeg editor/audio/images/subtitles/order/quality/play/download | RC-05 | VERIFIED_SYNTHETIC_MEDIA |
-| RC-08 | six Drive categories, private media index/progress/idempotent uploads/verified cache restore | RC-07 | PREPARED; fake-adapter tests; OAuth/live gate remains |
-| RC-09 | cancel/drain actual HTTP handlers and late upload cleanup before Store close | RC-03,RC-08 | DONE; independent retake accepted; full regressions passed |
-| RC-10 | critical THEN/mobile/PWA/persistence regression | RC-05,RC-07 | IN_FINAL_QA |
-| RC-11 | full regressions/typecheck/lint/build/PWA/docs/secrets | RC-09,RC-10 | 144passes/1POSIXskip; lint/build/PWA/docs passed; staged hygiene pending |
-| RC-12 | safe local activation; commit/push release candidate/draft PR to main | RC-11 | LOCAL_ACTIVE3006; publication pending |
-| RC-13 | Antigravity visual QA of actual combined UI + final integration review | RC-12 | HANDOFF_PREPARED; visual acceptance PENDING |
-| RC-14 | real AI/Flow/Drive/Supabase/cloud/paired Local Worker | external owner gates | BLOCKED / PREPARED / NOT_IMPLEMENTED individually; see matrix |
+| RC-01 | Preserve/fetch/review main, PR#1 and Premium V2 in isolated release | Owner mission | DONE |
+| RC-02 | Diagnose actual Ideas quota failure and stale state | RC-01 | DONE |
+| RC-03 | Mode/provenance/cache/progress/retry/cancel/deadline/restart fences | RC-02 | VERIFIED |
+| RC-04 | Consistent backup + original10Mock ideas recovery; preserve accounts/history/media/schema | RC-03, Owner proceed | VERIFIED |
+| RC-05 | Selected-only variable story + bibles/scenes/EN prompts/TH explanation | RC-03 | MOCK_ONLY |
+| RC-06 | Assisted Flow refs/status/credit rate/matching/missing clips | RC-05 | PREPARED; real Flow gate |
+| RC-07 | Real clip/audio/image imports + deterministic editor/MP4/play/download/persistence | RC-05 | VERIFIED_SYNTHETIC_MEDIA |
+| RC-08 | Drive private folders/index/progress/verified retry/cache restore | RC-07 | PREPARED; OAuth/live gate |
+| RC-09 | Request-lifecycle shutdown/auth/file/OAuth/queue safety review | RC-03,RC-08 | VERIFIED; independent review accepted |
+| RC-10 | THEN/48viewport cases/PWA/restart/read-error recovery; critical tablet/mobile repairs | RC-05,RC-07 | VERIFIED; visual/physical-device acceptance pending |
+| RC-11 | Full regressions/typecheck/lint/build/PWA/docs/secrets | RC-09,RC-10 | 144pass/0fail/1POSIXskip; checks passed |
+| RC-12 | Storage-preserving local3006 activation; normal release push/draft PR | RC-11 | LOCAL_ACTIVE; _RELEASE_PR_PENDING_ |
+| RC-13 | Antigravity actual combined UI visual QA + final integration review | RC-12 | READY_FOR_REVIEW; acceptance PENDING |
+| RC-14 | Live AI10/selected expansion canary after quota fix | Owner billing/access | BLOCKED; actual HTTP429 insufficient_quota |
+| RC-15 | Live Drive OAuth/checksum upload/download/restore | Owner Google setup+consent | BLOCKED |
+| RC-16 | Supabase/HTTPS host/approved migration + paired-worker bridge + notebook-offline mobile acceptance | RC-15, Owner host/schema approval | PREPARED / BLOCKED / NOT_IMPLEMENTED individually |
 
-Root reviewed isolated Sol High core/editor and Luna UI/QA/docs output before copying owned paths. Root alone owns Git/shared/config/progress/schema. No concurrent edits of the same files; Antigravity design worktree/specifications remain preserved. New schema migration, billing, public deployment, content publishing and main merge require separate approval.
+Latest source checkpoint `b271855`; Root reviewed disjoint agents before integration. Root owns Git/contracts/config/progress/schema. Existing architecture, owner data and Antigravity original worktree/specifications remain preserved. No main merge/force push/deploy/billing/publishing.
 
-Exact next task and required Owner actions are in [HANDOFF](HANDOFF.md). Current evidence supersedes historical checkpoint counts below.
+Exact next task and consolidated Owner gates: [HANDOFF](HANDOFF.md). Current [QA](docs/release/QA_RESULTS.json) and [readiness](docs/release/V1_READINESS.md) supersede the historical counts below.
 
 ## บันทึก checkpoint ก่อนหน้า (historical)
 

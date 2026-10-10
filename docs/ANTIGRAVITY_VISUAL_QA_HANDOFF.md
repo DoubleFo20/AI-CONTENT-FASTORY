@@ -1,71 +1,49 @@
-# Antigravity visual QA handoff — integrated Story Factory
+# Antigravity — ตรวจ UI ของ V1 Release Candidate จริง
 
 ANTIGRAVITY_STATUS: READY_FOR_IMPLEMENTATION_VISUAL_QA
 APP_IMPLEMENTATION_VISUAL_QA: PENDING
-Updated: 2026-10-09 (Asia/Bangkok)
+Updated: 2026-10-10 (Asia/Bangkok)
 
-[Draft PR#1](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/1) targets main and remains unmerged.
-Verified UI/core implementation checkpoint: `fda96d6377eb9895ab606bfdb01f758adb623e1c`.
-Subsequent publication-record commits contain documentation only; record actual branch HEAD
-with your review. Please return actual-app findings and screenshots before main integration review.
+ให้ตรวจแอปจาก branch `release/v1-real-world`, source checkpoint `b271855dfa535bf4a1b18afef5917f8b1280c925`, worktree `.worktrees/release-v1`. RELEASE_PR: _RELEASE_PR_PENDING_. Draft PR#1 และ main ยังไม่ merge; บันทึก HEAD ที่รันจริงทุกครั้ง เพราะ commit เอกสารอาจอยู่หลัง source checkpoint.
 
-Please visually review the **actual integrated candidate application** in Root's
-`integration/v1-ui-core` worktree against [UI_SPEC](UI_SPEC.md), [DESIGN_SYSTEM](DESIGN_SYSTEM.md),
-[MOBILE_UX](MOBILE_UX.md), [MOTION_SPEC](MOTION_SPEC.md), and [VISUAL_QA](VISUAL_QA.md).
-Do not review only `docs/design/` or reuse its screenshots as implementation evidence. The
-design branch's `APP_IMPLEMENTATION_VISUAL_QA: PASS` marker does not accept this combined
-candidate; app implementation QA remains pending.
+ฐานที่รวมแล้วคือ reviewed integration cfa6554 + Premium Cinematic V2 be29e0a พร้อม backend/core เดิมของ main dfe2b2c ไม่มี redesign หรือ migration. ตรวจแอปที่รวมแล้วเทียบ [UI_SPEC](UI_SPEC.md), [DESIGN_SYSTEM](DESIGN_SYSTEM.md), [MOBILE_UX](MOBILE_UX.md), [MOTION_SPEC](MOTION_SPEC.md) และ [VISUAL_QA](VISUAL_QA.md). PASS ของ prototype/design branch ไม่ใช่ acceptance ของ candidate นี้.
 
-Root reports that the integrated candidate combines main `dfe2b2c89599fec84472840b4934e5e1604a0805`
-with design branch `cad482e906f2dcc6db172c085196643a75f70c4f` without conflicts. Root has
-completed core/browser functional checks described in
-[INTEGRATION_REVIEW](INTEGRATION_REVIEW.md) and [QA record](integration/QA_RESULTS.json).
-Engineering checks passed:63 automated passes/1 POSIX skip,216 responsive+6 login cases,
-clipboard, dialog/drawer/picker, offline/cache/auth and real synthetic MP4. Review the current
-candidate commit SHA before capturing
-evidence, since UI fixes may advance it.
+Engineering ผ่าน [QA record](release/QA_RESULTS.json): 144 tests/1 Windows skip, lint/build/3typechecks/PWA; 48 route×locale×viewport cases และ retake เพิ่มสำหรับ tablet rail/mobile heading/Drive wrap/poll recovery; real synthetic MP4 12.021029s เล่น/ดาวน์โหลด/เปิดกลับได้. ภาพจาก actual candidate: [Clips TH360](release/clips-360-th.png), [Preview EN768](release/preview-768-en.png). ต้องเปิดแอปจริงร่วมกับภาพ ไม่ใช้ prototype แทน.
 
-From `D:\xampp\htdocs\Ai-content-factory\.worktrees\integration-v1-ui-core`, run
-`npm.cmd run build`, then `node scripts/integration-qa-server.mjs`. Open
-`http://127.0.0.1:3004` and create synthetic credentials of your choice. The helper creates
-a fresh ignored `.tmp` database each launch, forces labelled Mock mode, removes live provider
-environment credentials and does not touch the owner's database. No default login is shipped.
-The existing3004 fixture already has Root's synthetic test owner; for a
-fresh fixture set PowerShell `$env:ACF_QA_PORT='3005'` before launching and open that port.
-Close the server after review. Record browser/version, viewport, locale/content mode
-and a screenshot or observation for each issue. Return findings by severity with reproducible
-steps and expected behavior. No external Antigravity message has been sent; this document is
-the prepared handoff.
+## เปิด fixture ที่ปลอดภัย
 
-Captures from the actual integrated app: [360px Thai ideas](integration/ideas-360-th.png),
-[768px English scenes](integration/scenes-768-en.png), [1440px English preview](integration/preview-1440-en.png).
-Please inspect the running application as well as the captures, including failure/busy states
-and the visual/physical-mobile/assistive-technology coverage that engineering DOM checks do
-not establish. Enter real service consent or publishing only under separate owner authorization.
+จาก release worktree รัน `npm.cmd run build` แล้วใช้ port ว่างสำหรับ QA เท่านั้น:
 
-## Review coverage
+```powershell
+$env:ACF_QA_PORT='3005'
+Remove-Item Env:ACF_QA_DATA_DIR -ErrorAction SilentlyContinue
+node scripts/release-qa-server.mjs
+```
 
-- 360, 768 and 1440 px in Thai and English UI; exercise TH, EN and TH+EN content where data is bilingual.
-- Auth/setup and shell, dashboard, brief, exactly ten idea choices, one saved selection, selected-only expansion, four bibles, ordered scenes, manual Flow prompt handoff, queue/retry, scene clip import, editor, authenticated preview and MP4 download.
-- Keyboard and focus, modal/drawer Escape and focus return, long text, 44px controls, empty/error/busy/offline states, reconnect and logout/private cache behavior.
-- Confirm Thai explanations and English prompts retain source language; prompt copy contains only English.
-- Confirm the integrated screen reports synthetic Mock content as synthetic and local storage honestly. Google Drive/Supabase/cloud deployment/Local Worker pairing are not live-verified. Cost remains Unknown; review acknowledgement is not durable approval. Flow remains manual. Publishing is unsupported and must not be actionable.
+เปิด `http://127.0.0.1:3005`; helper สร้าง ignored database ใหม่ มี injected quota failure + Mock และไม่มี paid provider call/default login. ตั้ง synthetic username/password ของผู้ตรวจเอง. โปรเจกต์ QA ที่ใช้ browser regression ควรมีชื่อพร้อมคำว่า QA. ทดลองสร้าง brief → 10 ideas ใน Real test mode จะได้ quota error สังเคราะห์ จากนั้นสลับ Mock แล้วกด Retry หนึ่งครั้งเอง → เลือกหนึ่ง → expand → scenes/prompts → import synthetic/owned clips → export.
 
-The review must preserve the current authenticated owner cookie/CSRF behavior and real local
-SQLite/media/FFmpeg lane. Report API or security regressions to Root; visual review does not
-authorize endpoint, schema, migration or service changes. Keep UI acceptance separate from
-live AI quota, Google Flow creative quality, Drive authorization, hosted Supabase, cloud
-deployment and worker pairing gates.
+Owner app3006 ใช้ original populated data และบัญชีเดิม จึงใช้เฉพาะ Owner ตรวจผ่าน loginปกติ. ห้าม reset/seed/ใช้ QA harness กับ original Owner storage. Fixture3004ในเครื่องนี้มีบัญชี QA ของ Root; ถ้าต้องการบัญชีของผู้ตรวจให้ใช้ fresh3005ตามด้านบน. หยุดเฉพาะ QA serverเมื่อเสร็จและเก็บหลักฐานแยกจาก owner data.
 
-## Result to return
+## จุดที่ต้องตรวจ
 
-| Item | Result |
+- 360/768/1440px ใน UI ไทยและอังกฤษ พร้อม TH/EN/TH+EN content; Thai default, overflow, text wrapping, readable focus/header spacing และ tablet icon rail
+- Login/setup, dashboard, brief, ten radios/one saved selection, selected-only expansion, four bibles/keyboard tabs, scenes/EN copy+TH explanation/refs/duration/ratio
+- Queue progress/errors/manual Retry/Cancel; explicit Mock/Real และ persisted result provenance; pending worker/network/offline/auth states ต้องไม่ปลอมว่าบริการจริงพร้อม
+- Clip matching ที่ต้อง confirm, missing clips, audio/images, editor settings/order/music/SFX/subtitles, MP4 playback/download/reopen
+- Settings/modal/mobile drawer/editor picker, keyboard/Escape/focus return, native browser controls, long text,44px targets และ physical-mobile/assistive-technology coverage ที่ DOM testsยังไม่พิสูจน์
+- Drive OAuth instructions callbackตรงorigin, upload/restore/error/progress presentation; ตรวจกับ prepared state ได้ แต่ไม่ทำ consent/billing/live transfer โดยไม่มี Owner authorization
+- Planned modules/Publish/Meta/direct Flow/cloud pairingต้องไม่เป็น fake functional controls; ค่าเครดิตต้องระบุว่ามาจาก Owner rate ไม่ใช่ราคา/chargeที่ตรวจแล้ว
+
+รักษา existing cookie/CSRF/auth, private media และ SQLite/FFmpeg lane. รายงาน security/API issueให้ Root; visual QAไม่อนุญาต schema/endpoints/migration/paid generation/public deployment. ดู [readiness](release/V1_READINESS.md) เพื่อแยก local, mock, prepared, blocked และ not implemented.
+
+## ผลที่ต้องส่งคืน
+
+| รายการ | ผล |
 | --- | --- |
-| Candidate commit / launch invocation | Implementation fda96d6377eb9895ab606bfdb01f758adb623e1c; launch steps above; record current HEAD |
-| Browsers and viewport/locale matrix covered | PENDING |
-| Screenshots or observations | PENDING |
-| Findings with severity and reproduction | PENDING |
-| Retest after fixes | PENDING |
-| App implementation visual QA | PENDING until Antigravity reviews the actual candidate and Root accepts evidence |
+| Candidate/source/HEAD + launch command | Source b271855; บันทึกจริงตอนตรวจ |
+| Browser/device/viewport/locale/content mode | PENDING |
+| Screenshots และ reproduction/expected behavior ตาม severity | PENDING |
+| Retest หลังแก้ | PENDING |
+| Actual candidate visual acceptance | PENDING จน Antigravity ตรวจจริงและ Root รับหลักฐาน |
 
-This file prepares a review handoff only; no external Antigravity message has been sent.
+เอกสารนี้เป็น handoff พร้อมตรวจ ยังไม่ได้ส่งข้อความภายนอกถึง Antigravity และยังไม่มี visual acceptance หรือ main merge.

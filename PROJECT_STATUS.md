@@ -1,25 +1,27 @@
 # Project status
 
-STATUS: V1_RELEASE_CANDIDATE_FINAL_VERIFICATION
+STATUS: LOCAL_V1_RC_VERIFIED_EXTERNAL_GATES_PENDING
 CURRENT_PHASE: LOCAL_V1_REAL_WORLD_RELEASE
 ANTIGRAVITY_STATUS: READY_FOR_IMPLEMENTATION_VISUAL_QA
 Updated: 2026-10-10 (Asia/Bangkok)
 
-Current branch: `release/v1-real-world`; worktree `.worktrees/release-v1`. Base is reviewed integration `cfa6554` plus approved Premium Cinematic V2 `be29e0a`. Main `dfe2b2c` and Draft PR#1 remain unmerged. Original worktrees and dirty writer changes are preserved.
+Source checkpoint: `b271855dfa535bf4a1b18afef5917f8b1280c925`; branch `release/v1-real-world`, worktree `.worktrees/release-v1`. Reviewed integration cfa6554 + Premium Cinematic V2 be29e0a; main dfe2b2c และ Draft PR#1 ยังไม่ merge. RELEASE_PR: _RELEASE_PR_PENDING_.
 
-งานหลักที่เสร็จ: quota/stale-state recovery, observable queue/cancel/timeout/restart fences, persisted explicit Mock/Real mode, variable-duration selected-only pipeline, scene/Flow continuity/reference/status/credit estimate, confirmed batch clip matching, private audio/image imports, deterministic FFmpeg settings/preview/download และ Drive private project-media index พร้อม verified-retry/restore. ใช้ React/Vite + Express/SQLite เดิม ไม่มี FastAPI rewrite หรือ populated schema migration.
+แก้ Ideas blocker จากงานจริงที่ล้มเหลวเพราะ quota และ stale UI state แล้ว สำรอง SQLite แบบ consistent + integrity_check ก่อนกู้โปรเจกต์เดิมเป็น 10 Mock ideas/completed100; ไม่มี active job บัญชี/session/media/schema และ 3 failed records เดิมอยู่ครบ ไม่มีการเลือกหรือขยายเรื่องแทน Owner.
 
-กู้โปรเจกต์ Owner เดิมได้ 10 Mock ideas และ completed100 หลัง consistent SQLite backup + integrity_check. ไม่มี active job. ตรวจ invariant ว่าบัญชี/session/media/schema และ 3 quota-failed records เดิมยังอยู่ครบ; ไม่เลือกหรือขยายเรื่องแทน Owner และไม่เรียก paid provider.
+Local V1 ใช้ React/Vite + Express/SQLite/FFmpeg เดิม พร้อม persisted Mock/Real provenance, job progress/retry/cancel/deadline/restart fences, selected-only variable-duration story, 4 bibles, EN Flow prompts/TH explanations, scene/reference/status/owner-configured credit estimate, confirmed clip matching, private audio/images และ editor ordering/quality/music/SFX/subtitles/preview/download. Drive private index/verified retry/restore พร้อม injected tests แต่ยังไม่ได้ OAuth จริง ไม่มี migration/reset/new runtime dependency/env/lockfile/CI change.
 
-ผล browser จริง: wrong/valid login, ten ideas, saved idea9 มีผลเหนือ unsaved idea7, selected expansion, 4 bibles, 3 scenes/12 seconds, English clipboardพร้อมrefs + Thai explanations, configured synthetic credit estimate, 3 real synthetic clips + audio/image, settingsก่อนexport, MP4 play/download, server/browser restart persistence และ prompt pack ผ่าน. FFprobe: H.264720×1280 yuv420p + AAC48k stereo,12.021029s. Offline/public-shell/reconnect/logout private-resource401 ผ่าน; cache9 public assets/0 private และ localStorage2 public preferences. นี่ไม่ใช่ live Flow/AI/Drive/cloud test.
+ผลทดสอบจริง: `npm.cmd test` 145 total/144 passed/0 failed/1 POSIX skip บน Windows (79.02s); full lint และ build รวม client/server/tests typechecks ผ่าน. PWA/docs/secrets/whitespace ผ่านที่ source checkpoint. Chrome154 workflow/login/selection/bibles/prompts/imports/restart/public-cache/offline/logout isolation ผ่าน; H.264720×1280 yuv420p + AAC48k stereo,12.021029s เล่นและดาวน์โหลดได้. มี browser regression แบบเก็บใน repo สำหรับ read-error recovery ที่ไม่กลบ failed owner command.
 
-Final `npm.cmd test`:145 total,144 passed,0 failed,1 POSIX-permission skip on Windows (85.25s). `npm.cmd run lint`, `npm.cmd run build` (client/server/tests typechecks), `validate:pwa` และ `validate:docs` ผ่านจริง. รัน full suite แบบเรียงลำดับในคำสั่งมาตรฐาน หลังรอบที่รันหลาย processเกิด image-probe timeout; narrow image4/4และfull serialized145casesผ่าน. Independent high-risk reviewยอมรับ worker/storage/Drive/auth/file/queue/request lifecycle รวม SQLite shutdown และ late-Multer cleanup หลังแก้และ retake. Responsive retake และ staged secret/whitespace checks กำลังปิดรอบสุดท้าย.
+Responsive/THEN: 48 unique route×locale×viewport cases ที่360/768/1440 ผ่าน; retake หลังแก้ Drive setup overflow, tablet icon rail และ mobile heading/topbar collision ผ่าน. Polling เมื่อเชื่อมต่อได้อีกครั้งล้างเฉพาะ read network alert; action/auth error ยังอยู่. Independent read-only high-risk review และ scoped UI review ยอมรับหลังแก้. Physical mobile/assistive technology และ Antigravity visual acceptance ยังไม่ทดสอบ.
 
-Local candidate ใช้ original populated storage บน `http://127.0.0.1:3006`, bind loopback only, explicit persisted Mock. Started hidden app process14516; health200, existing-owner setupRequired=false และ anonymous project401/no-store ผ่าน. ใช้บัญชีเดิม;ไม่มี shipped/default credentials. Original root's empty storage ไม่ถูกเปลี่ยนและเดิม3001/5173ไม่ได้ถูก force-displace.
+ตรวจ OpenAI จริงหนึ่งคำขอแยกจาก Owner data เมื่อ2026-10-10 ได้ HTTP429/insufficient_quota → AI_QUOTA_EXCEEDED; ไม่มี automatic retry หรือ billing change. Text readiness ยัง MOCK_ONLY/BLOCKED แยกกัน. Google Flow assisted handoff เป็น primary; ไม่มี approved direct API หรือการใช้เครดิตอัตโนมัติ.
 
-External gates: live OpenAI quota, Google OAuth/round trip, Flow account/real clips, Supabase/HTTPS deployment/approved migration, paired Local Worker + notebook-offline mobile test. ไม่มี billing/deploy/publishing/main merge. ดู [readiness matrix](docs/release/V1_READINESS.md), [API](docs/API_CONTRACT.md), [Drive setup](docs/DRIVE_STORAGE.md).
+Owner app ทำงานที่ `http://127.0.0.1:3006`, loopback only, original populated storage, บัญชีเดิมและ explicit persisted Mock. Hidden PID14516 ณ checkpoint; health200/setupRequired=false และ anonymous401/no-store ผ่าน. อ่าน [คู่มือเปิดข้อมูลเดิม](docs/release/LOCAL_OWNER_RUN.md) ก่อน restart; default storage ของ worktreeอื่นไม่ใช่ข้อมูล Owner ชุดนี้.
 
-NEXT_TASK: finish responsive retake + staged hygiene; checkpoint/push/draft release PR and actual-app Antigravity visual QA handoff.
+หลักฐาน: [readiness matrix](docs/release/V1_READINESS.md), [QA results](docs/release/QA_RESULTS.json), [visual QA handoff](docs/ANTIGRAVITY_VISUAL_QA_HANDOFF.md), [Drive/OAuth](docs/DRIVE_STORAGE.md). Live OpenAI quota, Flow clips/account, Drive consent/round trip, Supabase/HTTPS host/approved migration และ paired-worker/notebook-offline acceptance เป็น gates แยก. ไม่ deploy/publish/merge main.
+
+NEXT_TASK: Antigravity ตรวจ actual release UI และ Owner ตรวจ Release PR; Owner แก้ API quota/ให้ OAuth/เลือก host+Supabase ก่อน live canary หรือ cloud cutover. ไม่มี Codex development scheduler/automatic resume ที่ตั้งไว้.
 
 ## บันทึก checkpoint ก่อนหน้า (historical)
 

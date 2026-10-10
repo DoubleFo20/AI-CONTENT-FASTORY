@@ -5,9 +5,9 @@ DESIGN_DELIVERY_STATUS: DESIGN_READY_FOR_CODEX
 PHASE_0A_STATUS: STABLE
 DESIGN_REFERENCE_QA: PASS_WITH_DOCUMENTED_LIMITS
 VISUAL_QA_STATUS: PASS
-Updated: 2026-10-09 (Asia/Bangkok)
+Updated: 2026-10-10 (Asia/Bangkok)
 
-The approved design branch has been brought into `integration/v1-ui-core` from the latest
+The approved Premium Cinematic V2 and reviewed integration are now in `release/v1-real-world` with the latest
 backend/core main. Its earlier PASS marker does not accept this combined candidate. Review
 the actual integrated application using [visual QA handoff](docs/ANTIGRAVITY_VISUAL_QA_HANDOFF.md)
 and [integration review](docs/INTEGRATION_REVIEW.md); final implementation visual QA is pending.
