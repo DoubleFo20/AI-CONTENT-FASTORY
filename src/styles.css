@@ -290,5 +290,6 @@ progress::-moz-progress-bar { background: var(--accent); }
 @media (max-width: 768px) { .hero { grid-template-columns: 1fr; padding: 24px; min-height: auto; } .split { grid-template-columns: 1fr !important; } }
 
 .storage-panel code { overflow-wrap: anywhere; white-space: normal; }
+.storage-panel .notice { display: block; }
 .storage-panel .notice, .storage-panel li { min-width: 0; }
 .storage-panel .notice ol { padding-inline-start: 22px; max-width: 100%; }
