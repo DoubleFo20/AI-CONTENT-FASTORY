@@ -1451,7 +1451,7 @@
       "docs/GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md": "e18eb1d973e2a1bbd17d935158df8db60028ba72fd7a12d7549bdc1c9c63c590"
     }
   },
-  "latestCheckpointKey": "geminiExpansionReduction",
+  "latestCheckpointKey": "geminiExpansionLiveAcceptance",
   "rootRecordNote": "Top-level sourceCommit/tests/status are historical initial Phase2 evidence. Read latestCheckpointKey for the current source-specific checkpoint; prior live/QA records remain unchanged.",
   "geminiExpansionReduction": {
     "date": "2026-10-12",
@@ -1670,5 +1670,278 @@
       "findingsFixedBeforeCheckpoint": true,
       "scope": "Current public docs/source/artifact hashes and local links only; reviewer made no tests, helper, private data, Git, runtime or network calls."
     }
+  },
+  "geminiExpansionLiveAcceptance": {
+    "verified": true,
+    "testedSourceCommit": "8f95c1640d461d6ddf8f47dbc778988b19f83c7c",
+    "atUtc": "2026-10-11T18:02:54.550Z",
+    "projectId": "cc629e54-668e-4ff1-82fe-c5904b4edbcc",
+    "jobId": "94d8afeb-66e7-4c7f-99b6-b15f1899e782",
+    "generationRequests": 1,
+    "automaticRetries": 0,
+    "newIdeasRequests": 0,
+    "modelsApiRequests": 0,
+    "openAiRequests": 0,
+    "billingChanged": false,
+    "freeTier": {
+      "observedUtc": "2026-10-11T17:58:19Z",
+      "dashboard": "https://aistudio.google.com/",
+      "projectTier": "FREE_TIER",
+      "keyTier": "FREE_TIER",
+      "billingAccount": "NONE",
+      "keyBindingMethod": "PRIVATE_MASKED_SUFFIX_COMPARISON",
+      "keyMatches": true,
+      "billingChanged": false,
+      "limitation": "Masked key suffix matched locally; no independent key identity API request."
+    },
+    "ideasCount": 10,
+    "selectedCount": 1,
+    "charactersCount": 2,
+    "locationsCount": 1,
+    "continuityRulesCount": 2,
+    "scenes": [
+      {
+        "id": "scene_1",
+        "order": 1,
+        "durationSeconds": 6,
+        "characterIds": [
+          "character_1"
+        ],
+        "locationId": "location_1",
+        "hasThaiExplanation": true,
+        "hasEnglishFlowPrompt": true
+      },
+      {
+        "id": "scene_2",
+        "order": 2,
+        "durationSeconds": 6,
+        "characterIds": [
+          "character_1"
+        ],
+        "locationId": "location_1",
+        "hasThaiExplanation": true,
+        "hasEnglishFlowPrompt": true
+      },
+      {
+        "id": "scene_3",
+        "order": 3,
+        "durationSeconds": 8,
+        "characterIds": [
+          "character_2"
+        ],
+        "locationId": "location_1",
+        "hasThaiExplanation": true,
+        "hasEnglishFlowPrompt": true
+      }
+    ],
+    "durationSeconds": 20,
+    "usage": [
+      {
+        "operation": "ideas",
+        "inputTokens": 254,
+        "outputTokens": 1307,
+        "totalTokens": 1561,
+        "jobId": "3ddfc8e6-d53d-4472-8e0b-503aa2e1a57c"
+      },
+      {
+        "operation": "expand",
+        "inputTokens": 624,
+        "outputTokens": 1291,
+        "totalTokens": 1915,
+        "jobId": "94d8afeb-66e7-4c7f-99b6-b15f1899e782"
+      }
+    ],
+    "estimatedCostUsd": null,
+    "billableAmountVerified": false,
+    "preservation": {
+      "schema": true,
+      "accounts": true,
+      "tenRealIdeas": true,
+      "selectedIdea": true,
+      "priorFourJobs": true,
+      "clips": true,
+      "exports": true,
+      "media": true,
+      "ownerLogicalData": true,
+      "ownerMedia": true
+    },
+    "owner3006": {
+      "health": 200,
+      "anonymousProjectsStatus": 401,
+      "changed": false
+    },
+    "canary3013": {
+      "health": 200,
+      "activeJobs": 0,
+      "jobs": 5
+    },
+    "logoutConfirmed": true,
+    "rawContentPublished": false,
+    "secretsPublished": false,
+    "historicalHttp400RootCause": "NOT_PROVEN",
+    "status": "LIVE_GEMINI_SELECTED_EXPANSION_VERIFIED",
+    "sourceImplementationCommit": "921ce7b32b795defd41e784ff893b31df2588dfa",
+    "sourceHashes": {
+      "server/ai/gemini.ts": "8caa14c59c3be510cf7340f440d28c48c25d77b1696a7f5268a9b1e6d49bb550",
+      "server/ai/gemini-expansion.ts": "1f3096109a6979e3bf923f87b77bed221af68e67b88b5cc8aea152bc9078390f",
+      "tests/gemini-provider.test.ts": "3cafc176d65a405b0e5730be4732be9b49d1435bfc5794103cd2ec01c01e5f1d",
+      "tests/gemini-expansion.test.ts": "e2f4369e3d179f332340a68ece39d4adedbedf87e431d47d820564f9f7c21845"
+    },
+    "report": "docs/GEMINI_EXPANSION_LIVE_RESULT_20261012_TH.md",
+    "sourceApplicationChangedThisTurn": false,
+    "runtime": {
+      "ownerPort": 3006,
+      "ownerPid": 22544,
+      "ownerMode": "mock",
+      "ownerRestarted": false,
+      "ownerUiChanged": false,
+      "canaryPort": 3013,
+      "canaryPid": 19484
+    },
+    "productionPromptValidation": {
+      "testedSourceCommit": "8f95c1640d461d6ddf8f47dbc778988b19f83c7c",
+      "generationRequests": 0,
+      "flowApiRequests": 0,
+      "actualCachedPackage": true,
+      "productionCompiler": "server/project-files.ts:flowPrompt",
+      "prompts": [
+        {
+          "sceneId": "scene_1",
+          "aspectRatio": "9:16",
+          "durationSeconds": 6,
+          "rawPromptPreserved": true,
+          "characterAppearanceIncluded": true,
+          "locationAppearanceIncluded": true,
+          "continuityIncluded": true,
+          "sceneFilenameIncluded": true,
+          "englishOnly": true
+        },
+        {
+          "sceneId": "scene_2",
+          "aspectRatio": "9:16",
+          "durationSeconds": 6,
+          "rawPromptPreserved": true,
+          "characterAppearanceIncluded": true,
+          "locationAppearanceIncluded": true,
+          "continuityIncluded": true,
+          "sceneFilenameIncluded": true,
+          "englishOnly": true
+        },
+        {
+          "sceneId": "scene_3",
+          "aspectRatio": "9:16",
+          "durationSeconds": 8,
+          "rawPromptPreserved": true,
+          "characterAppearanceIncluded": true,
+          "locationAppearanceIncluded": true,
+          "continuityIncluded": true,
+          "sceneFilenameIncluded": true,
+          "englishOnly": true
+        }
+      ],
+      "limitation": "Pure production compiler checked offline; no Flow clip generation or newly authenticated prompt-pack HTTP download."
+    },
+    "tests": {
+      "oneRequestHarness": {
+        "total": 15,
+        "passed": 15,
+        "failed": 0,
+        "live": false
+      },
+      "geminiScoped": {
+        "total": 62,
+        "passed": 62,
+        "failed": 0,
+        "live": false
+      },
+      "production": {
+        "total": 7,
+        "passed": 7,
+        "failed": 0,
+        "live": false
+      },
+      "driveCloud": {
+        "total": 69,
+        "passed": 68,
+        "failed": 0,
+        "skipped": 1,
+        "skipReason": "POSIX vault test skipped on Windows",
+        "live": false
+      },
+      "build": "PASSED_INCLUDES_THREE_TYPECHECKS",
+      "lint": "PASSED_ZERO_WARNINGS",
+      "powerShellParser": "PASSED",
+      "fullSuiteThisTurn": "NOT_RERUN_SOURCE_UNCHANGED",
+      "browserResponsiveMp4ThisTurn": "NOT_RERUN_UI_EDITOR_UNCHANGED",
+      "publicDocsValidation": "PASSED_27_REQUIRED_ARTIFACTS",
+      "pwaValidation": "PASSED_PUBLIC_SHELL_PRIVATE_API_EXCLUSION",
+      "secretsValidation": "PASSED_181_TRACKED_FILES_NO_SECRET_VALUES_PRINTED",
+      "stagedDiffCheck": "PASSED"
+    },
+    "review": {
+      "helperSafety": "READY_NO_P1_P2_READ_ONLY_INDEPENDENT_REVIEW",
+      "helperHashes": {
+        "execute-approved-compact-expansion.mjs": "e3c0da0638cf5c569d7732bcf223c27044e7ce916605eb9cdfcef1a8a84fc386",
+        "start-approved-compact-resume.mjs": "dc86d279e5a99466e06b273588d2ae14bca17860e8b2572c74322a34b3a92b1f",
+        "start-approved-compact-canary.ps1": "91bdbfb77bbe9eecb600fcbe9020922127bf74b51d891e4b29648a88088d65cc",
+        "run-approved-compact-expansion.ps1": "16f789d07e31236ed117c52b6c7984f473c74d2700b33bcfff68408e8b7ebca2"
+      },
+      "contentReviewedReadOnly": true,
+      "editorialNote": "Story Bible includes community restocking ending; generated scene list focuses on setup, mystery, revelation and does not have a separate ending shot. Owner editorial review needed before producing video.",
+      "documentation": {
+        "result": "READY_NO_P1_P2_READ_ONLY_INDEPENDENT_REVIEW",
+        "findingsFixedBeforeCheckpoint": true,
+        "scope": "Public latest status, immutable historical QA/source hashes and relative links only; no tests/network/runtime/private data/Git writes by reviewer."
+      }
+    },
+    "integrations": {
+      "geminiCanary": "VERIFIED",
+      "owner3006Gemini": "NOT_ACTIVATED_OWNER_POLICY",
+      "flowVideo": "ASSISTED_OWNER_OPERATED_NO_LIVE_CLIPS",
+      "drive": "PREPARED_OAUTH_AND_LIVE_PROOF_REQUIRED",
+      "cloud": "PREPARED_APPROVED_DEPLOYMENT_AND_DISCONNECTED_DEVICE_TEST_REQUIRED",
+      "mainMerge": false,
+      "publicDeploy": false,
+      "contentPublish": false
+    },
+    "approval": {
+      "maximum": 1,
+      "consumed": 1,
+      "remaining": 0,
+      "lateConfirmation": "SAME_AUTHORIZATION_NOT_ADDITIONAL_REQUEST"
+    },
+    "usageRemaining": {
+      "primary": 51,
+      "secondary": 92,
+      "kind": "AUTHORITATIVE_ACCOUNT_SNAPSHOT"
+    },
+    "commands": [
+      "node --test .tmp/approved-compact-expansion-offline.test.mjs",
+      "node --import tsx --test --test-concurrency=1 tests/gemini-provider.test.ts tests/gemini-expansion.test.ts tests/gemini-live-verifier.test.ts tests/ai-integration.test.ts tests/ai-usage.test.ts",
+      "node --import tsx --test --test-concurrency=1 tests/production.test.ts",
+      "node --import tsx --test --test-concurrency=1 tests/drive.test.ts tests/drive-project.test.ts tests/drive-live-verifier.test.ts tests/drive-abort.test.ts tests/cloud.test.ts tests/worker-presence.test.ts",
+      "npm.cmd run build",
+      "npm.cmd run lint",
+      "powershell.exe -NoProfile -File .tmp/gemini-private/start-approved-compact-canary.ps1 -Action Start -Port 3013 (reviewed, used once, zero generation)",
+      "powershell.exe -NoProfile -File .tmp/gemini-private/run-approved-compact-expansion.ps1 (reviewed, used once, EXACTLY ONE approved generation)",
+      "node .tmp/verify-approved-compact-expansion-result.mjs --review-content (read-only, used once)",
+      "node .tmp/check-compact-flow-production.mjs (offline, used once)",
+      "npm.cmd run validate:docs",
+      "npm.cmd run validate:pwa",
+      "npm.cmd run validate:secrets",
+      "git diff --cached --check",
+      "node .tmp/verify-compact-expansion-live-checkpoint.mjs"
+    ],
+    "nextTask": "รักษา cached real package และตรวจ PR2/PR3 ต่อโดยไม่ merge/deploy; budget รอบนี้เหลือ0 ห้าม rerun/reset used helpers/markers หรือส่ง Gemini/Models/OpenAI เพิ่มโดยไม่มีapprovalใหม่ Owner3006ยังMockตามข้อห้ามเปลี่ยนแอป การactivateต้องอนุญาตขั้นถัดไป DriveรอOAuth/consent/live roundtrip/approvedrestore CloudรอapprovedSupabase/HTTPS/hosting/schema/deployment/notebook-offlineproof",
+    "publicEvidenceVerification": {
+      "command": "node .tmp/verify-compact-expansion-live-checkpoint.mjs",
+      "result": "PASSED",
+      "documents": 11,
+      "sourceHashes": "UNCHANGED",
+      "historicalEvidenceAndQa": "UNCHANGED",
+      "currentPublicEvidence": "CONSISTENT",
+      "liveRequestsMadeByCheck": 0
+    },
+    "reportSha256": "e5a962a75d695d105610dc2f14fae268095c19e6e904420deac4b0da5b2fcc38"
   }
 }

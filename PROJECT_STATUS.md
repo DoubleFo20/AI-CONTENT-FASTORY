@@ -1,5 +1,25 @@
 # Project status
 
+STATUS: LIVE_GEMINI_SELECTED_EXPANSION_VERIFIED
+RELEASE_READINESS: LOCAL_V1_MOCK_READY_GEMINI_CANARY_VERIFIED_OWNER_ACTIVATION_PENDING
+Updated: 2026-10-12 (Asia/Bangkok)
+
+Owner-approved selected-only Gemini Free Tier expansion สำเร็จหนึ่งคำขอบน latest PR3 source8f95c16 (implementation921ce7b) เก็บ10realideas/selectionเดิม ได้ Story Bibleสองภาษา, 2characters,1location,2continuityrules และ3scenesรวม20วินาที พร้อมThai explanations/English promptsครบ Canonical assisted Flow compilerเติมappearance/location/continuity/sceneID/9:16/duration/filenameครบด้วยผลcachedเดิม ไม่สร้างideas/เรียกModelsAPI/OpenAI/automaticretry/Paid/Billing [ผลจริง](docs/GEMINI_EXPANSION_LIVE_RESULT_20261012_TH.md), [หลักฐานปิดบังข้อมูล](docs/GEMINI_EXPANSION_LIVE_RESULT_20261012.json)
+
+ก่อนส่งตรวจ AI Studio: project/key Free tier, Billing No billing account; key suffixตรงbackendจากprivatecomparison ไม่เปิดเผยkey และไม่อ้างindependentidentityquery Consistentbackup/integrity/schema/0active/historyผ่าน Helper independentreviewREADY/noP1P2 และexclusivemarkerก่อนPOSTเดียว งบอนุมัติใช้ครบ1/1 ไม่มีคำขอเพิ่ม ค่าusage expansioninput624/output1291/total1915tokens; costnullไม่สมมติinvoiceเป็นศูนย์
+
+Actual checksรอบนี้: harness15/15, Gemini scoped62/62, production7/7, Drive/cloud69total/68pass/0fail/1WindowsPOSIXskip, build/สามtypechecks/lint/parserผ่าน Full227/226pass/1skip/FFmpeg-FFprobeเป็นhistoricalหลักฐานsource921ce7bที่appsourceตรงกัน ไม่rerunfull/browser/responsive/playbackใหม่ Drive/cloudmock testsไม่ใช่liveproof SpecificparameterของhistoricalHTTP400ยังNOT_PROVEN แม้compactrequestครั้งนี้สำเร็จ
+
+หลังส่งread-only schema/users/10ideas/selection/4historicaljobs/clips/exports/mediaอยู่ครบ Canary5jobs/0active/newcompletedpackageและreceiptเท่านั้น Owner3006PID22544/release6a9386e/Mock/PremiumUIคงเดิม ไม่มีrestart/env/schema/UIchange health200/anonymousprojects401 logicaldata/mediaตรงfreshbaseline ไม่activateGeminiตามคำสั่งOwner Contentreviewพบฉากจบrestockingไม่ได้แยกใน3scenes Ownerควรตรวจeditorialก่อนสร้างvideo
+
+NEXT_TASK: รักษา cached real package และตรวจ PR2/PR3 ต่อโดยไม่ merge/deploy; budget รอบนี้เหลือ0 ห้าม rerun/reset used helpers/markers หรือส่ง Gemini/Models/OpenAI เพิ่มโดยไม่มีapprovalใหม่ Owner3006ยังMockตามข้อห้ามเปลี่ยนแอป การactivateต้องอนุญาตขั้นถัดไป DriveรอOAuth/consent/live roundtrip/approvedrestore CloudรอapprovedSupabase/HTTPS/hosting/schema/deployment/notebook-offlineproof
+
+Usage authoritativeล่าสุดเหลือ51%/92% (5hr/week), สูงกว่า7% ไม่มีresetcredit/scheduler/automaticresume
+
+---
+
+## Previous checkpoint — historical (8f95c16)
+
 STATUS: OFFLINE_EXPANSION_FIX_VERIFIED_LIVE_APPROVAL_PENDING
 RELEASE_READINESS: LOCAL_V1_MOCK_READY_GEMINI_EXPANSION_UNVERIFIED
 Updated: 2026-10-12 (Asia/Bangkok)

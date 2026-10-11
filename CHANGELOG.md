@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-12 — Gemini Free Tier selected expansion ผ่าน live หนึ่งคำขอ
+
+- Latest PR3 source8f95c16/implementation921ce7b ขยายselectedcanaryสำเร็จ 3scenes/20sec/2characters/1location/2rules; input624/output1291 tokens มีไทย/อังกฤษครบ ใช้10ideas/selectionเดิม ไม่เปลี่ยนOwner3006
+- ตรวจproject/keyFreeTierและNoBillingAccountก่อนส่ง; exclusiveapproval1/1/0remaining, backup/schema/history/readonlypreservationผ่าน ไม่retry/Models/OpenAI/Paid/Billing ไม่resetusedhelpers
+- Harness15/15/Gemini62/62/production7/7/DriveCloud68pass1WindowsPOSIXskip; build/typechecks/lint/parserผ่าน CanonicalFlowcompilerใช้realcachedpackageเติมcontinuity/appearance/duration/ratio/IDs ไม่มีFlowAPI/clipgeneration
+- [ผลตรวจภาษาไทย](docs/GEMINI_EXPANSION_LIVE_RESULT_20261012_TH.md) และ [safe JSON evidence](docs/GEMINI_EXPANSION_LIVE_RESULT_20261012.json); historicalHTTP400parameterยังNOT_PROVEN PR2/PR3คงDraft/unmerged Drive/cloudยังต้องexternalauthorization/liveproof
+
 ## 2026-10-12 — checkpoint ของ compact Gemini expansion (ทดสอบ offline 2026-10-11)
 
 - Source921ce7b เพิ่ม strict flat draft/local A–D assembler คง StoryPackage/API/schema/queue/UI เดิม; expansionหนึ่งrequestเหมือนเดิม ลด wire2,281→1,568ไบต์ และ Ideas schemaไม่เปลี่ยน [รายละเอียด](docs/GEMINI_EXPANSION_FIX_TH.md)

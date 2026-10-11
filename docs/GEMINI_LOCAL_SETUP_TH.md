@@ -1,6 +1,6 @@
 # ตั้ง Gemini Free Tier สำหรับ backend ในเครื่อง
 
-สถานะ: OFFLINE_EXPANSION_FIX_VERIFIED_LIVE_APPROVAL_PENDING — private key/FreeTierattestation เดิมคงอยู่โดยไม่ได้อ่านค่า Owner3006ยังreleaseเดิมMock/Premium และcanary3013หยุดอยู่ Source921ce7bแก้draft schema/assemblerผ่านoffline แต่ยังไม่มีliveproof Budgetเก่าเหลือ0 ต้องOwnerapprovalใหม่สูงสุด1selected-onlyexpansionก่อนstartcanary/generation ไม่reset/rerunusedhelpers ไม่เปิดBilling/OpenAI/fallback และPR2/PR3ไม่merge [ผลแก้และแผน](GEMINI_EXPANSION_FIX_TH.md), [ผลliveย้อนหลัง](GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md)
+สถานะ: LIVE_GEMINI_SELECTED_EXPANSION_VERIFIED — latestPR3 source8f95c16/implementation921ce7b ผ่านselectedcanaryหนึ่งคำขอ มี3scenes/20sec/bibles/TH-EN/promptsครบ AIStudioแสดงproject/keyFreeTierและNoBillingAccountก่อนส่ง; suffixmatchตรวจprivate Backendkeyเป็นWindows-userDPAPI/environmentเท่านั้น ไม่เผยkey Owner3006ยังoriginalreleaseMock/Premiumห้ามเปลี่ยน Budgetรอบนี้เหลือ0 ไม่มีgenerationเพิ่ม/rerun/resetusedhelpers ไม่เปิดBilling/OpenAI/fallback PR2/PR3ไม่merge [ผลจริง](GEMINI_EXPANSION_LIVE_RESULT_20261012_TH.md)
 
 ## 1. ตรวจบัญชี API ด้วยตนเอง
 
@@ -56,9 +56,9 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File "D:\xampp\htdocs\Ai-cont
 
 ## 4. ขั้นตอน first-run เดิม — ใช้ไปแล้วเมื่อ 2026-10-11
 
-**ห้ามรันคำสั่ง Start หรือสร้าง canary ใหม่ในส่วนนี้ซ้ำ.** ขั้นตอนแรกด้านล่างเป็น historical. KeyDPAPIพร้อมและ canaryเดิมมี10ideas/one selection; Owner-approved expansionretryหนึ่งครั้งใช้ครบแล้วและล้มเหลว HTTP400/AI_REQUEST_FAILED. Status/reasonของรอบแรกยังunknown. [ผลล่าสุด](GEMINI_LIVE_RESULT_20261011_TH.md) กำหนดให้หยุดgenerationจนมีapprovalใหม่; อย่าresetmarker/reusehelperหรือgenerateideasใหม่.
+**ห้ามรันคำสั่ง Start หรือสร้าง canary ใหม่ในส่วนนี้ซ้ำ.** ขั้นตอนสร้าง canary ด้านล่างเป็น historical ไม่ใช่ authorization ใหม่ KeyDPAPIพร้อมและ canaryเดิมมี10realideas/selection รวมถึง package ของ expansion ที่สำเร็จจากคำขอ FreeTier วันที่2026-10-12 ใช้สิทธิ์ครบ1/1แล้ว ให้รักษาผล cached ไม่generateideasใหม่หรือreset/rerunusedhelpers ดู [ผลล่าสุด](GEMINI_EXPANSION_LIVE_RESULT_20261012_TH.md) ส่วน [HTTP400 เดิม](GEMINI_LIVE_RESULT_20261011_TH.md) เป็นหลักฐานย้อนหลังที่ยังไม่พิสูจน์ specificparameter
 
-Checkpointนี้หยุดตามusage<=7%. ก่อน live ให้ sessionถัดไปตรวจ Windows PowerShell7 th-TH หลัง timestamp/native-probe fixes; WindowsPowerShell5 synthetic14checksผ่านแล้ว แต่ยังไม่ใช่ live API proof. Configure/Statusทำได้โดยไม่ส่งgenerationrequest.
+บันทึกย้อนหลังจาก checkpoint ก่อนการทดสอบล่าสุด: เคยหยุดตามusage<=7% และมีข้อเสนอให้ตรวจ PowerShell7/th-TH หลัง timestamp/native-probe fixes โดย WindowsPowerShell5 synthetic14checksผ่านตอนนั้น ข้อความนี้เป็นประวัติ ไม่ใช่ NEXT_TASK ปัจจุบัน รอบล่าสุดมี live proof แล้วและใช้งบครบ ให้รักษาผล cached; ห้ามเริ่ม generation ใหม่จากคำสั่งตัวอย่างด้านล่างโดยไม่มี Owner approval ใหม่
 
 Codex จะ build/check source ที่ review แล้ว และเปิด runtime แยกบน loopback 3013 พร้อมฐานข้อมูลใหม่ `storage/gemini-canary-<random>`. Launcher ปฏิเสธพอร์ตที่มีผู้ใช้ ตรวจ PID/listening owner/health ภายใน deadline และไม่มี generation request ระหว่าง startup. ใช้ normal account setup/login ในฐานข้อมูลสังเคราะห์เท่านั้น. Log/metadata อยู่ใน private directory.
 
