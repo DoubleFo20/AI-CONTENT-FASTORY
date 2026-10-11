@@ -2,7 +2,7 @@
 
 STATUS: LIVE_IDEAS_VERIFIED_EXPANSION_BLOCKED
 
-ล่าสุดหลัง Owner เลือก Mock: ยังไม่อนุมัติ Gemini request เพิ่ม Checkpoint offline ส่ง 0 live requests และเพิ่ม parsing/invalid-field diagnostics สำหรับอนาคตโดยไม่ restart runtime หรือเปลี่ยน payload ดู [ผลวิเคราะห์ HTTP400](GEMINI_HTTP400_OFFLINE_REVIEW_TH.md) ผล live ต่อไปนี้เป็นประวัติที่ยังไม่ถูกทดสอบซ้ำ
+ผล live ล่าสุดอยู่ใน [diagnostic request report](GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md): Ownerอนุมัติเพิ่ม1และใช้ครบ HTTP400/INVALID_ARGUMENT/PARSED_ERROR ยังไม่มีspecificfield/package ข้อความต่อไปเป็นประวัติก่อนrequestล่าสุด; คงผลและSHAเดิมเพื่อไม่อ้างdiagnosticsใหม่ย้อนหลัง
 
 ## Retry ที่ Owner อนุมัติ — ผล live ล่าสุด (ประวัติ)
 

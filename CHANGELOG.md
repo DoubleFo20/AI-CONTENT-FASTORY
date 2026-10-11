@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-11 — one approved diagnostic expansion; INVALID_ARGUMENT observed
+
+- ใช้สิทธิ์ Owner-approved expansion1requestบนcachedcanaryเดิม Job3d7b6ca4 failedAI_REQUEST_FAILED/HTTP400 และครั้งนี้เก็บ providerStatusINVALID_ARGUMENT/errorResponsePARSED_ERRORได้ ยังไม่ทราบ parameter/field ที่ผิด ไม่มี package/expansionreceipt [ผลจริง](docs/GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md)
+- Consistentbackup/schema/idle/historyผ่านก่อนverifiedcanaryrestart source1538c58 Newmarkers/logsแยกold; normalcanaryCSRF/logoutconfirmed Offlinehelpertests12/12และbuild/typechecksผ่าน IndependentreviewREADY/noP1P2 ไม่มี furtherretry/Modelsprobe/OpenAI/Billing/paidfallback
+- 10realideas/selection/schema/users/old3jobhistoryอยู่ครบ; now4jobs/0active Owner3006health200/read-onlybaselinepreserved ยังRC/Mock/PremiumUI ไม่มี appsource/UI/schema/media/Ownerdata change
+- Budgetเหลือ0และPR2/PR3ยังDraft/unmerged Drive/Cloudexternalgatesคงเดิม ผลเก่ารักษาตามsource ไม่มีnewfullsuite/MP4/browserหรือliveintegration-successclaim
+
 ## 2026-10-11 — offline HTTP400 investigation; Owner retains Mock
 
 - Owner ยังไม่อนุมัติ Gemini เพิ่ม; checkpointนี้ 0 live requests/0 Models API requests ไม่มี OpenAI/Billing/provider fallback หรือ runtime change

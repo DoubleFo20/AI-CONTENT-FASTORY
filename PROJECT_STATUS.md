@@ -1,5 +1,25 @@
 # Project status
 
+STATUS: LIVE_EXPANSION_INVALID_ARGUMENT_BLOCKED
+RELEASE_READINESS: LOCAL_V1_MOCK_READY_LIVE_EXPANSION_BLOCKED
+Updated: 2026-10-11 (Asia/Bangkok)
+
+Owner อนุมัติ selected-only expansion อีก1 Gemini Free Tier request เพื่อ diagnostics และใช้สิทธิ์ครบแล้ว มี generationPOST1/ModelsAPI0/OpenAI0 ไม่มี automaticretry/paidfallback/Billingchange คง Owner3006 RC/Mock/Premium Cinematic V2 ห้าม generationเพิ่มโดยไม่มีapprovalใหม่
+
+Job3d7b6ca4-00e8-4523-8d7f-78fef2c1038c queued→running15→failed15/AI_REQUEST_FAILED diagnosticsครั้งนี้ยืนยัน HTTP400/providerStatusINVALID_ARGUMENT/errorResponsePARSED_ERROR/phasehttp เมื่อ2026-10-11T02:51:33.284Z แต่ไม่ระบุ reason/invalidField/requestIssue จึงยังไม่ทราบพารามิเตอร์ที่ถูกปฏิเสธ ไม่มี rawGooglebody/messageที่เก็บไว้ ไม่สมมติ quota/schema/model/region เป็นสาเหตุ [ผลจริง](docs/GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md), [หลักฐานที่ปิดบังข้อมูล](docs/GEMINI_DIAGNOSTIC_RESULT_20261011.json)
+
+ก่อนส่งสำรอง SQLite แบบ consistent/integrity/schema/history ผ่าน และตรวจ0activejobs Restartเฉพาะ verifiedcanaryPID17440 เป็นPID15272/source1538c58 ใช้storageเดิม Marker/logsใหม่แยกของเก่า IndependenthelperreviewREADY/noP1P2; offlinehelpertests12/12และbuild/สามtypechecksผ่าน ใช้ normalcanarysession/CSRF/หนึ่งretryPOST/logoutconfirmed ไม่แก้SQLiteผ่านคำสั่งโดยตรง หลังส่ง read-only10ideas/one selection/4jobs/0active และschema/users/ประวัติ3jobsเดิมอยู่ครบ ไม่มี packageหรือexpansionreceipt รวมประวัติideas1+expansion3=4attempts
+
+Owner3006 health200/read-onlybaselinepreserved:1owner/1project/4jobs/10cachedMockideas/0active/0clips/0exports ไม่มี Ownerdatabase/mediawrites หรือrestart/UI/schema/env/dependency/CI change ไม่ได้rerunfullsuite/browser/responsive/MP4ใหม่เพราะappsource/UI/editorไม่เปลี่ยน ผลเดิมคงผูกcheckpointเดิม
+
+NEXT_TASK: วิเคราะห์ request/schema และเตรียมวิธีเก็บรายละเอียด error ที่ปิดบังข้อมูลด้วย offline fixtures ก่อนพิจารณา liveเพิ่ม Budgetครั้งนี้เหลือ0; ห้ามrerun/resetusedhelpers/markers หรือModelsprobe/สร้างideasใหม่/เปลี่ยนpaidprovider/Billing หากทดสอบจริงอีกต้อง explicitOwnerapprovalใหม่พร้อมbudget/preflight/newmarker Owner3006ใช้Mockต่อและยังไม่activateGeminiจนisolatedpipelineผ่าน DriveรอOAuth/consent/liveverify/approvedrestore; CloudรอapprovedSupabase/HTTPS/schema/deployment/notebook-offlineproof PR2/PR3คงDraft/unmerged ไม่มีmainmerge/deploy/publish
+
+Usage authoritative ณ checkpointเหลือ19%/13% (5hr/week), สูงกว่า7%; ตรวจซ้ำก่อนเริ่มงานใหม่ ไม่มีresetcredit/scheduler/automaticresume
+
+---
+
+## Previous checkpoint — historical (1538c58)
+
 STATUS: OFFLINE_REVIEW_COMPLETE_LIVE_APPROVAL_PENDING
 RELEASE_READINESS: LOCAL_V1_MOCK_READY_LIVE_EXPANSION_BLOCKED
 Updated: 2026-10-11 (Asia/Bangkok)

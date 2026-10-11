@@ -2,7 +2,7 @@
   "sourceCommit": "de462843a2847e850334730c004f8b1d8f01e0b6",
   "releaseBase": "ba327e2364e0a14f36629e4dc9376de6b827f10e",
   "date": "2026-10-10",
-  "scope": "Cumulative Phase2 evidence with a new zero-live offline HTTP400 review. Historical ten real ideas/selection and consumed expansion retry remain unchanged; no proven root cause/live expansion/Drive/cloud proof. Current diagnostics hashes are in geminiOfflineReview.",
+  "scope": "Cumulative source-specific Phase2 evidence. Latest Owner-approved single diagnostic expansion failed HTTP400/INVALID_ARGUMENT. Specific parameter root cause and live package remain unproven; no further generation authorized. Historical live/offline results retained.",
   "tests": {
     "command": "npm.cmd test",
     "exitCode": 0,
@@ -1266,6 +1266,189 @@
       "node .tmp/verify-gemini-offline-checkpoint.mjs",
       "npm.cmd run validate:secrets",
       "git diff --cached --check"
-    ]
+    ],
+    "historicalCheckpoint": true,
+    "supersededBy": "approvedDiagnosticExpansion (current authorization/result only; historical offline tests and artifact retained)"
+  },
+  "approvedDiagnosticExpansion": {
+    "date": "2026-10-11",
+    "scope": "LIVE_GEMINI_OWNER_APPROVED_SINGLE_DIAGNOSTIC_EXPANSION",
+    "sourceCommit": "1538c58da2c7283b73d6fc2eedb50ec87acdadb5",
+    "projectId": "cc629e54-668e-4ff1-82fe-c5904b4edbcc",
+    "retryJobId": "3d7b6ca4-00e8-4523-8d7f-78fef2c1038c",
+    "ownerAuthorizedAdditionalGenerationRequests": 1,
+    "generationRetryPosts": 1,
+    "additionalAttemptsRemaining": 0,
+    "cumulativeGenerationAttempts": {
+      "ideas": 1,
+      "expansion": 3,
+      "total": 4
+    },
+    "outcome": {
+      "status": "FAILED",
+      "errorCode": "AI_REQUEST_FAILED",
+      "progress": 15,
+      "packagePresent": false,
+      "scenesAndPromptsVerified": false,
+      "expansionUsage": null
+    },
+    "normalizedGoogleDiagnostic": {
+      "event": "GEMINI_REQUEST_FAILED",
+      "at": "2026-10-11T02:51:33.284Z",
+      "provider": "gemini",
+      "operation": "expand",
+      "model": "gemini-3.5-flash-lite",
+      "errorCode": "AI_REQUEST_FAILED",
+      "phase": "http",
+      "runtimePid": 15272,
+      "sourceCommit": "1538c58da2c7283b73d6fc2eedb50ec87acdadb5",
+      "httpStatus": 400,
+      "providerStatus": "INVALID_ARGUMENT",
+      "errorResponse": "PARSED_ERROR",
+      "reason": null,
+      "invalidField": null,
+      "requestIssue": null
+    },
+    "diagnosis": {
+      "providerStatusNowObserved": "INVALID_ARGUMENT",
+      "specificParameterRootCause": "NOT_PROVEN",
+      "rawGoogleMessageOrBodyRetained": false,
+      "inferredQuotaOrSchemaOrModelOrRegionCause": false
+    },
+    "ideasUsage": [
+      {
+        "operation": "ideas",
+        "inputTokens": 254,
+        "outputTokens": 1307,
+        "totalTokens": 1561,
+        "jobId": "3ddfc8e6-d53d-4472-8e0b-503aa2e1a57c"
+      }
+    ],
+    "preservation": {
+      "activeJobs": 0,
+      "ideasCount": 10,
+      "jobCount": 4,
+      "ideasPreserved": true,
+      "selectedPreserved": true,
+      "accountsPreserved": true,
+      "schemaPreserved": true,
+      "priorJobHistoryPreserved": true,
+      "packagePresent": false,
+      "databaseWrites": false,
+      "jobId": "3d7b6ca4-00e8-4523-8d7f-78fef2c1038c",
+      "status": "failed",
+      "progress": 15,
+      "errorCode": "AI_REQUEST_FAILED",
+      "sourceCommit": "1538c58da2c7283b73d6fc2eedb50ec87acdadb5",
+      "generationRetryPosts": 1,
+      "logoutConfirmed": true,
+      "databaseWritesScope": "READ_ONLY_POST_REQUEST_VERIFICATION_ONLY"
+    },
+    "owner3006": {
+      "healthHttpStatus": 200,
+      "baselinePreserved": true,
+      "mode": "mock",
+      "databaseWrites": false,
+      "restarted": false,
+      "uiChanged": false,
+      "users": 1,
+      "projects": 1,
+      "jobs": 4,
+      "activeJobs": 0,
+      "clips": 0,
+      "exports": 0
+    },
+    "freeTierAttestedByOwner": true,
+    "billingVerifiedByTool": false,
+    "billingChanged": false,
+    "openaiRequests": 0,
+    "modelListingRequests": 0,
+    "automaticRetries": 0,
+    "fallback": false,
+    "consistentBackupAndIntegrityVerified": true,
+    "sourceSchemaMatchVerified": true,
+    "helperReview": "READY_NO_P1_P2_READ_ONLY",
+    "helperOfflineTests": {
+      "total": 12,
+      "passed": 12,
+      "failed": 0,
+      "durationMs": 4388.3664,
+      "kind": "INJECTED_SYNTHETIC"
+    },
+    "buildIncludingThreeTypechecks": "PASSED",
+    "newRuntimePid": 15272,
+    "previousCanaryPid": 17440,
+    "report": "docs/GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md",
+    "status": "LIVE_EXPANSION_INVALID_ARGUMENT_BLOCKED",
+    "checks": {
+      "build": "PASSED",
+      "threeTypechecks": "PASSED_WITH_BUILD",
+      "helperNodeSyntax": "PASSED",
+      "helperPowerShellSyntax": "PASSED",
+      "docs": "PASSED",
+      "pwa": "PASSED",
+      "secrets": "PASSED",
+      "whitespace": "PASSED",
+      "fullSuiteRerun": false,
+      "lintRerun": false,
+      "browserRerun": false,
+      "responsiveRerun": false,
+      "mp4Rerun": false,
+      "docsArtifacts": 27,
+      "secretsTrackedFiles": 175
+    },
+    "preparationInitialFailure": {
+      "cause": "PROJECT_NAME_IS_IN_INPUT_JSON_NOT_DIRECT_COLUMN",
+      "fixedBeforeAnyEvidenceCreationRestartOrLiveRequest": true,
+      "databaseWrites": false,
+      "additionalLiveRequests": 0
+    },
+    "sourceHashes": {
+      "server/ai/gemini.ts": "72f26909430db732484fab16fbb547adbdb4a44c2ec44ee02d0aa54c492ed09d",
+      "tests/gemini-provider.test.ts": "fd6ebe8b4198d09bd69099117a6dada751c0cb7a67c12af6f6642f0c7fcde492"
+    },
+    "commands": [
+      "npm.cmd run build",
+      "node .tmp/prepare-approved-diagnostic-expansion-20261011.mjs",
+      "node --check .tmp/gemini-private/diagnose-approved-expansion.mjs",
+      "node --check .tmp/gemini-private/start-approved-diagnostic-resume.mjs",
+      "node --test .tmp/approved-diagnostic-expansion-offline.test.mjs",
+      "PowerShell ParseFile for new restart/runner scripts",
+      "node .tmp/observe-approved-diagnostic-expansion-20261011.mjs --preflight-only",
+      "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .tmp/gemini-private/resume-approved-diagnostic-canary.ps1 -Action Start -Port 3013",
+      "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .tmp/gemini-private/run-approved-diagnostic-expansion.ps1 (used once)",
+      "node .tmp/observe-approved-diagnostic-expansion-20261011.mjs",
+      "node .tmp/capture-approved-diagnostic-expansion-20261011.mjs",
+      "node .tmp/check-owner-phaseA.mjs (release-v1; read-only)",
+      "GET Owner3006 /api/health (status only)",
+      "npm.cmd run validate:docs",
+      "npm.cmd run validate:pwa",
+      "node .tmp/verify-approved-diagnostic-checkpoint.mjs",
+      "npm.cmd run validate:secrets",
+      "git diff --cached --check"
+    ],
+    "usageRemaining": {
+      "primary": 19,
+      "secondary": 13
+    },
+    "nextTask": "Continue offline request/schema investigation and safe error-detail instrumentation. No further live generation/model-list probe/reset/rerun/new canary without fresh explicit Owner authorization; current budget0. Owner3006 remains Mock. Drive OAuth/live round trip and approved Supabase/HTTPS/deployment/offline proof remain external gates.",
+    "docsReview": {
+      "result": "READY_NO_P1_P2_READ_ONLY",
+      "scope": "Latest public result MD/JSON, current QA record, and PROJECT_STATUS/TASKS/HANDOFF. No private evidence, runtime, Git or live testing by reviewer."
+    },
+    "publicEvidenceVerification": {
+      "command": "node .tmp/verify-approved-diagnostic-checkpoint.mjs",
+      "result": "PASSED",
+      "documents": 11,
+      "linksChecked": 100,
+      "sourceHashes": "UNCHANGED",
+      "historicalEvidence": "UNCHANGED",
+      "privateDataRead": false,
+      "liveRequests": 0
+    },
+    "publicArtifactHashes": {
+      "docs/GEMINI_DIAGNOSTIC_RESULT_20261011.json": "998b5f62e0b46793e19c1ed7343ef0e5506c27a46f5c3616295b1be9d2790ad3",
+      "docs/GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md": "e18eb1d973e2a1bbd17d935158df8db60028ba72fd7a12d7549bdc1c9c63c590"
+    }
   }
 }

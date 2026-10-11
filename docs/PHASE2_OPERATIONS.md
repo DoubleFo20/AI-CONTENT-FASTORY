@@ -1,6 +1,6 @@
 # Phase 2 — real integrations preparation
 
-ล่าสุด 2026-10-11: Owner เลือก Mock และยังไม่อนุมัติ Gemini request เพิ่ม ตรวจ HTTP400 แบบ offline แล้ว; root cause ยังไม่ทราบเพราะ response เดิมไม่ถูกเก็บ เพิ่ม diagnostics ที่ไม่บันทึก private fields และทดสอบ injected ผ่าน ไม่มี live call หรือ runtime restart ใน checkpoint นี้ [Offline review](GEMINI_HTTP400_OFFLINE_REVIEW_TH.md), [historical result](GEMINI_LIVE_RESULT_20261011_TH.md) Owner3006/PR2/PR3 คงเดิม
+ล่าสุด 2026-10-11: Owner-approved diagnostic expansion1requestใช้ครบแล้ว source1538c58 Job3d7b6ca4 failedHTTP400/INVALID_ARGUMENT/PARSED_ERROR; ไม่มีspecificfield/reasonหรือpackage Budgetเหลือ0 ห้ามgeneration/resetmarker/rerunhelper Source/billing/model/requestเดิม; Owner3006RC/Mockคงอยู่ [ผลล่าสุด](GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md), [historical offline review](GEMINI_HTTP400_OFFLINE_REVIEW_TH.md)
 
 สถานะ: LIVE_IDEAS_VERIFIED_EXPANSION_BLOCKED; [Draft PR#3](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/3) target release/v1-real-world. Gemini จริงผ่านเฉพาะสิบไอเดียและการเลือกหนึ่งเรื่อง; expansion ล้มเหลว จึงยังไม่ผ่าน end-to-end live AI. Drive/Cloud ยังไม่มี live proof. Owner app3006 ยังเป็น RC/Mock และ Premium Cinematic V2 คงอยู่. Phase A แยกใน [FINAL_REVIEW](release/FINAL_REVIEW.md); main และ Draft PR#2 ยังไม่ merge.
 
@@ -18,7 +18,7 @@ OpenAI/Gemini บันทึก token metadata เฉพาะเมื่อ�
 
 ## Gemini — checkpoint จริงและการดำเนินงานครั้งต่อไป
 
-Owner ยังไม่อนุมัติ live requests; current budget=0 รักษา Mock และ cached canary เท่านั้น รายงาน offline ตรวจ model/endpoint/schema/config พร้อม redacted request artifact แล้ว รุ่น diagnostics ใหม่เพิ่ม errorResponse/invalidField enums ไม่เปลี่ยน request และยังไม่ active ใน process3013 ดู [ผลและข้อจำกัด](GEMINI_HTTP400_OFFLINE_REVIEW_TH.md) การตรวจครั้งถัดไปเสนอ expansion เพียงหนึ่ง request หลังได้รับ approval ใหม่ และผ่าน backup/idle/schema/history/new marker โดยไม่ทำ model-list probe หรือสร้างไอเดียใหม่
+Owner อนุมัติ diagnostic expansionหนึ่งrequestและใช้ครบแล้ว; current budget=0 ผลล่าสุด HTTP400/INVALID_ARGUMENT แต่specificparameterยังunknown Runtime3013PID15272โหลดsource1538c58 รักษา10ideas/selection/old3jobs และ now4jobs/0active [รายงานและข้อจำกัด](GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md) ไม่ส่งคำขอเพิ่มไม่Modelsprobe/resetmarker/สร้างideasใหม่ ต้อง approval ใหม่ก่อนliveทุกครั้ง
 
 ส่วนต่อไปเป็นประวัติของ live retry ที่ใช้สิทธิ์ครบแล้ว:
 
@@ -58,4 +58,4 @@ Acceptance cloud: approvedHTTPSURL, real durablequeue/auth/cloudAI, mobile statu
 
 FlowยังprimaryและOwner-operated: scenes/ENprompts/THexplanations/refs/durations/9:16หรือ16:9/verifiedcreditbudget→Flowclips→scene matching/import→deterministiceditor→MP4. Google Flow direct automation, Meta support และ publishingไม่ได้เปิด. Facebook/YouTube ใช้ exportedMP4ตามratioที่เลือก; Ownerตรวจplatformrequirements/creativequalityก่อนpublishเอง. Variable story12–180sไม่บังคับdailyquota; rates/budgetผู้ใช้ตรวจเอง ไม่มีใช้Flowcreditsอัตโนมัติ.
 
-NEXT_TASK: ขอ Owner approval หลังอ่าน offline evidence สำหรับ selected-only expansion 1 Gemini Free Tier request บน canary เดิม; ยังไม่ส่งคำขอ ไม่ reset marker/reuse helper หรือ regenerate ideas ก่อนอนุมัติ DriveรอOAuth/consent/liveverify; CloudรอapprovedSupabase/HTTPS/schema/deployment/offlineproof Owner3006Mock/PR2/PR3Draftคงเดิม ตรวจusageตาม7%rule ไม่มีscheduler/automaticresume
+NEXT_TASK: วิเคราะห์ request/schema และเตรียม safe error detail capture แบบ offlineก่อนliveเพิ่ม Budgetล่าสุดใช้ครบแล้ว ห้ามreuse/resethelper/markerหรือgenerationโดยไม่มีexplicitOwnerapprovalใหม่ DriveรอOAuth/consent/liveverify; CloudรอapprovedSupabase/HTTPS/schema/deployment/offlineproof Owner3006Mock/PR2/PR3Draftคงเดิม ตรวจusageตาม7%rule ไม่มีscheduler/automaticresume

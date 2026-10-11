@@ -1,6 +1,6 @@
 # ตั้ง Gemini Free Tier สำหรับ backend ในเครื่อง
 
-สถานะ: OFFLINE_REVIEW_COMPLETE_LIVE_APPROVAL_PENDING — Owner เลือกใช้ Mock ต่อและยังไม่อนุมัติ Gemini เพิ่ม Key DPAPI และคำยืนยัน Free Tier เดิมคงอยู่; 10 real ideas/หนึ่ง selection ผ่าน แต่ expansion ยัง BLOCKED/HTTP400 ห้าม Start canary ใหม่, generation, reset marker หรือ rerun helper ที่ใช้แล้ว ดู [offline review](GEMINI_HTTP400_OFFLINE_REVIEW_TH.md) และ [ผล live เดิม](GEMINI_LIVE_RESULT_20261011_TH.md) Owner3006 คง RC/Mock; PR2/PR3 ยังไม่ merge
+สถานะ: LIVE_EXPANSION_INVALID_ARGUMENT_BLOCKED — Owner-approved diagnostic expansionหนึ่งrequestใช้ครบแล้ว HTTP400/INVALID_ARGUMENT; ไม่มีpackageและยังไม่ทราบ specificparameter Key DPAPIเดิมคงอยู่ ไม่มีBilling/OpenAI/fallback Budgetเหลือ0 ห้ามgeneration/Startcanaryใหม่/resetmarker/rerunhelperโดยไม่มีapprovalใหม่ Owner3006คงRC/MockและPR2/PR3ไม่merge ดู [ผลล่าสุด](GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md)
 
 ## 1. ตรวจบัญชี API ด้วยตนเอง
 
