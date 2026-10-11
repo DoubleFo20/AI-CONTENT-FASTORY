@@ -1,0 +1,215 @@
+{
+  "date": "2026-10-11",
+  "scope": "INJECTED_SYNTHETIC_EXPANSION_SCHEMA_REDUCTION",
+  "sourceBaseCommit": "c6dcc4249f40b5773ac62a7b20b383257e9cf351",
+  "sourceFileHashes": {
+    "server/ai/gemini.ts": "8caa14c59c3be510cf7340f440d28c48c25d77b1696a7f5268a9b1e6d49bb550",
+    "server/ai/gemini-expansion.ts": "1f3096109a6979e3bf923f87b77bed221af68e67b88b5cc8aea152bc9078390f",
+    "tests/gemini-provider.test.ts": "3cafc176d65a405b0e5730be4732be9b49d1435bfc5794103cd2ec01c01e5f1d",
+    "tests/gemini-expansion.test.ts": "e2f4369e3d179f332340a68ece39d4adedbedf87e431d47d820564f9f7c21845"
+  },
+  "historicalRootCause": "NOT_PROVEN",
+  "hypothesis": "REDUCE_SCHEMA_WIDTH_NESTING_CONSTRAINTS",
+  "priorExpansion": {
+    "bytes": 2281,
+    "jsonContainers": 64,
+    "maxDepth": 8,
+    "schemaObjects": 11,
+    "schemaProperties": 36,
+    "arrayBoundPairs": 5,
+    "numericBoundPairs": 2,
+    "sha256": "60bad99120d5082eb81616adea3842d9142d4774fea5ee02269ee233602ce524"
+  },
+  "currentExpansion": {
+    "bytes": 1568,
+    "jsonContainers": 42,
+    "maxDepth": 7,
+    "schemaObjects": 5,
+    "schemaProperties": 26,
+    "arrayBoundPairs": 0,
+    "numericBoundPairs": 0,
+    "sha256": "fe920b51b76576a13d6e1f912f37a9aae26fb0fefd2de764ee88a61a447b88b6"
+  },
+  "ideasWireSchemaUnchanged": true,
+  "remoteKeywords": [
+    "type",
+    "properties",
+    "required",
+    "additionalProperties",
+    "items"
+  ],
+  "localValidation": "FULL_STRICT_DRAFT_A_B_C_D_AND_EXISTING_STORY_PACKAGE",
+  "injectedRequests": {
+    "ideas": 1,
+    "expansion": 1
+  },
+  "liveGoogleRequests": 0,
+  "modelListingRequests": 0,
+  "openaiRequests": 0,
+  "billingChanges": 0,
+  "automaticRetries": 0,
+  "fallback": false,
+  "privateDataRead": false,
+  "configuredModel": "gemini-3.5-flash-lite",
+  "configuredEndpoint": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
+  "generationConfig": {
+    "candidateCount": 1,
+    "maxOutputTokens": 12000,
+    "responseMimeType": "application/json",
+    "responseJsonSchema": {
+      "type": "object",
+      "properties": {
+        "storyTh": {
+          "type": "string"
+        },
+        "storyEn": {
+          "type": "string"
+        },
+        "characters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "visualDescriptionEn": {
+                "type": "string"
+              },
+              "backgroundTh": {
+                "type": "string"
+              },
+              "backgroundEn": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "visualDescriptionEn",
+              "backgroundTh",
+              "backgroundEn"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "locations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nameTh": {
+                "type": "string"
+              },
+              "nameEn": {
+                "type": "string"
+              },
+              "visualDescriptionEn": {
+                "type": "string"
+              },
+              "descriptionTh": {
+                "type": "string"
+              },
+              "descriptionEn": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "nameTh",
+              "nameEn",
+              "visualDescriptionEn",
+              "descriptionTh",
+              "descriptionEn"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "th": {
+                "type": "string"
+              },
+              "en": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "th",
+              "en"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "scenes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "titleTh": {
+                "type": "string"
+              },
+              "titleEn": {
+                "type": "string"
+              },
+              "durationSeconds": {
+                "type": "integer"
+              },
+              "explanationTh": {
+                "type": "string"
+              },
+              "flowPromptEn": {
+                "type": "string"
+              },
+              "narrationTh": {
+                "type": "string"
+              },
+              "narrationEn": {
+                "type": "string"
+              },
+              "characterIndices": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              },
+              "locationIndex": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "titleTh",
+              "titleEn",
+              "durationSeconds",
+              "explanationTh",
+              "flowPromptEn",
+              "narrationTh",
+              "narrationEn",
+              "characterIndices",
+              "locationIndex"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "storyTh",
+        "storyEn",
+        "characters",
+        "locations",
+        "rules",
+        "scenes"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "headers": {
+    "x-goog-api-key": "[REDACTED_OFFLINE_PLACEHOLDER]",
+    "Content-Type": "application/json"
+  },
+  "store": false,
+  "contents": "[OMITTED_SYNTHETIC_DATA]",
+  "systemInstruction": "[OMITTED_SYNTHETIC_DATA]",
+  "testedSourceCommit": "921ce7b32b795defd41e784ff893b31df2588dfa"
+}

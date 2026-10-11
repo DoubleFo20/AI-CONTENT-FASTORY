@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-12 — checkpoint ของ compact Gemini expansion (ทดสอบ offline 2026-10-11)
+
+- Source921ce7b เพิ่ม strict flat draft/local A–D assembler คง StoryPackage/API/schema/queue/UI เดิม; expansionหนึ่งrequestเหมือนเดิม ลด wire2,281→1,568ไบต์ และ Ideas schemaไม่เปลี่ยน [รายละเอียด](docs/GEMINI_EXPANSION_FIX_TH.md)
+- Scoped62/62; full227/226pass/0fail/1WindowsPOSIXskip รวม FFmpeg/FFprobe; build/สามtypechecks/lintผ่าน Independent source review READY/noP1P2 ไม่มีliveAI/Models/OpenAI/Billing/retry
+- Canary10realideas/selection/4jobs/schema/accountsอยู่ครบแบบread-only Owner3006คืนreleaseเดิมในMockโดยไม่มีexternalcredentials logicaldata/mediaก่อน–หลังตรงกัน หลังreviewhelperแก้P2 cleanup/PIDownershipแล้ว Canary3013ไม่start
+- HTTP400/INVALID_ARGUMENTspecificparameterยังNOT_PROVEN; requestใหม่ยังไม่ผ่านlive ต้องOwnerapprovalใหม่สูงสุด1selected-onlyFreeTierexpansion ไม่ใช้usedhelpersซ้ำ PR2/PR3คงDraft/unmerged Drive/Cloudexternalgatesคงเดิม
+
 ## 2026-10-11 — one approved diagnostic expansion; INVALID_ARGUMENT observed
 
 - ใช้สิทธิ์ Owner-approved expansion1requestบนcachedcanaryเดิม Job3d7b6ca4 failedAI_REQUEST_FAILED/HTTP400 และครั้งนี้เก็บ providerStatusINVALID_ARGUMENT/errorResponsePARSED_ERRORได้ ยังไม่ทราบ parameter/field ที่ผิด ไม่มี package/expansionreceipt [ผลจริง](docs/GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md)

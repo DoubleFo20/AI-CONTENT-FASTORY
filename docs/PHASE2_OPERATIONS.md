@@ -1,8 +1,8 @@
 # Phase 2 — real integrations preparation
 
-ล่าสุด 2026-10-11: Owner-approved diagnostic expansion1requestใช้ครบแล้ว source1538c58 Job3d7b6ca4 failedHTTP400/INVALID_ARGUMENT/PARSED_ERROR; ไม่มีspecificfield/reasonหรือpackage Budgetเหลือ0 ห้ามgeneration/resetmarker/rerunhelper Source/billing/model/requestเดิม; Owner3006RC/Mockคงอยู่ [ผลล่าสุด](GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md), [historical offline review](GEMINI_HTTP400_OFFLINE_REVIEW_TH.md)
+ล่าสุด 2026-10-12: OFFLINE_EXPANSION_FIX_VERIFIED_LIVE_APPROVAL_PENDING — source921ce7b ลด expansion wire schema และประกอบ StoryPackage ด้วย local A–D validation โดยยังใช้หนึ่งrequest Offline62/62/full227(226pass/1WindowsPOSIXskip)/build/typechecks/lintผ่าน ยัง0liveและspecificHTTP400rootcauseNOT_PROVEN Owner3006กลับมารันreleaseเดิมMock/Premiumโดยไม่มีexternalcredentials Canary3013หยุดอยู่ รอOwnerapprovalใหม่สูงสุด1selected-onlyFreeTierrequest ไม่reset/rerunusedhelpers ดู [รายงานและแผน](GEMINI_EXPANSION_FIX_TH.md), [audit](GEMINI_EXPANSION_REDUCTION_AUDIT.json)
 
-สถานะ: LIVE_IDEAS_VERIFIED_EXPANSION_BLOCKED; [Draft PR#3](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/3) target release/v1-real-world. Gemini จริงผ่านเฉพาะสิบไอเดียและการเลือกหนึ่งเรื่อง; expansion ล้มเหลว จึงยังไม่ผ่าน end-to-end live AI. Drive/Cloud ยังไม่มี live proof. Owner app3006 ยังเป็น RC/Mock และ Premium Cinematic V2 คงอยู่. Phase A แยกใน [FINAL_REVIEW](release/FINAL_REVIEW.md); main และ Draft PR#2 ยังไม่ merge.
+สถานะ checkpoint: OFFLINE_EXPANSION_FIX_VERIFIED_LIVE_APPROVAL_PENDING; [Draft PR#3](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/3) target release/v1-real-world สถานะ live ยังผ่านเฉพาะสิบไอเดีย/หนึ่ง selection; expansion หลัง compact fix ยังไม่ถูกทดสอบจริง Historical HTTP400/INVALID_ARGUMENTspecificparameterยังNOT_PROVEN Drive/Cloudไม่มีliveproof Owner3006ยังRC/Mock/PremiumUI Phase Aดู [FINAL_REVIEW](release/FINAL_REVIEW.md) mainและDraftPR#2ยังไม่merge
 
 ## AI text
 
@@ -16,9 +16,9 @@ OpenAI/Gemini บันทึก token metadata เฉพาะเมื่อ�
 
 ต้นทุนใช้ optional private `ACF_AI_PRICING_JSON`: JSON array ของ `{provider,model,inputUsdPerMillion,outputUsdPerMillion,cachedInputUsdPerMillion?,verifiedAt}`. ใช้เฉพาะ model ที่ตรง มีหนึ่ง verified rate/date ไม่อยู่อนาคต; cached tokens ต้องมี cached rate จึงประมาณได้. ไม่มีราคาหรือ free-tier default; Owner ใส่อัตราที่ตรวจจาก billing/pricing ที่ใช้จริง. Reasoning รวมใน output tokens อยู่แล้ว ไม่คิดซ้ำ. Retained50receipts ไม่ใช่ lifetime billing total.
 
-## Gemini — checkpoint จริงและการดำเนินงานครั้งต่อไป
+## Gemini — checkpoint live ย้อนหลังและการดำเนินงานครั้งต่อไป
 
-Owner อนุมัติ diagnostic expansionหนึ่งrequestและใช้ครบแล้ว; current budget=0 ผลล่าสุด HTTP400/INVALID_ARGUMENT แต่specificparameterยังunknown Runtime3013PID15272โหลดsource1538c58 รักษา10ideas/selection/old3jobs และ now4jobs/0active [รายงานและข้อจำกัด](GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md) ไม่ส่งคำขอเพิ่มไม่Modelsprobe/resetmarker/สร้างideasใหม่ ต้อง approval ใหม่ก่อนliveทุกครั้ง
+Owner อนุมัติ diagnostic expansionหนึ่งrequestและใช้ครบแล้ว; current budget=0 ผลล่าสุด HTTP400/INVALID_ARGUMENT แต่specificparameterยังunknown Runtime3013PID15272/source1538c58เป็นข้อมูลตอนทดสอบเดิม ปัจจุบันport3013หยุดอยู่ รักษา10ideas/selection/old3jobs และ now4jobs/0active [รายงานและข้อจำกัด](GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md) ไม่ส่งคำขอเพิ่มไม่Modelsprobe/resetmarker/สร้างideasใหม่ ต้อง approval ใหม่ก่อนliveทุกครั้ง
 
 ส่วนต่อไปเป็นประวัติของ live retry ที่ใช้สิทธิ์ครบแล้ว:
 
@@ -58,4 +58,4 @@ Acceptance cloud: approvedHTTPSURL, real durablequeue/auth/cloudAI, mobile statu
 
 FlowยังprimaryและOwner-operated: scenes/ENprompts/THexplanations/refs/durations/9:16หรือ16:9/verifiedcreditbudget→Flowclips→scene matching/import→deterministiceditor→MP4. Google Flow direct automation, Meta support และ publishingไม่ได้เปิด. Facebook/YouTube ใช้ exportedMP4ตามratioที่เลือก; Ownerตรวจplatformrequirements/creativequalityก่อนpublishเอง. Variable story12–180sไม่บังคับdailyquota; rates/budgetผู้ใช้ตรวจเอง ไม่มีใช้Flowcreditsอัตโนมัติ.
 
-NEXT_TASK: วิเคราะห์ request/schema และเตรียม safe error detail capture แบบ offlineก่อนliveเพิ่ม Budgetล่าสุดใช้ครบแล้ว ห้ามreuse/resethelper/markerหรือgenerationโดยไม่มีexplicitOwnerapprovalใหม่ DriveรอOAuth/consent/liveverify; CloudรอapprovedSupabase/HTTPS/schema/deployment/offlineproof Owner3006Mock/PR2/PR3Draftคงเดิม ตรวจusageตาม7%rule ไม่มีscheduler/automaticresume
+NEXT_TASK: ขอ Owner approval ใหม่สำหรับ selected-only expansion เดิมสูงสุด1 Gemini Free Tier request ตามรายงาน fix; ขั้น offline schema/diagnostics เสร็จแล้ว ก่อนส่งต้อง reviewed source/consistent backup/schema/idle/history/new exclusive helper+marker สิทธิ์เก่าเหลือ0 ไม่ reset/rerun used helpers, ไม่ retry/regenerate ideas/Models probe/OpenAI/Billing Owner3006ใช้Mockต่อ Drive/Cloudยังรอexternalauthorization/liveproof PR2/PR3คงDraft/unmerged ตรวจusageตาม7%rule ไม่มีscheduler/automaticresume

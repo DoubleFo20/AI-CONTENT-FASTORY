@@ -1,5 +1,25 @@
 # Project status
 
+STATUS: OFFLINE_EXPANSION_FIX_VERIFIED_LIVE_APPROVAL_PENDING
+RELEASE_READINESS: LOCAL_V1_MOCK_READY_GEMINI_EXPANSION_UNVERIFIED
+Updated: 2026-10-12 (Asia/Bangkok)
+
+Gemini expansion ใช้ draft ที่แบนลงและตรวจ A–D ภายใน backend จากคำขอเดียว คง StoryPackage/API/SQLite/queue/UI เดิม Ideas wire schema ไม่เปลี่ยน ลด expansion schema 2,281→1,568 ไบต์, object schemas 11→5, properties 36→26 และ JSON depth 8→7 ตรวจ bounds/references/ระยะเวลาเต็มในเครื่อง ไม่ซ่อมผลที่ผิดหรือสร้าง Mock ทดแทน [รายงานและแผน live](docs/GEMINI_EXPANSION_FIX_TH.md), [audit](docs/GEMINI_EXPANSION_REDUCTION_AUDIT.json)
+
+Source ที่ทดสอบ/commit: 921ce7b Root scoped62/62 และ full227/226pass/0fail/1WindowsPOSIXskip ผ่าน รวม MP4 จาก synthetic assets/FFmpeg/FFprobe Build/สามtypechecks/lintผ่าน Independent source review READY/noP1P2 ไม่ rerun browser/responsive/playback ใหม่ ไม่อ้างว่า mocks เป็น live proof
+
+Checkpoint นี้ liveGemini0/ModelsAPI0/OpenAI0 ไม่เปิดBilling/paidfallback/automaticretry Specific root cause ของ historical HTTP400/INVALID_ARGUMENT ยัง NOT_PROVEN เพราะไม่ได้เก็บข้อความ/invalidfield ของ Google Canary เดิมยัง10realideas/one selection/4jobs/0active/no package ตรวจ read-only logical schema/users/projects/jobs/clips/exports hashes ตรงเดิมทั้งหมด
+
+Owner3006 เดิมหยุดอยู่ นำกลับมารัน release6a9386e/Mock/PremiumUI ด้วย credential-free process PID22544 หลัง schema/integrity/0active preflightและ independent helper review หน้าเว็บ/health/authstatus200, anonymousprojects401 ตรวจ logical data/media ก่อน–หลังตรงกัน:1owner/1project/4jobs/0clips/0exports Canary3013ยังไม่start ไม่มีactivationGeminiบนOwner3006
+
+NEXT_TASK: ขอ Owner approval ใหม่สำหรับ selected-only expansion สูงสุด1 Gemini Free Tier request บนcanaryเดิม โดยไม่ regenerateideas/Modelsprobe/OpenAI/retry/Billing ก่อนส่งต้อง sourceที่reviewแล้ว/consistentbackup/schema/integrity/0active/history/newexclusivehelper+marker; สิทธิ์เก่าเหลือ0และusedhelpersห้ามreset/rerun DriveรอOAuth/consent/liveverify/approvedrestore CloudรอapprovedSupabase/HTTPS/schema/deployment/notebook-offlineproof PR2/PR3คงDraft/unmerged ไม่merge/deploy/publish
+
+Usage authoritative ล่าสุดเหลือ73%/96% (5hr/week), สูงกว่า7% ตรวจซ้ำก่อนเริ่มงานใหม่ ไม่ใช้resetcreditและไม่มีscheduler/automaticresume
+
+---
+
+## Previous checkpoint — historical (c6dcc42)
+
 STATUS: LIVE_EXPANSION_INVALID_ARGUMENT_BLOCKED
 RELEASE_READINESS: LOCAL_V1_MOCK_READY_LIVE_EXPANSION_BLOCKED
 Updated: 2026-10-11 (Asia/Bangkok)

@@ -1,13 +1,13 @@
 # V1 Release Candidate — สถานะสำหรับการใช้งานจริง
 
-ล่าสุด Phase2 2026-10-11: [หนึ่ง request ที่อนุมัติเพื่อ diagnostics](../GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md) ใช้ครบและfailedHTTP400/INVALID_ARGUMENT ไม่มีspecificfield/reason/package จึงยังBLOCKED Owner3006คงRC/Mock/PremiumUIและข้อมูลเดิมอยู่ครบ หลักฐานreleaseเดิมยังผูกscope/sourceเดิม
+ล่าสุด Phase2 2026-10-12: [compact expansion offline fix](../GEMINI_EXPANSION_FIX_TH.md) source921ce7b ผ่าน62scoped/full227(226pass/1WindowsPOSIXskip), build/สามtypechecks/lint แต่0liveและspecificHTTP400parameterยังNOT_PROVEN Gemini expansionยังBLOCKEDรอOwnerapprovalใหม่1request Owner3006คืนreleaseเดิมRC/Mock/PremiumUI โดยไม่มีexternalcredentialsและlogicaldata/mediaตรงbaseline Canary3013ยังหยุดอยู่ หลักฐานbrowser/layout/playbackเดิมยังผูกscope/sourceเดิม ไม่mergePR2/PR3
 
 | ความสามารถ | สถานะล่าสุด | หลักฐาน |
 | --- | --- | --- |
 | Local V1 / Premium UI / Owner data | VERIFIED | Original baseline/HTTP200; no UI/schema changes |
 | Story text in Owner3006 | MOCK_ONLY | Saved Mock mode preserved |
 | Gemini ten real concepts + one selection | VERIFIED | One live canary; ideas receipt1561tokens |
-| Gemini selected story/scenes/Flow prompts live | BLOCKED | Latest approved1request failedHTTP400/INVALID_ARGUMENT/PARSED_ERROR ไม่มีpackageหรือspecificparameter; budgetเหลือ0 ห้ามgenerationเพิ่มโดยไม่มีapprovalใหม่ |
+| Gemini selected story/scenes/Flow prompts live | BLOCKED | Historical approvedrequest failedHTTP400/INVALID_ARGUMENT; compact draft/local assemblerผ่านoffline source921ce7b ยังไม่มีlivepackage รอOwnerapprovalใหม่สูงสุด1expansion |
 | Drive primary media | PREPARED |34 scoped Drive/cloud/presence mocked tests; OAuth/live verification still pending |
 | Cloud foundation | PREPARED | Injected contracts; no approved deployed HTTPS/Supabase |
 | Notebook-offline / full automation | NOT_IMPLEMENTED | No disconnected-device production proof |
@@ -39,7 +39,7 @@ React/Vite + Express/SQLite/FFmpeg และ Premium Cinematic V2 เป็น�
 
 ## สิ่งที่ Owner ต้องทำ
 
-1. ใช้บัญชีเดิมใน local3006 เลือกหนึ่งไอเดียและขยายใน Mockได้ Gemini live expansionล่าสุดที่อนุมัติใช้ครบหนึ่งrequestและfailedHTTP400/INVALID_ARGUMENT ต้องวิเคราะห์offlineต่อและapprovalใหม่ก่อนliveเพิ่ม ยังไม่activateOwner3006หรือใช้OpenAI
+1. ใช้บัญชีเดิมใน local3006 เลือกหนึ่งไอเดียและขยายใน Mockได้ Gemini live expansionล่าสุดที่อนุมัติใช้ครบหนึ่งrequestและfailedHTTP400/INVALID_ARGUMENT แก้compactdraft/localvalidationผ่านofflineแล้ว ต้องapprovalใหม่1selected-onlyrequestก่อนliveเพิ่ม ยังไม่activateOwner3006หรือใช้OpenAI
 2. ตรวจและสร้างคลิปด้วย Google Flow เอง; ตั้ง credit rate/model/duration/budget จากข้อมูลบัญชีที่ตรวจจริงก่อนใช้งาน การคำนวณในแอปไม่หักเครดิต
 3. ตั้ง OAuth ผ่าน private environment manager และ consent ตาม [คู่มือ Drive](../DRIVE_STORAGE.md) แล้วตรวจ small-file round trip ก่อนใช้เก็บ media จริง
 4. เลือกและอนุมัติ host/Supabase project/schema สำหรับ cloud แยกจาก local lane; ยังไม่ deploy หรือเปลี่ยนข้อมูลเดิมเพียงเพราะมี SQL draft

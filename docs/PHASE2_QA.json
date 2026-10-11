@@ -1450,5 +1450,225 @@
       "docs/GEMINI_DIAGNOSTIC_RESULT_20261011.json": "998b5f62e0b46793e19c1ed7343ef0e5506c27a46f5c3616295b1be9d2790ad3",
       "docs/GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md": "e18eb1d973e2a1bbd17d935158df8db60028ba72fd7a12d7549bdc1c9c63c590"
     }
+  },
+  "latestCheckpointKey": "geminiExpansionReduction",
+  "rootRecordNote": "Top-level sourceCommit/tests/status are historical initial Phase2 evidence. Read latestCheckpointKey for the current source-specific checkpoint; prior live/QA records remain unchanged.",
+  "geminiExpansionReduction": {
+    "date": "2026-10-12",
+    "status": "OFFLINE_EXPANSION_FIX_VERIFIED_LIVE_APPROVAL_PENDING",
+    "releaseReadiness": "LOCAL_V1_MOCK_READY_GEMINI_EXPANSION_UNVERIFIED",
+    "sourceCommit": "921ce7b32b795defd41e784ff893b31df2588dfa",
+    "sourceBaseCommit": "c6dcc4249f40b5773ac62a7b20b383257e9cf351",
+    "sourceHashes": {
+      "server/ai/gemini.ts": "8caa14c59c3be510cf7340f440d28c48c25d77b1696a7f5268a9b1e6d49bb550",
+      "server/ai/gemini-expansion.ts": "1f3096109a6979e3bf923f87b77bed221af68e67b88b5cc8aea152bc9078390f",
+      "tests/gemini-provider.test.ts": "3cafc176d65a405b0e5730be4732be9b49d1435bfc5794103cd2ec01c01e5f1d",
+      "tests/gemini-expansion.test.ts": "e2f4369e3d179f332340a68ece39d4adedbedf87e431d47d820564f9f7c21845"
+    },
+    "scope": "OFFLINE_INJECTED_SYNTHETIC_PROVIDER_AND_LOCAL_VALIDATION_WITH_OWNER_MOCK_RESTORE",
+    "historicalRootCause": "NOT_PROVEN",
+    "historicalProviderStatus": "INVALID_ARGUMENT",
+    "schemaReduction": {
+      "before": {
+        "bytes": 2281,
+        "jsonContainers": 64,
+        "maxDepth": 8,
+        "schemaObjects": 11,
+        "schemaProperties": 36,
+        "arrayBoundPairs": 5,
+        "numericBoundPairs": 2,
+        "sha256": "60bad99120d5082eb81616adea3842d9142d4774fea5ee02269ee233602ce524"
+      },
+      "after": {
+        "bytes": 1568,
+        "jsonContainers": 42,
+        "maxDepth": 7,
+        "schemaObjects": 5,
+        "schemaProperties": 26,
+        "arrayBoundPairs": 0,
+        "numericBoundPairs": 0,
+        "sha256": "fe920b51b76576a13d6e1f912f37a9aae26fb0fefd2de764ee88a61a447b88b6"
+      },
+      "ideasWireSchemaUnchanged": true
+    },
+    "architecture": {
+      "providerRequestsPerExpansion": 1,
+      "stages": "LOCAL_A_B_C_D_VALIDATION_AND_ASSEMBLY",
+      "sharedStoryPackageUnchanged": true,
+      "apiUnchanged": true,
+      "databaseSchemaUnchanged": true,
+      "queueUnchanged": true,
+      "uiUnchanged": true,
+      "dependenciesUnchanged": true,
+      "fullContentAiAuthored": true,
+      "noOutputRepair": true
+    },
+    "tests": {
+      "targeted": {
+        "total": 62,
+        "passed": 62,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 9502.4112,
+        "kind": "INJECTED_SYNTHETIC_LOOPBACK"
+      },
+      "full": {
+        "total": 227,
+        "passed": 226,
+        "failed": 0,
+        "skipped": 1,
+        "cancelled": 0,
+        "durationMs": 92240.5793,
+        "skipReason": "WINDOWS_POSIX_VAULT_PERMISSIONS",
+        "kind": "ISOLATED_SYNTHETIC_INJECTED_AND_FFMPEG_FFPROBE"
+      },
+      "addedExpansionRegressions": 6,
+      "automaticLiveRetries": 0
+    },
+    "checks": {
+      "build": "PASSED",
+      "threeTypechecks": "PASSED_WITH_BUILD",
+      "lint": "PASSED",
+      "docs": "PASSED_27_ARTIFACTS_AFTER_FINAL_CURRENT_DOC_UPDATE",
+      "pwa": "PASSED_AFTER_DOCUMENT_UPDATE",
+      "secrets": "PASSED_179_TRACKED_FILES",
+      "whitespace": "PASSED_STAGED_DIFF",
+      "browserRerun": false,
+      "responsiveRerun": false,
+      "actualPlaybackRerun": false,
+      "syntheticMp4Ffprobe": "PASSED_WITH_FULL_SUITE"
+    },
+    "independentSourceReview": {
+      "result": "READY_NO_P1_P2_READ_ONLY",
+      "files": [
+        "server/ai/gemini.ts",
+        "server/ai/gemini-expansion.ts",
+        "tests/gemini-provider.test.ts"
+      ],
+      "sourceHashesMatch": true,
+      "rootIntegrationReview": "READY"
+    },
+    "ownerRestoreHelperReview": {
+      "result": "READY_NO_P1_P2_READ_ONLY_AFTER_CLEANUP_AND_PID_GUARDS",
+      "sha256": "1c83485e106b9e62abfa27734e28bed61770db6e1ca42ede74dbf63afa2d58d3",
+      "initialP2Findings": 2,
+      "initialFindingsFixedBeforeExecution": true,
+      "exclusiveExecution": true,
+      "hiddenProcess": true,
+      "cleanEnvironment": true
+    },
+    "owner3006": {
+      "mode": "mock",
+      "restored": true,
+      "pid": 22544,
+      "source": "6a9386eac19719e25932d8485bae36cd5312b37a",
+      "port": 3006,
+      "healthHttpStatus": 200,
+      "routes": {
+        "/": 200,
+        "/api/auth/status": 200,
+        "/api/projects": 401
+      },
+      "counts": {
+        "users": 1,
+        "projects": 1,
+        "jobs": 4,
+        "clips": 0,
+        "exports": 0
+      },
+      "activeJobs": 0,
+      "databaseLogicalContentPreserved": true,
+      "mediaPreserved": true,
+      "schemaMatch": true,
+      "credentialsPassed": false,
+      "aiRequests": 0,
+      "paidServicesEnabled": false,
+      "uiChanged": false
+    },
+    "canary": {
+      "projectId": "cc629e54-668e-4ff1-82fe-c5904b4edbcc",
+      "ideas": 10,
+      "selected": 1,
+      "jobs": 4,
+      "activeJobs": 0,
+      "packagePresent": false,
+      "readOnlyInspection": true,
+      "allLogicalRowsAndSchemaUnchanged": true,
+      "directDatabaseMutation": false,
+      "runtimeStarted": false,
+      "runtimeReachableAtInitialObservation": false,
+      "port": 3013
+    },
+    "live": {
+      "geminiRequests": 0,
+      "modelsRequests": 0,
+      "openaiRequests": 0,
+      "billingChanges": 0,
+      "automaticRetries": 0,
+      "paidFallback": false,
+      "liveExpansionVerified": false,
+      "newOwnerApprovalRequired": true,
+      "priorApprovalBudgetRemaining": 0,
+      "plannedMaximumRequests": 1,
+      "proposedOperation": "SELECTED_ONLY_EXPANSION_EXISTING_CANARY",
+      "freeTierAttestationNotBillingTelemetry": true
+    },
+    "integrations": {
+      "drive": "PREPARED_OAUTH_AND_LIVE_ROUND_TRIP_REQUIRED",
+      "cloud": "PREPARED_APPROVED_SUPABASE_HTTPS_SCHEMA_DEPLOYMENT_AND_OFFLINE_PROOF_REQUIRED",
+      "owner3006GeminiActivation": false,
+      "mainMerge": false,
+      "pr2And3Merged": false,
+      "publicDeployment": false,
+      "contentPublish": false
+    },
+    "report": "docs/GEMINI_EXPANSION_FIX_TH.md",
+    "audit": "docs/GEMINI_EXPANSION_REDUCTION_AUDIT.json",
+    "commands": [
+      "node --import tsx --test --test-concurrency=1 tests/gemini-provider.test.ts tests/gemini-expansion.test.ts tests/ai-provider-routing.test.ts tests/ai-integration.test.ts tests/gemini-live-verifier.test.ts tests/ai-usage.test.ts",
+      "npm.cmd test",
+      "npm.cmd run build",
+      "npm.cmd run lint",
+      "node .tmp/capture-gemini-expansion-reduction.mjs (injected, used once)",
+      "node .tmp/check-gemini-expansion-offline-preservation.mjs (read-only)",
+      "node .tmp/check-owner-phaseA.mjs (release-v1; read-only)",
+      "node --check .tmp/restore-owner-mock-offline-20261011.mjs",
+      "node .tmp/restore-owner-mock-offline-20261011.mjs (reviewed, Mock-only, used once)",
+      "npm.cmd run validate:docs",
+      "npm.cmd run validate:pwa",
+      "npm.cmd run validate:secrets",
+      "git diff --cached --check"
+    ],
+    "usageRemaining": {
+      "primary": 73,
+      "secondary": 96,
+      "kind": "AUTHORITATIVE_ACCOUNT_SNAPSHOT"
+    },
+    "nextTask": "Await fresh explicit Owner approval for at most one Free Tier selected-expansion request. Before sending use reviewed source, consistent backup/schema/idle/history guards and NEW exclusive helper/marker; never reuse used diagnostic helpers. No ideas regeneration/Models probe/retry/OpenAI/Billing/Owner activation/main merge/deploy/publish. Drive/cloud external gates remain.",
+    "testsDate": "2026-10-11",
+    "publicEvidenceVerification": {
+      "command": "node .tmp/verify-gemini-expansion-fix-checkpoint.mjs",
+      "result": "PASSED",
+      "documents": 11,
+      "linksChecked": 105,
+      "sourceHashes": "UNCHANGED",
+      "historicalEvidence": "UNCHANGED",
+      "historicalQaRecords": "UNCHANGED",
+      "ownerLogicalData": "UNCHANGED",
+      "canaryLogicalData": "UNCHANGED",
+      "privateCredentialsRead": false,
+      "liveRequests": 0
+    },
+    "commandsScope": "All listed commands were executed in this task; source-scoped tests are injected/synthetic. Final docs/secrets/staged checks passed after documentation update. No live requests.",
+    "publicArtifactHashes": {
+      "docs/GEMINI_EXPANSION_FIX_TH.md": "4f91ea105a441bcf3f88b82b62201fe443ac5a1d06610d0ed241a924c836f7d6",
+      "docs/GEMINI_EXPANSION_REDUCTION_AUDIT.json": "ddfe3a7d1b21fbc0a036c569d1f9e216e75ef35e852691deb0915376f8e821cb"
+    },
+    "docsReview": {
+      "result": "READY_NO_P1_P2_READ_ONLY",
+      "initialP2Findings": 2,
+      "findingsFixedBeforeCheckpoint": true,
+      "scope": "Current public docs/source/artifact hashes and local links only; reviewer made no tests, helper, private data, Git, runtime or network calls."
+    }
   }
 }

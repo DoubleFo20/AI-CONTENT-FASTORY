@@ -1,6 +1,6 @@
 # AI Content Factory — master context
 
-Updated: 2026-10-11 (Asia/Bangkok). This is an existing local application with an opt-in cloud target in
+Updated: 2026-10-12 (Asia/Bangkok). This is an existing local application with an opt-in cloud target in
 `D:\xampp\htdocs\Ai-content-factory`, not a PHP application merely because XAMPP hosts
 the directory. Node 24.18.0, npm 11.16.0, Git 2.51.1 and FFmpeg 8.1.1 were discovered.
 
@@ -51,7 +51,7 @@ shared/contracts.ts, ROADMAP.md and TASKS.md. Status files record evidence, not 
 
 ## Checkpoint state
 
-Latest Phase2 checkpoint: Owner approved exactly one additional diagnostic expansion on the cached canary. Used once: job3d7b6ca4 failed AI_REQUEST_FAILED/HTTP400, providerStatus INVALID_ARGUMENT/errorResponse PARSED_ERROR; specific parameter root cause still unproven and no package/expansion receipt. Source1538c58, consistent backup/schema/history/idle checks, new exclusive marker, reviewed helper, 12 injected tests and build/typechecks passed. Canary3013 restarted only after identity verification; Owner3006 remains RC/Mock with original data preserved. Budget remaining0; no generation/model-list/OpenAI/Billing/fallback without fresh authorization. See [latest live diagnostic result](docs/GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md); PR2/PR3 remain Draft/unmerged.
+Latest Phase2 checkpoint — 2026-10-12: compact Gemini expansion draft/local A–D assembly verified on source921ce7b; StoryPackage/API/SQLite/UI preserved, one request remains one. Wire2281→1568bytes; Ideas schema unchanged. Scoped62/62 + full227/226pass/1WindowsPOSIXskip, build/three typechecks/lint and independent source review passed; 0 live requests. Canary10realideas/selection/4jobs unchanged, old INVALID_ARGUMENT specific parameter still NOT_PROVEN. Owner3006 restored on original release6a9386e/Mock with no AI/Drive/cloud credentials, schema/logical data/media preserved; canary3013 stopped. Current status OFFLINE_EXPANSION_FIX_VERIFIED_LIVE_APPROVAL_PENDING; historical authorization budget0, new single selected-expansion approval required. See [ผลตรวจและแผน](docs/GEMINI_EXPANSION_FIX_TH.md). PR2/PR3 remain Draft/unmerged; Drive/Cloud still require external authorization/live proof.
 
 Current release supersedes the historical integration checkpoint below. Branch
 `release/v1-real-world` combines reviewed integration cfa6554 with Premium Cinematic V2

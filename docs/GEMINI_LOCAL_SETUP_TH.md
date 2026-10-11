@@ -1,6 +1,6 @@
 # ตั้ง Gemini Free Tier สำหรับ backend ในเครื่อง
 
-สถานะ: LIVE_EXPANSION_INVALID_ARGUMENT_BLOCKED — Owner-approved diagnostic expansionหนึ่งrequestใช้ครบแล้ว HTTP400/INVALID_ARGUMENT; ไม่มีpackageและยังไม่ทราบ specificparameter Key DPAPIเดิมคงอยู่ ไม่มีBilling/OpenAI/fallback Budgetเหลือ0 ห้ามgeneration/Startcanaryใหม่/resetmarker/rerunhelperโดยไม่มีapprovalใหม่ Owner3006คงRC/MockและPR2/PR3ไม่merge ดู [ผลล่าสุด](GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md)
+สถานะ: OFFLINE_EXPANSION_FIX_VERIFIED_LIVE_APPROVAL_PENDING — private key/FreeTierattestation เดิมคงอยู่โดยไม่ได้อ่านค่า Owner3006ยังreleaseเดิมMock/Premium และcanary3013หยุดอยู่ Source921ce7bแก้draft schema/assemblerผ่านoffline แต่ยังไม่มีliveproof Budgetเก่าเหลือ0 ต้องOwnerapprovalใหม่สูงสุด1selected-onlyexpansionก่อนstartcanary/generation ไม่reset/rerunusedhelpers ไม่เปิดBilling/OpenAI/fallback และPR2/PR3ไม่merge [ผลแก้และแผน](GEMINI_EXPANSION_FIX_TH.md), [ผลliveย้อนหลัง](GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md)
 
 ## 1. ตรวจบัญชี API ด้วยตนเอง
 
