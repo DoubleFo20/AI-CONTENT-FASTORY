@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createGeminiProvider, type GeminiFailureDiagnostic } from '../server/ai/gemini.js';
 import { AiProviderError } from '../server/ai/provider.js';
 import { createMockProvider } from '../server/ai/mock.js';
-import { ERROR_CODES, type Idea, type ProjectInput } from '../shared/contracts.js';
+import { ERROR_CODES, type Idea, type ProjectInput, type StoryPackage } from '../shared/contracts.js';
 import type { AiUsage } from '../shared/ai.js';
 
 interface CapturedRequest {
@@ -32,6 +32,39 @@ function jsonResponse(body: unknown, status = 200): Response {
 
 function envelope(payload: unknown, extra: Record<string, unknown> = {}): Record<string, unknown> {
   return { candidates: [{ index: 0, finishReason: 'STOP', content: { role: 'model', parts: [{ text: JSON.stringify(payload) }] } }], ...extra };
+}
+
+function expansionDraft(story: StoryPackage) {
+  return {
+    storyTh: story.storyBible.th, storyEn: story.storyBible.en,
+    characters: story.characters.map(character => ({
+      name: character.name, visualDescriptionEn: character.visualDescriptionEn,
+      backgroundTh: character.background.th, backgroundEn: character.background.en,
+    })),
+    locations: story.locations.map(location => ({
+      nameTh: location.name.th, nameEn: location.name.en, visualDescriptionEn: location.visualDescriptionEn,
+      descriptionTh: location.description.th, descriptionEn: location.description.en,
+    })),
+    rules: story.continuityRules,
+    scenes: story.scenes.map(scene => ({
+      titleTh: scene.title.th, titleEn: scene.title.en, durationSeconds: scene.durationSeconds,
+      explanationTh: scene.explanationTh, flowPromptEn: scene.flowPromptEn,
+      narrationTh: scene.narration.th, narrationEn: scene.narration.en,
+      characterIndices: scene.characterIds.map(id => story.characters.findIndex(character => character.id === id) + 1),
+      locationIndex: story.locations.findIndex(location => location.id === scene.locationId) + 1,
+    })),
+  };
+}
+
+function expectedStory(story: StoryPackage): StoryPackage {
+  // The mock fixture has one character and location; production IDs are backend-derived.
+  assert.equal(story.characters.length, 1); assert.equal(story.locations.length, 1);
+  return {
+    ...story,
+    characters: [{ ...story.characters[0], id: 'character_1' }],
+    locations: [{ ...story.locations[0], id: 'location_1' }],
+    scenes: story.scenes.map(scene => ({ ...scene, id: `scene_${scene.order}`, characterIds: ['character_1'], locationId: 'location_1' })),
+  };
 }
 
 function safeError(code: string): (error: unknown) => boolean {
@@ -81,15 +114,18 @@ test('Gemini expansion uses only whitelisted selected fields and preserves reque
   const privateInput = Object.assign({}, input, { ideas: ['PRIVATE_ALTERNATIVE'], package: 'PRIVATE_PACKAGE', csrf: 'PRIVATE_CSRF' });
   const privateSelected = Object.assign({}, selected, { private: 'PRIVATE_SELECTED', title: { ...selected.title, private: 'PRIVATE_TITLE' } });
   for (const targetDurationSeconds of [12, 61, 180]) {
+    let calls = 0;
     let captured!: CapturedRequest;
     const requested = { ...privateInput, targetDurationSeconds };
     const story = await createMockProvider().expandStory({ ...input, targetDurationSeconds: targetDurationSeconds === 61 ? 60 : targetDurationSeconds }, selected);
     const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async (url, init) => {
+      calls += 1;
       assert.equal(url, 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent');
       captured = JSON.parse(String(init?.body)) as CapturedRequest;
-      return jsonResponse(envelope(story));
+      return jsonResponse(envelope(expansionDraft(story)));
     } });
-    assert.deepEqual(await provider.expandStory(requested, privateSelected), story);
+    assert.deepEqual(await provider.expandStory(requested, privateSelected), expectedStory(story));
+    assert.equal(calls, 1);
     const prompt = captured.contents[0].parts[0].text;
     assert.match(prompt, /ONLY the single selected idea/);
     assert.match(prompt, /idea_selected/);
@@ -97,6 +133,12 @@ test('Gemini expansion uses only whitelisted selected fields and preserves reque
     assert.match(prompt, new RegExp(`Target a total story duration of ${targetDurationSeconds} seconds`));
     assert.match(prompt, /explanation in Thai/);
     assert.match(prompt, /English Google Flow prompt/);
+    assert.match(prompt, /storyTh, storyEn, characters, locations, rules, scenes/);
+    assert.match(prompt, /1-based integer reference/);
+    assert.match(prompt, /IDs and scene order are derived by the backend from array order/);
+    assert.match(prompt, /3-12/);
+    assert.match(prompt, /4-20 seconds each, total <=180 seconds/);
+    assert.match(prompt, /stable visual continuity/);
     assert.doesNotMatch(prompt, /PRIVATE_ALTERNATIVE|PRIVATE_PACKAGE|PRIVATE_CSRF|PRIVATE_SELECTED|PRIVATE_TITLE/);
     assert.equal(captured.generationConfig.maxOutputTokens, 12000);
   }
@@ -174,19 +216,33 @@ test('Gemini retains complete local Zod and semantic validation after reducing t
     const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => jsonResponse(envelope(payload)) });
     await assert.rejects(provider.generateIdeas(input), safeError('AI_INVALID_OUTPUT'));
   }
-  const story = await createMockProvider().expandStory(input, selected);
+  const story = expansionDraft(await createMockProvider().expandStory(input, selected));
   const badStories = [
     { ...story, scenes: story.scenes.slice(0, 2) },
-    { ...story, scenes: story.scenes.map(scene => ({ ...scene, locationId: 'unknown_location' })) },
-    { ...story, scenes: story.scenes.map(scene => ({ ...scene, characterIds: ['unknown_character'] })) },
+    { ...story, scenes: story.scenes.map(scene => ({ ...scene, locationIndex: 2 })) },
+    { ...story, scenes: story.scenes.map(scene => ({ ...scene, characterIndices: [2] })) },
+    { ...story, scenes: story.scenes.map(scene => ({ ...scene, characterIndices: [1, 1] })) },
+    { ...story, scenes: story.scenes.map(scene => ({ ...scene, characterIndices: [0] })) },
+    { ...story, scenes: story.scenes.map(scene => ({ ...scene, locationIndex: 1.5 })) },
     { ...story, scenes: story.scenes.map(scene => ({ ...scene, order: 2 })) },
     { ...story, scenes: story.scenes.map(scene => ({ ...scene, durationSeconds: 21 })) },
     { ...story, scenes: story.scenes.map(scene => ({ ...scene, durationSeconds: 3 })) },
-    { ...story, scenes: Array.from({ length: 10 }, (_, index) => ({ ...story.scenes[0], id: `scene_${index}`, order: index + 1, durationSeconds: 20 })) },
+    { ...story, scenes: story.scenes.map(scene => ({ ...scene, durationSeconds: 4.5 })) },
+    { ...story, scenes: story.scenes.map(scene => ({ ...scene, flowPromptEn: 'x'.repeat(4001) })) },
+    { ...story, storyTh: '' },
+    { ...story, scenes: Array.from({ length: 10 }, () => ({ ...story.scenes[0], durationSeconds: 20 })) },
+    { ...story, private: 'extra field' },
   ];
   for (const payload of badStories) {
-    const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key, fetch: async () => jsonResponse(envelope(payload)) });
+    let calls = 0;
+    const diagnostics: GeminiFailureDiagnostic[] = [];
+    const provider = createGeminiProvider({ freeTierConfirmed: true, apiKey: key,
+      onDiagnostic: diagnostic => { diagnostics.push(diagnostic); },
+      fetch: async () => { calls += 1; return jsonResponse(envelope(payload)); } });
     await assert.rejects(provider.expandStory(input, selected), safeError('AI_INVALID_OUTPUT'));
+    assert.equal(calls, 1);
+    assert.deepEqual(diagnostics, [{ provider: 'gemini', operation: 'expand', model: 'gemini-3.5-flash-lite',
+      phase: 'validation', errorCode: 'AI_INVALID_OUTPUT' }]);
   }
 });
 
@@ -487,27 +543,30 @@ test('Gemini distinguishes error response parsing and trusted invalid-field cate
   }
 });
 
-test('Gemini generated wire schemas use documented keywords and complete object/array constraints in both operations', async () => {
-  const keywords = new Set(['type', 'properties', 'required', 'additionalProperties', 'items', 'minItems', 'maxItems', 'minimum', 'maximum']);
+test('Gemini retains Ideas wire constraints and sends only structural Expansion schema keywords', async () => {
+  const structuralKeywords = ['type', 'properties', 'required', 'additionalProperties', 'items'];
   const types = new Set(['object', 'array', 'integer', 'number', 'string', 'boolean', 'null']);
-  function verify(value: unknown): void {
+  function verify(value: unknown, expansion: boolean): void {
     assert(value && typeof value === 'object' && !Array.isArray(value));
     const node = value as Record<string, unknown>;
-    assert(Object.keys(node).every(name => keywords.has(name)), 'wire schema contains undocumented keywords');
+    const keywords = new Set(expansion ? structuralKeywords : [...structuralKeywords, 'minItems', 'maxItems', 'minimum', 'maximum']);
+    assert(Object.keys(node).every(name => keywords.has(name)), 'wire schema contains unexpected keywords');
     assert(typeof node.type === 'string' && types.has(node.type));
     if (node.type === 'object') {
       assert(node.properties && typeof node.properties === 'object' && !Array.isArray(node.properties));
       const properties = node.properties as Record<string, unknown>;
       assert.deepEqual([...(node.required as string[])].sort(), Object.keys(properties).sort());
       assert.equal(node.additionalProperties, false);
-      Object.values(properties).forEach(verify);
+      Object.values(properties).forEach(property => verify(property, expansion));
     }
     if (node.type === 'array') {
-      assert(Number.isInteger(node.minItems) && Number.isInteger(node.maxItems));
-      assert((node.minItems as number) <= (node.maxItems as number));
-      verify(node.items);
+      if (!expansion) {
+        assert(Number.isInteger(node.minItems) && Number.isInteger(node.maxItems));
+        assert((node.minItems as number) <= (node.maxItems as number));
+      }
+      verify(node.items, expansion);
     }
-    if (node.type === 'integer') {
+    if (node.type === 'integer' && !expansion) {
       assert(Number.isInteger(node.minimum) && Number.isInteger(node.maximum));
       assert((node.minimum as number) <= (node.maximum as number));
     }
@@ -516,14 +575,19 @@ test('Gemini generated wire schemas use documented keywords and complete object/
   let calls = 0;
   const provider = createGeminiProvider({ apiKey: key, freeTierConfirmed: true, fetch: async (url, init) => {
     const payload = JSON.parse(String(init?.body)) as CapturedRequest;
-    verify(payload.generationConfig.responseJsonSchema);
+    verify(payload.generationConfig.responseJsonSchema, calls === 1);
+    if (calls === 1) {
+      const schema = payload.generationConfig.responseJsonSchema as { properties: Record<string, unknown> };
+      assert.deepEqual(Object.keys(schema.properties).sort(), ['characters', 'locations', 'rules', 'scenes', 'storyEn', 'storyTh']);
+      assert.doesNotMatch(JSON.stringify(schema), /\$schema|pattern|minLength|maxLength|minItems|maxItems|minimum|maximum/);
+    }
     assert.equal(url, 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent');
     assert(payload.generationConfig.maxOutputTokens <= 65536);
     assert.deepEqual(Object.keys(payload.generationConfig).sort(), ['candidateCount', 'maxOutputTokens', 'responseJsonSchema', 'responseMimeType']);
     assert.equal(payload.generationConfig.candidateCount, 1);
     assert.equal(payload.generationConfig.responseMimeType, 'application/json');
     calls++;
-    return jsonResponse(envelope(calls === 1 ? { ideas } : story));
+    return jsonResponse(envelope(calls === 1 ? { ideas } : expansionDraft(story)));
   } });
   await provider.generateIdeas(input); await provider.expandStory(input, selected);
   assert.equal(calls, 2);
