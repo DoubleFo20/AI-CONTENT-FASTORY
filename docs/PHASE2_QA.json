@@ -2,7 +2,7 @@
   "sourceCommit": "de462843a2847e850334730c004f8b1d8f01e0b6",
   "releaseBase": "ba327e2364e0a14f36629e4dc9376de6b827f10e",
   "date": "2026-10-10",
-  "scope": "Cumulative Phase2 evidence: historical synthetic/browser checkpoints, live Gemini ten ideas and one selection, one additional approved expansion retry failed HTTP400. No successful live expansion/Drive/cloud proof; current preparation source is pinned by approvedExpansionRetry.providerDiagnosticPreparation.sourceHashes.",
+  "scope": "Cumulative Phase2 evidence with a new zero-live offline HTTP400 review. Historical ten real ideas/selection and consumed expansion retry remain unchanged; no proven root cause/live expansion/Drive/cloud proof. Current diagnostics hashes are in geminiOfflineReview.",
   "tests": {
     "command": "npm.cmd test",
     "exitCode": 0,
@@ -1098,6 +1098,174 @@
       "secondary": 18
     },
     "report": "docs/GEMINI_LIVE_RESULT_20261011_TH.md",
-    "nextTask": "Observe existing cached canary only. Any additional generation needs new explicit Owner authorization and a new bounded marker/preflight on unchanged data. Drive OAuth/live verification and approved Supabase/HTTPS/deployment remain external gates."
+    "nextTask": "Observe existing cached canary only. Any additional generation needs new explicit Owner authorization and a new bounded marker/preflight on unchanged data. Drive OAuth/live verification and approved Supabase/HTTPS/deployment remain external gates.",
+    "historicalCheckpoint": true,
+    "supersededBy": "geminiOfflineReview (current preparation/policy only; historical live result preserved)"
+  },
+  "geminiOfflineReview": {
+    "date": "2026-10-11",
+    "sourceBase": "2e3652036a738eb8fa4dc314e16cbd3a07966e0e",
+    "status": "OFFLINE_REVIEW_COMPLETE_LIVE_APPROVAL_PENDING",
+    "ownerDecision": {
+      "mode": "mock",
+      "additionalLiveRequestsAuthorized": 0
+    },
+    "liveGeminiRequests": 0,
+    "modelListingRequests": 0,
+    "rootCause": "NOT_PROVEN_RESPONSE_BODY_NOT_RETAINED",
+    "retrospectiveErrorBodyRecovered": false,
+    "googleErrorBody": null,
+    "officialContract": {
+      "model": "gemini-3.5-flash-lite",
+      "modelOutputLimit": 65536,
+      "apiVersion": "v1beta",
+      "method": "generateContent",
+      "generationFieldsPresentInReference": true,
+      "schemaKeywordsSupported": true,
+      "recommendedFormat": "responseFormat.text",
+      "usedFormat": "responseMimeType + responseJsonSchema",
+      "formatDriftProvesHistoricalFailure": false,
+      "modelListedFreeTier": true,
+      "currentAccountTierVerified": false,
+      "currentAccountRightsVerified": false,
+      "freeTierAttestedByOwnerPreviously": true,
+      "billingChanged": false,
+      "openaiRequests": 0,
+      "fallback": false
+    },
+    "sourceHashes": {
+      "server/ai/gemini.ts": "72f26909430db732484fab16fbb547adbdb4a44c2ec44ee02d0aa54c492ed09d",
+      "tests/gemini-provider.test.ts": "fd6ebe8b4198d09bd69099117a6dada751c0cb7a67c12af6f6642f0c7fcde492"
+    },
+    "diagnostics": {
+      "errorResponse": [
+        "PARSED_ERROR",
+        "INVALID_ENVELOPE",
+        "MALFORMED_JSON",
+        "BODY_READ_FAILED"
+      ],
+      "invalidField": [
+        "RESPONSE_SCHEMA",
+        "GENERATION_CONFIG",
+        "CONTENTS",
+        "SYSTEM_INSTRUCTION",
+        "MODEL",
+        "UNKNOWN"
+      ],
+      "providerMessageRetained": false,
+      "rawDescriptionsRetained": false,
+      "retrospectivelyRecovered": false,
+      "publicRequestSchemaModelBudgetChanged": false,
+      "liveRuntimeUpdated": false
+    },
+    "independentReview": {
+      "result": "READY_NO_P1_P2_SOURCE_ONLY",
+      "privateDataAccess": false,
+      "testsRunByReviewer": false
+    },
+    "tests": {
+      "command": "node --import tsx --test --test-concurrency=1 tests/gemini-provider.test.ts tests/ai-provider-routing.test.ts tests/gemini-live-verifier.test.ts tests/ai-integration.test.ts tests/ai-usage.test.ts",
+      "total": 56,
+      "passed": 56,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 13477.3983,
+      "kind": "INJECTED_SYNTHETIC",
+      "beforeSemanticsPreservingRegexLintFix": true
+    },
+    "postRegexTests": {
+      "command": "node --import tsx --test --test-concurrency=1 tests/gemini-provider.test.ts",
+      "total": 21,
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 6350.8717,
+      "kind": "INJECTED_SYNTHETIC"
+    },
+    "checks": {
+      "build": "PASSED_BEFORE_SEMANTICS_PRESERVING_REGEX_LINT_FIX",
+      "threeTypechecks": "PASSED_WITH_BUILD",
+      "firstLint": "FAILED_SIX_NO_USELESS_ESCAPE_DIAGNOSTIC_REGEX",
+      "postFixLint": "PASSED",
+      "docs": "PASSED_27_REQUIRED_ARTIFACTS",
+      "pwa": "PASSED_PUBLIC_SHELL_PRIVATE_API_EXCLUSION",
+      "secrets": "PASSED_173_TRACKED_FILES_NO_VALUES_PRINTED",
+      "whitespace": "PASSED_STAGED_DIFF_CHECK",
+      "fullSuiteRerun": false,
+      "browserRerun": false,
+      "responsiveRerun": false,
+      "mp4Rerun": false,
+      "publicOfflineEvidence": "PASSED_10_DOCUMENTS_94_LINKS_SOURCE_SCHEMA_HASHES_HISTORICAL_LIVE_EVIDENCE_UNCHANGED"
+    },
+    "requestAudit": {
+      "path": "docs/GEMINI_HTTP400_OFFLINE_AUDIT.json",
+      "scope": "OFFLINE_INJECTED_SCHEMA_ONLY",
+      "injectedTransportCalls": 2,
+      "privateKeyRead": false,
+      "keyHeader": "REDACTED",
+      "storyData": "OMITTED",
+      "liveRequest": false
+    },
+    "owner3006": {
+      "healthHttpStatus": 200,
+      "rootHttpStatus": 200,
+      "authStatusHttpStatus": 200,
+      "anonymousProjectsHttpStatus": 401,
+      "baselinePreserved": true,
+      "databaseWrites": false,
+      "mode": "mock",
+      "users": 1,
+      "projects": 1,
+      "jobs": 4,
+      "activeJobs": 0,
+      "clips": 0,
+      "exports": 0,
+      "projectsWithTenIdeas": 1,
+      "restart": false,
+      "uiChanged": false
+    },
+    "canary": {
+      "additionalGenerationRequests": 0,
+      "restart": false,
+      "sourceAtLastObservedRuntime": "bf276fb7e0d4a443057467bb8c8404ffa299b157",
+      "newDiagnosticsActiveInRuntime": false,
+      "cachedDataOrUsedMarkersChanged": false
+    },
+    "billingChanged": false,
+    "openaiRequests": 0,
+    "automaticRetries": 0,
+    "fallback": false,
+    "mainMerged": false,
+    "publiclyDeployed": false,
+    "usageRemaining": {
+      "primary": 33,
+      "secondary": 15
+    },
+    "report": "docs/GEMINI_HTTP400_OFFLINE_REVIEW_TH.md",
+    "nextTask": "Request fresh explicit Owner approval for exactly one selected-only Free Tier expansion on existing cached canary after reviewing offline evidence. Before approval: no generation/model-list/restarts/used-marker resets. After approval: reviewed source, consistent backup, idle/schema/pinned history, new one-attempt marker. Drive OAuth/live round trip and approved Supabase/HTTPS/deployment/offline proof remain external gates.",
+    "documentationReview": {
+      "result": "READY_NO_P1_P2_READ_ONLY",
+      "filesChangedByReviewer": false,
+      "testsOrGitOrNetworkOrProcessesRunByReviewer": false,
+      "privateDataRead": false
+    },
+    "evidenceHashes": {
+      "docs/GEMINI_HTTP400_OFFLINE_REVIEW_TH.md": "8d59efc05c7366b9a663b0e7284d4f19d347c1b613b7167df6b3f225cf9fadcf",
+      "docs/GEMINI_HTTP400_OFFLINE_AUDIT.json": "d917c8525883713aadd00afa2dbf24e6281d423cb4514813fead155cded42187"
+    },
+    "commands": [
+      "node --import tsx --test --test-concurrency=1 tests/gemini-provider.test.ts tests/ai-provider-routing.test.ts tests/gemini-live-verifier.test.ts tests/ai-integration.test.ts tests/ai-usage.test.ts",
+      "npm.cmd run build",
+      "npm.cmd run lint (initial lint failure and final passed)",
+      "node --import tsx --test --test-concurrency=1 tests/gemini-provider.test.ts",
+      "node --import tsx .tmp/capture-gemini-offline-audit.mjs (injected, no network)",
+      "node .tmp/check-owner-phaseA.mjs (release-v1; existing baseline; read-only)",
+      "GET Owner3006 / /api/health /api/auth/status /api/projects (status only)",
+      "npm.cmd run validate:docs",
+      "npm.cmd run validate:pwa",
+      "node .tmp/verify-gemini-offline-checkpoint.mjs",
+      "npm.cmd run validate:secrets",
+      "git diff --cached --check"
+    ]
   }
 }

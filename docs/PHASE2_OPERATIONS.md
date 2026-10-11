@@ -1,6 +1,6 @@
 # Phase 2 — real integrations preparation
 
-Latest2026-10-11: Owner-approved expansionretryหนึ่งครั้งใช้ครบแล้ว. Canaryเดิมยัง10realideas/one selection; newjob599d80d9 failedAI_REQUEST_FAILED/HTTP400/phasehttp ไม่มีpackage/expusage. Runtime3013PID17440 sourcebf276fb; newstatusdiagnosticsเป็นfuturepreparation ยังไม่activeในprocess. ห้ามgenerationเพิ่ม/Startcanaryใหม่/resetmarkerโดยไม่มีapprovalใหม่. [Actualresult](GEMINI_LIVE_RESULT_20261011_TH.md); Owner3006/PR2/PR3 unchanged/unmerged.
+ล่าสุด 2026-10-11: Owner เลือก Mock และยังไม่อนุมัติ Gemini request เพิ่ม ตรวจ HTTP400 แบบ offline แล้ว; root cause ยังไม่ทราบเพราะ response เดิมไม่ถูกเก็บ เพิ่ม diagnostics ที่ไม่บันทึก private fields และทดสอบ injected ผ่าน ไม่มี live call หรือ runtime restart ใน checkpoint นี้ [Offline review](GEMINI_HTTP400_OFFLINE_REVIEW_TH.md), [historical result](GEMINI_LIVE_RESULT_20261011_TH.md) Owner3006/PR2/PR3 คงเดิม
 
 สถานะ: LIVE_IDEAS_VERIFIED_EXPANSION_BLOCKED; [Draft PR#3](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/3) target release/v1-real-world. Gemini จริงผ่านเฉพาะสิบไอเดียและการเลือกหนึ่งเรื่อง; expansion ล้มเหลว จึงยังไม่ผ่าน end-to-end live AI. Drive/Cloud ยังไม่มี live proof. Owner app3006 ยังเป็น RC/Mock และ Premium Cinematic V2 คงอยู่. Phase A แยกใน [FINAL_REVIEW](release/FINAL_REVIEW.md); main และ Draft PR#2 ยังไม่ merge.
 
@@ -17,6 +17,10 @@ OpenAI/Gemini บันทึก token metadata เฉพาะเมื่อ�
 ต้นทุนใช้ optional private `ACF_AI_PRICING_JSON`: JSON array ของ `{provider,model,inputUsdPerMillion,outputUsdPerMillion,cachedInputUsdPerMillion?,verifiedAt}`. ใช้เฉพาะ model ที่ตรง มีหนึ่ง verified rate/date ไม่อยู่อนาคต; cached tokens ต้องมี cached rate จึงประมาณได้. ไม่มีราคาหรือ free-tier default; Owner ใส่อัตราที่ตรวจจาก billing/pricing ที่ใช้จริง. Reasoning รวมใน output tokens อยู่แล้ว ไม่คิดซ้ำ. Retained50receipts ไม่ใช่ lifetime billing total.
 
 ## Gemini — checkpoint จริงและการดำเนินงานครั้งต่อไป
+
+Owner ยังไม่อนุมัติ live requests; current budget=0 รักษา Mock และ cached canary เท่านั้น รายงาน offline ตรวจ model/endpoint/schema/config พร้อม redacted request artifact แล้ว รุ่น diagnostics ใหม่เพิ่ม errorResponse/invalidField enums ไม่เปลี่ยน request และยังไม่ active ใน process3013 ดู [ผลและข้อจำกัด](GEMINI_HTTP400_OFFLINE_REVIEW_TH.md) การตรวจครั้งถัดไปเสนอ expansion เพียงหนึ่ง request หลังได้รับ approval ใหม่ และผ่าน backup/idle/schema/history/new marker โดยไม่ทำ model-list probe หรือสร้างไอเดียใหม่
+
+ส่วนต่อไปเป็นประวัติของ live retry ที่ใช้สิทธิ์ครบแล้ว:
 
 Backend keyDPAPIและOwnerFreeTierattestationพร้อมตาม [คู่มือ](GEMINI_LOCAL_SETUP_TH.md). ได้10realideas/one selection; initialexpansionstatusHTTPunknown. Ownerอนุมัติ retryเพียงหนึ่งครั้งบนcanaryเดิม ซึ่งใช้ไปแล้วและfailedAI_REQUEST_FAILED/HTTP400 เมื่อ2026-10-11T01:42:47.427Z. See [live report](GEMINI_LIVE_RESULT_20261011_TH.md); ไม่ยืนยันrootcause/quota/billingtierด้วยเครื่องมือ.
 
@@ -54,4 +58,4 @@ Acceptance cloud: approvedHTTPSURL, real durablequeue/auth/cloudAI, mobile statu
 
 FlowยังprimaryและOwner-operated: scenes/ENprompts/THexplanations/refs/durations/9:16หรือ16:9/verifiedcreditbudget→Flowclips→scene matching/import→deterministiceditor→MP4. Google Flow direct automation, Meta support และ publishingไม่ได้เปิด. Facebook/YouTube ใช้ exportedMP4ตามratioที่เลือก; Ownerตรวจplatformrequirements/creativequalityก่อนpublishเอง. Variable story12–180sไม่บังคับdailyquota; rates/budgetผู้ใช้ตรวจเอง ไม่มีใช้Flowcreditsอัตโนมัติ.
 
-NEXT_TASK: รักษา live canaryเดิม; diagnosticsstatusพร้อมแต่คำขอเพิ่มต้องexplicitOwnerapprovalใหม่ เพราะ retryหนึ่งครั้งใช้ครบแล้ว. DriveรอOAuthconfig/consent/liveverify; CloudรอapprovedSupabase/HTTPShost/schema/deployment/offlineproof. Owner3006Mock/PR2/PR3Draftคงเดิม; ตรวจusageตาม7%rule ไม่มีscheduler/automaticresume.
+NEXT_TASK: ขอ Owner approval หลังอ่าน offline evidence สำหรับ selected-only expansion 1 Gemini Free Tier request บน canary เดิม; ยังไม่ส่งคำขอ ไม่ reset marker/reuse helper หรือ regenerate ideas ก่อนอนุมัติ DriveรอOAuth/consent/liveverify; CloudรอapprovedSupabase/HTTPS/schema/deployment/offlineproof Owner3006Mock/PR2/PR3Draftคงเดิม ตรวจusageตาม7%rule ไม่มีscheduler/automaticresume

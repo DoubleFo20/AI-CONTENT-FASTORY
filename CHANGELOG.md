@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-11 — offline HTTP400 investigation; Owner retains Mock
+
+- Owner ยังไม่อนุมัติ Gemini เพิ่ม; checkpointนี้ 0 live requests/0 Models API requests ไม่มี OpenAI/Billing/provider fallback หรือ runtime change
+- ตรวจ official model/v1beta endpoint/generated schema/config ไม่พบความไม่ตรง contract ที่พิสูจน์ HTTP400 ข้อจำกัดเดิมคือไม่ได้เก็บ Google body/status/reason จึงไม่อ้างว่าแก้ generation root cause แล้ว [ผลวิเคราะห์](docs/GEMINI_HTTP400_OFFLINE_REVIEW_TH.md), [redacted audit](docs/GEMINI_HTTP400_OFFLINE_AUDIT.json)
+- เพิ่ม enum-only parsing outcome/trusted invalid-field category และ targeted regression tests; request/schema/model/budget เดิม Independent source review READY/noP1P2; 56/56 injected/build/typechecks ผ่าน ก่อน lint พบ regex escape 6 จุด หลังแก้ semantics เดิม provider21/21/lint ผ่าน
+- Owner3006 HTTP200/anonymous401/read-only baseline preserved; UI/data/media/schema/env/dependencies เดิมคงอยู่ ไม่มี full suite/MP4/browser/live rerun ใหม่ PR2/PR3คงDraft/unmerged ขั้นตอน live ถัดไปต้อง approval ใหม่สำหรับ selected-only expansion 1 request; Drive/Cloud ยังรอ external authorization
+
 ## 2026-10-11 — one approved expansion retry and safe status diagnostics
 
 - Used exactly one Owner-approved Free Tier retry on the existing cached canary; newjob599d80d9 failedAI_REQUEST_FAILED/HTTP400. Preserved10ideas/selection/originaljobs; normalcanarylogoutconfirmed. No additional generation/fallback/OpenAI/Billing/Ownerdatawrites. Live package/scenes/prompts remainBLOCKED; see [report](docs/GEMINI_LIVE_RESULT_20261011_TH.md).

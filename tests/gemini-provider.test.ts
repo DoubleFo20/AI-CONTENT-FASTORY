@@ -378,7 +378,7 @@ test('Gemini failure diagnostics distinguish HTTP, transport and body without re
     if (fixture.reason !== undefined) assert.equal(diagnostic.reason, fixture.reason.startsWith('private') ? 'UNKNOWN' : fixture.reason);
     else assert(!('reason' in diagnostic));
     assert(Object.isFrozen(diagnostic));
-    assert(Object.keys(diagnostic).every(name => ['provider','operation','model','phase','errorCode','httpStatus','reason','providerStatus','requestIssue'].includes(name)));
+    assert(Object.keys(diagnostic).every(name => ['provider','operation','model','phase','errorCode','httpStatus','reason','providerStatus','requestIssue','errorResponse','invalidField'].includes(name)));
     const output = JSON.stringify(diagnostics);
     for (const privateValue of [key, input.brief, selected.logline.en, 'private', 'metadata']) assert(!output.includes(privateValue));
   }
@@ -447,4 +447,84 @@ test('Gemini diagnostic sink failures cannot replace normalized errors, trigger 
   await assert.rejects(invalid.generateIdeas(input), safeError('AI_INVALID_OUTPUT'));
   assert.deepEqual(diagnostics, [{ provider: 'gemini', operation: 'ideas', model: 'gemini-3.5-flash-lite',
     phase: 'validation', errorCode: 'AI_INVALID_OUTPUT' }]);
+});
+
+test('Gemini distinguishes error response parsing and trusted invalid-field categories without recording provider text', async () => {
+  const badRequest = (field: unknown, type = 'type.googleapis.com/google.rpc.BadRequest') => ({
+    '@type': type, fieldViolations: [{ field, description: `private ${key} ${input.brief}` }],
+  });
+  const fixtures: Array<{ body?: unknown; raw?: string; bodyFails?: boolean; parse: GeminiFailureDiagnostic['errorResponse']; field?: GeminiFailureDiagnostic['invalidField'] }> = [
+    { raw: `private ${key}`, parse: 'MALFORMED_JSON' },
+    { body: { private: key }, parse: 'INVALID_ENVELOPE' },
+    { body: { error: [] }, parse: 'INVALID_ENVELOPE' },
+    { bodyFails: true, parse: 'BODY_READ_FAILED' },
+    ...[
+      ['generation_config.response_json_schema.properties.private', 'RESPONSE_SCHEMA'],
+      ['generationConfig.responseFormat.text.schema.properties.private', 'RESPONSE_SCHEMA'],
+      ['generationConfig.maxOutputTokens', 'GENERATION_CONFIG'],
+      ['contents[0].parts[0].text', 'CONTENTS'], ['system_instruction.parts[0].text', 'SYSTEM_INSTRUCTION'],
+      ['model', 'MODEL'], [`private ${key}`, 'UNKNOWN'], [`generationConfig${key}`, 'UNKNOWN'],
+    ].map(([field, category]) => ({ body: { error: { status: 'INVALID_ARGUMENT', details: [badRequest(field)] } },
+      parse: 'PARSED_ERROR' as const, field: category as GeminiFailureDiagnostic['invalidField'] })),
+    { body: { error: { status: 'FAILED_PRECONDITION', details: [badRequest('contents[0]')] } }, parse: 'PARSED_ERROR' },
+    { body: { error: { status: 'INVALID_ARGUMENT', details: [badRequest('contents[0]', 'private.BadRequest')] } }, parse: 'PARSED_ERROR' },
+    { body: { error: { status: 'INVALID_ARGUMENT', details: [badRequest(`contents.${'x'.repeat(513)}`), badRequest(null)] } }, parse: 'PARSED_ERROR' },
+  ];
+  for (const fixture of fixtures) {
+    let calls = 0; const diagnostics: GeminiFailureDiagnostic[] = [];
+    const provider = createGeminiProvider({ apiKey: key, freeTierConfirmed: true, onDiagnostic: value => { diagnostics.push(value); }, fetch: async () => {
+      calls++;
+      const response = fixture.raw ? new Response(fixture.raw, { status: 400 }) : jsonResponse(fixture.body, 400);
+      if (fixture.bodyFails) Object.defineProperty(response, 'json', { value: async () => { throw new Error(`private ${key}`); } });
+      return response;
+    } });
+    await assert.rejects(provider.expandStory(input, selected), safeError('AI_REQUEST_FAILED'));
+    assert.equal(calls, 1); assert.equal(diagnostics.length, 1);
+    assert.equal(diagnostics[0].errorResponse, fixture.parse); assert.equal(diagnostics[0].invalidField, fixture.field);
+    assert.equal(diagnostics[0].httpStatus, 400); assert.equal(diagnostics[0].phase, 'http');
+    const logged = JSON.stringify(diagnostics);
+    for (const value of [key, input.brief, 'private', 'description', 'fieldViolations']) assert(!logged.includes(value));
+  }
+});
+
+test('Gemini generated wire schemas use documented keywords and complete object/array constraints in both operations', async () => {
+  const keywords = new Set(['type', 'properties', 'required', 'additionalProperties', 'items', 'minItems', 'maxItems', 'minimum', 'maximum']);
+  const types = new Set(['object', 'array', 'integer', 'number', 'string', 'boolean', 'null']);
+  function verify(value: unknown): void {
+    assert(value && typeof value === 'object' && !Array.isArray(value));
+    const node = value as Record<string, unknown>;
+    assert(Object.keys(node).every(name => keywords.has(name)), 'wire schema contains undocumented keywords');
+    assert(typeof node.type === 'string' && types.has(node.type));
+    if (node.type === 'object') {
+      assert(node.properties && typeof node.properties === 'object' && !Array.isArray(node.properties));
+      const properties = node.properties as Record<string, unknown>;
+      assert.deepEqual([...(node.required as string[])].sort(), Object.keys(properties).sort());
+      assert.equal(node.additionalProperties, false);
+      Object.values(properties).forEach(verify);
+    }
+    if (node.type === 'array') {
+      assert(Number.isInteger(node.minItems) && Number.isInteger(node.maxItems));
+      assert((node.minItems as number) <= (node.maxItems as number));
+      verify(node.items);
+    }
+    if (node.type === 'integer') {
+      assert(Number.isInteger(node.minimum) && Number.isInteger(node.maximum));
+      assert((node.minimum as number) <= (node.maximum as number));
+    }
+  }
+  const story = await createMockProvider().expandStory(input, selected);
+  let calls = 0;
+  const provider = createGeminiProvider({ apiKey: key, freeTierConfirmed: true, fetch: async (url, init) => {
+    const payload = JSON.parse(String(init?.body)) as CapturedRequest;
+    verify(payload.generationConfig.responseJsonSchema);
+    assert.equal(url, 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent');
+    assert(payload.generationConfig.maxOutputTokens <= 65536);
+    assert.deepEqual(Object.keys(payload.generationConfig).sort(), ['candidateCount', 'maxOutputTokens', 'responseJsonSchema', 'responseMimeType']);
+    assert.equal(payload.generationConfig.candidateCount, 1);
+    assert.equal(payload.generationConfig.responseMimeType, 'application/json');
+    calls++;
+    return jsonResponse(envelope(calls === 1 ? { ideas } : story));
+  } });
+  await provider.generateIdeas(input); await provider.expandStory(input, selected);
+  assert.equal(calls, 2);
 });

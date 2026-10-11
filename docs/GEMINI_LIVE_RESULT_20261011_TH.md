@@ -2,7 +2,9 @@
 
 STATUS: LIVE_IDEAS_VERIFIED_EXPANSION_BLOCKED
 
-## Retry ที่ Owner อนุมัติ — ผลล่าสุด
+ล่าสุดหลัง Owner เลือก Mock: ยังไม่อนุมัติ Gemini request เพิ่ม Checkpoint offline ส่ง 0 live requests และเพิ่ม parsing/invalid-field diagnostics สำหรับอนาคตโดยไม่ restart runtime หรือเปลี่ยน payload ดู [ผลวิเคราะห์ HTTP400](GEMINI_HTTP400_OFFLINE_REVIEW_TH.md) ผล live ต่อไปนี้เป็นประวัติที่ยังไม่ถูกทดสอบซ้ำ
+
+## Retry ที่ Owner อนุมัติ — ผล live ล่าสุด (ประวัติ)
 
 Owner อนุมัติ expansion เพิ่ม **หนึ่งครั้งด้วย Free Tier**. ใช้สิทธิ์ครบแล้ว ไม่มี generation request เพิ่มหลัง failure. Free Tier/Billing disabled เป็น Owner attestation; ไม่มี billing telemetry หรือการเปิด Billing/เปลี่ยน Paid/OpenAI/Mock.
 

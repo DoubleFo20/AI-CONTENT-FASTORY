@@ -1,5 +1,25 @@
 # Project status
 
+STATUS: OFFLINE_REVIEW_COMPLETE_LIVE_APPROVAL_PENDING
+RELEASE_READINESS: LOCAL_V1_MOCK_READY_LIVE_EXPANSION_BLOCKED
+Updated: 2026-10-11 (Asia/Bangkok)
+
+Owner ยังไม่อนุมัติ Gemini request เพิ่มและเลือกใช้ Mock ต่อ Checkpoint นี้ส่ง 0 live Gemini requests / 0 Models API requests; ไม่เรียก OpenAI ไม่เปิด Billing ไม่ restart หรือเปลี่ยนโหมด Owner3006 และไม่ reset marker ที่ใช้แล้ว
+
+ตรวจ model ID, v1beta endpoint, generated payload/schema/config และเอกสาร Google ทางการแล้ว ไม่พบความไม่ตรง contract ที่พิสูจน์สาเหตุ HTTP400 ได้ ข้อจำกัดที่ยืนยันคือ Google error body/status/reason ของ job599d80d9 ไม่ถูกเก็บ จึงยังแยก INVALID_ARGUMENT/FAILED_PRECONDITION หรือยืนยัน schema complexity/quota/region ไม่ได้ รูปแบบ responseJsonSchema ยังอยู่ใน REST reference แม้ guide แนะนำ responseFormat.text; ไม่เปลี่ยน request จากการคาดเดา [รายงานภาษาไทย](docs/GEMINI_HTTP400_OFFLINE_REVIEW_TH.md) และ [audit ที่ปิดบังข้อมูล](docs/GEMINI_HTTP400_OFFLINE_AUDIT.json)
+
+แก้ diagnostics ให้แยก error response parsing และรายงาน invalid-field category จาก trusted BadRequest โดยเก็บ enums เท่านั้น ไม่เก็บ key/message/description/prompt/field path Request/schema/model/budget/retries/fallback คงเดิม Independent read-only source review READY/noP1P2; scoped56/56 injected ผ่าน และ build/สาม typechecks ผ่านก่อนแก้ regex lint หลังแก้ regex ที่มีความหมายเดิม provider21/21 และ lint ผ่าน ไม่อ้างผลทดสอบใหม่สำหรับ full suite/browser/responsive/MP4 หรือ live provider
+
+Owner3006: /,health,authstatus HTTP200; anonymous projects401 ตรวจฐานข้อมูล/สื่อแบบ read-only พบ 1owner/1project/4jobs/10cachedMockideas/0active/0clips/0exports และ baseline preserved ไม่มี database writes Premium Cinematic V2, UI และ local media คงอยู่ Canary เดิมมี 10realideas/one selection และ approved retry ใช้ครบแล้ว; historical HTTP400 ยังผูก bf276fb ไม่ใช่ผลใหม่
+
+NEXT_TASK: หลังรายงาน offline ให้ขอ Owner approval ใหม่สำหรับ selected-only expansion เพียง 1 Gemini Free Tier request บน canary เดิม ห้ามส่งก่อนอนุมัติ ก่อนส่งต้อง reviewed source/consistent backup/0active/schema/pinned history/new one-attempt marker; ไม่ใช้ helper หรือ reset marker ที่ใช้แล้ว ไม่ regenerate ideas/Models API probe/OpenAI/Paid/Billing Owner3006 activation ยังรอ full isolated live pipeline ที่ผ่านและรักษาข้อมูลเดิม DriveรอOAuth/consent/live round trip/approvedrestore; CloudรอapprovedSupabase/HTTPS/schema/deployment/notebook-offlineproof PR2/PR3คงDraft/unmerged ไม่มีmainmerge/deploy/publish
+
+Usage authoritative ล่าสุดเหลือ33%/15% (5hr/week), สูงกว่า7%; ตรวจซ้ำก่อนเริ่มงานใหม่ ไม่มีresetcredit/scheduler/automaticresume
+
+---
+
+## Previous checkpoint — historical (2e36520)
+
 STATUS: LIVE_IDEAS_VERIFIED_EXPANSION_BLOCKED
 Updated: 2026-10-11 (Asia/Bangkok)
 

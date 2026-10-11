@@ -27,13 +27,20 @@ export interface GeminiFailureDiagnostic {
   reason?: 'API_KEY_INVALID' | 'QUOTA_EXCEEDED' | 'RATE_LIMIT_EXCEEDED' | 'UNKNOWN';
   providerStatus?: 'INVALID_ARGUMENT' | 'FAILED_PRECONDITION' | 'NOT_FOUND' | 'PERMISSION_DENIED' | 'UNAUTHENTICATED' | 'RESOURCE_EXHAUSTED' | 'INTERNAL' | 'UNAVAILABLE' | 'DEADLINE_EXCEEDED' | 'UNKNOWN';
   requestIssue?: 'SCHEMA_COMPLEXITY';
+  errorResponse?: 'PARSED_ERROR' | 'INVALID_ENVELOPE' | 'MALFORMED_JSON' | 'BODY_READ_FAILED';
+  invalidField?: 'RESPONSE_SCHEMA' | 'GENERATION_CONFIG' | 'CONTENTS' | 'SYSTEM_INSTRUCTION' | 'MODEL' | 'UNKNOWN';
 }
+
+type GeminiApiErrorContext = Omit<Pick<GeminiFailureDiagnostic,
+  'reason' | 'providerStatus' | 'requestIssue' | 'errorResponse' | 'invalidField'>, 'reason'> & { reason?: string };
 
 const DiagnosticCodes = new Set<ErrorCode>(['AI_REQUEST_FAILED', 'AI_TIMEOUT', 'AI_ACCESS_DENIED', 'AI_QUOTA_EXCEEDED',
   'AI_RATE_LIMITED', 'AI_INVALID_OUTPUT', 'AI_REFUSED']);
 const DiagnosticReasons = new Set(['API_KEY_INVALID', 'QUOTA_EXCEEDED', 'RATE_LIMIT_EXCEEDED']);
 const DiagnosticStatuses = new Set(['INVALID_ARGUMENT', 'FAILED_PRECONDITION', 'NOT_FOUND', 'PERMISSION_DENIED',
   'UNAUTHENTICATED', 'RESOURCE_EXHAUSTED', 'INTERNAL', 'UNAVAILABLE', 'DEADLINE_EXCEEDED']);
+const DiagnosticResponseKinds = new Set(['PARSED_ERROR', 'INVALID_ENVELOPE', 'MALFORMED_JSON', 'BODY_READ_FAILED']);
+const DiagnosticFields = new Set(['RESPONSE_SCHEMA', 'GENERATION_CONFIG', 'CONTENTS', 'SYSTEM_INSTRUCTION', 'MODEL', 'UNKNOWN']);
 
 const EnvelopeSchema = z.object({
   candidates: z.array(z.object({
@@ -101,24 +108,45 @@ function usageData(body: unknown, operation: AiUsage['operation'], model: string
   return usage.success ? usage.data : undefined;
 }
 
-function apiErrorContext(body: unknown): { reason?: string; providerStatus?: GeminiFailureDiagnostic['providerStatus']; requestIssue?: 'SCHEMA_COMPLEXITY' } {
+function invalidFieldCategory(field: unknown): GeminiFailureDiagnostic['invalidField'] {
+  if (typeof field !== 'string' || field.length > 512) return;
+  if (/^(?:generationConfig|generation_config)\.(?:responseJsonSchema|response_json_schema|responseSchema|response_schema|_responseJsonSchema|_response_json_schema)(?:\.|\[|$)/.test(field)
+      || /^(?:generationConfig|generation_config)\.(?:responseFormat|response_format)\.text\.schema(?:\.|\[|$)/.test(field)) return 'RESPONSE_SCHEMA';
+  if (/^(?:generationConfig|generation_config)(?:\.|\[|$)/.test(field)) return 'GENERATION_CONFIG';
+  if (/^contents(?:\.|\[|$)/.test(field)) return 'CONTENTS';
+  if (/^(?:systemInstruction|system_instruction)(?:\.|\[|$)/.test(field)) return 'SYSTEM_INSTRUCTION';
+  if (/^model(?:\.|\[|$)/.test(field)) return 'MODEL';
+  return 'UNKNOWN';
+}
+
+function apiErrorContext(body: unknown): GeminiApiErrorContext {
   const result = z.object({ error: z.object({ status: z.unknown().optional(), message: z.unknown().optional(), details: z.unknown().optional() }) }).safeParse(body);
-  if (!result.success) return {};
+  if (!result.success) return { errorResponse: 'INVALID_ENVELOPE' };
   const error = result.data.error;
   const providerStatus = error.status === undefined ? undefined : typeof error.status === 'string' && DiagnosticStatuses.has(error.status)
     ? error.status as GeminiFailureDiagnostic['providerStatus'] : 'UNKNOWN';
   let reason: string | undefined;
+  let invalidField: GeminiFailureDiagnostic['invalidField'];
   if (Array.isArray(error.details)) {
-    for (const detail of error.details) {
+    for (const detail of error.details.slice(0, 16)) {
       const parsed = z.object({ '@type': z.literal('type.googleapis.com/google.rpc.ErrorInfo'),
         domain: z.literal('googleapis.com'), reason: z.string() }).safeParse(detail);
-      if (parsed.success) { reason = parsed.data.reason; break; }
+      if (parsed.success && reason === undefined) reason = parsed.data.reason;
+      if (providerStatus !== 'INVALID_ARGUMENT') continue;
+      const badRequest = z.object({ '@type': z.literal('type.googleapis.com/google.rpc.BadRequest'),
+        fieldViolations: z.array(z.unknown()) }).safeParse(detail);
+      if (!badRequest.success) continue;
+      for (const violation of badRequest.data.fieldViolations.slice(0, 16)) {
+        const field = z.object({ field: z.unknown() }).safeParse(violation);
+        const category = field.success ? invalidFieldCategory(field.data.field) : undefined;
+        if (category && (invalidField === undefined || invalidField === 'UNKNOWN')) invalidField = category;
+      }
     }
   }
   // Classify a canonical provider complaint into a fixed enum; never log its text.
   const schemaComplexity = providerStatus === 'INVALID_ARGUMENT' && typeof error.message === 'string' && error.message.length <= 4096
     && /^The (?:specified |response )?schema (?:is too complex|produces a constraint that has too many states)\b/i.test(error.message);
-  return { reason,
+  return { reason, errorResponse: 'PARSED_ERROR', ...(invalidField ? { invalidField } : {}),
   ...(providerStatus !== undefined ? { providerStatus } : {}), ...(schemaComplexity ? { requestIssue: 'SCHEMA_COMPLEXITY' as const } : {}) };
 }
 
@@ -132,14 +160,16 @@ export function createGeminiProvider(options: GeminiProviderOptions = {}): AiPro
   const requestFetch = options.fetch ?? fetch;
   const timeoutMs = options.timeoutMs ?? 120_000;
 
-  function diagnose(operation: AiUsage['operation'], phase: GeminiFailureDiagnostic['phase'], code: ErrorCode, status?: number, reason?: string,
-    providerStatus?: GeminiFailureDiagnostic['providerStatus'], requestIssue?: 'SCHEMA_COMPLEXITY'): void {
+  function diagnose(operation: AiUsage['operation'], phase: GeminiFailureDiagnostic['phase'], code: ErrorCode, status?: number,
+    context: GeminiApiErrorContext = {}): void {
     const diagnostic: GeminiFailureDiagnostic = Object.freeze({ provider: 'gemini', operation, model: 'gemini-3.5-flash-lite', phase,
       errorCode: DiagnosticCodes.has(code) ? code : 'AI_REQUEST_FAILED',
       ...(typeof status === 'number' && Number.isInteger(status) && status >= 100 && status <= 599 ? { httpStatus: status } : {}),
-      ...(reason !== undefined ? { reason: DiagnosticReasons.has(reason) ? reason as GeminiFailureDiagnostic['reason'] : 'UNKNOWN' as const } : {}),
-      ...(providerStatus !== undefined ? { providerStatus: DiagnosticStatuses.has(providerStatus) ? providerStatus : 'UNKNOWN' as const } : {}),
-      ...(requestIssue === 'SCHEMA_COMPLEXITY' ? { requestIssue } : {}),
+      ...(context.reason !== undefined ? { reason: DiagnosticReasons.has(context.reason) ? context.reason as GeminiFailureDiagnostic['reason'] : 'UNKNOWN' as const } : {}),
+      ...(context.providerStatus !== undefined ? { providerStatus: DiagnosticStatuses.has(context.providerStatus) ? context.providerStatus : 'UNKNOWN' as const } : {}),
+      ...(context.requestIssue === 'SCHEMA_COMPLEXITY' ? { requestIssue: context.requestIssue } : {}),
+      ...(context.errorResponse !== undefined && DiagnosticResponseKinds.has(context.errorResponse) ? { errorResponse: context.errorResponse } : {}),
+      ...(context.invalidField !== undefined && DiagnosticFields.has(context.invalidField) ? { invalidField: context.invalidField } : {}),
     });
     // A logging failure must not alter the provider result or trigger another call.
     try { void Promise.resolve(options.onDiagnostic?.(diagnostic)).catch(() => {}); }
@@ -160,9 +190,7 @@ export function createGeminiProvider(options: GeminiProviderOptions = {}): AiPro
     });
     let phase: GeminiFailureDiagnostic['phase'] = 'fetch';
     let httpStatus: number | undefined;
-    let errorReason: string | undefined;
-    let providerStatus: GeminiFailureDiagnostic['providerStatus'];
-    let requestIssue: 'SCHEMA_COMPLEXITY' | undefined;
+    let errorContext: GeminiApiErrorContext = {};
     try {
       return await Promise.race([aborted, (async () => {
         let response: Response;
@@ -189,9 +217,10 @@ export function createGeminiProvider(options: GeminiProviderOptions = {}): AiPro
           if (response.status === 402) throw new AiProviderError('AI_QUOTA_EXCEEDED');
           if (response.status === 408 || response.status === 499 || response.status === 504) throw new AiProviderError('AI_TIMEOUT');
           if (response.status === 400 || response.status === 429) {
-            const context = apiErrorContext(await response.json().catch(() => null));
-            const reason = context.reason;
-            errorReason = reason; providerStatus = context.providerStatus; requestIssue = context.requestIssue;
+            try { errorContext = apiErrorContext(await response.json()); }
+            catch (error) { errorContext = { errorResponse: error instanceof SyntaxError ? 'MALFORMED_JSON' : 'BODY_READ_FAILED' }; }
+            if (signal.aborted) throw new AiProviderError('AI_TIMEOUT');
+            const reason = errorContext.reason;
             if (response.status === 400 && reason === 'API_KEY_INVALID') throw new AiProviderError('AI_ACCESS_DENIED');
             if (response.status === 429) throw new AiProviderError(reason === 'QUOTA_EXCEEDED' ? 'AI_QUOTA_EXCEEDED' : 'AI_RATE_LIMITED');
           }
@@ -219,7 +248,7 @@ export function createGeminiProvider(options: GeminiProviderOptions = {}): AiPro
         }
       })()]);
     } catch (error) {
-      diagnose(operation, phase, error instanceof AiProviderError ? error.code : 'AI_REQUEST_FAILED', httpStatus, errorReason, providerStatus, requestIssue);
+      diagnose(operation, phase, error instanceof AiProviderError ? error.code : 'AI_REQUEST_FAILED', httpStatus, errorContext);
       throw error;
     } finally {
       clearTimeout(timer);
