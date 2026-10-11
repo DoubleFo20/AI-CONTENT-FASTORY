@@ -2,6 +2,43 @@
 
 STATUS: LIVE_IDEAS_VERIFIED_EXPANSION_BLOCKED
 
+## Retry ที่ Owner อนุมัติ — ผลล่าสุด
+
+Owner อนุมัติ expansion เพิ่ม **หนึ่งครั้งด้วย Free Tier**. ใช้สิทธิ์ครบแล้ว ไม่มี generation request เพิ่มหลัง failure. Free Tier/Billing disabled เป็น Owner attestation; ไม่มี billing telemetry หรือการเปิด Billing/เปลี่ยน Paid/OpenAI/Mock.
+
+| ขั้นตอน | ผลจริง |
+| --- | --- |
+| Consistent backup + idle/schema check | VERIFIED ก่อน restart isolated3013ด้วย bf276fb; accounts/ideas/selection/history เดิมยังอยู่ |
+| Retry endpoint | POST /api/jobs/59245471-320e-4834-aa24-5e20ea1497a6/retry หนึ่งครั้งผ่าน normal canary session/CSRF |
+| Job ใหม่ | 599d80d9-7412-466f-9600-a0e62485e1e6; queued → running15 → failed15 / AI_REQUEST_FAILED |
+| Private diagnostic | HTTP400 / phase=http / 2026-10-11T01:42:47.427Z; providerStatus/reason ไม่ได้เก็บ |
+| Ten ideas / one selection / original jobs | VERIFIED ยังคงเดิม; read-onlyพบ3jobs/0active ไม่ได้ generateideasใหม่ |
+| Logout | VERIFIED APIตอบok:true; helperไม่รายงานสำเร็จถ้าlogoutล้มเหลว |
+| Live package / scenes / Flow prompts | BLOCKED ยังไม่มี package; ไม่มี expansion usage receipt |
+| Owner3006 / original database / media | VERIFIED HTTP200/read-onlybaselinepreserved; RC/Mock/PremiumUIเดิม |
+
+Project cc629e54-668e-4ff1-82fe-c5904b4edbcc ใช้ storage/gemini-canary-4XXQbi เดิม. Isolated PID17440 เป็น observation ณ checkpoint; Owner PID14548ไม่ถูกหยุดหรือrestart. รวม live generation attempts สองรอบเป็น ideas1 + expansionเดิม1 + approvedretry1. Receiptที่มีเพียง ideas: **254 input / 1307 output / 1561 total**. ไม่มี expansion receiptจึงไม่สมมติ token/cost=0.
+
+หลักฐาน privateอยู่ใน .tmp/gemini-private/approved-expansion-retry-20261011.*: consistentbackup/preflight/exclusiveattemptmarker/result/diagnostic และ auth/keyDPAPI แยกต่างหาก. ห้าม commit/print backup/credentials/rawlogs หรือ reset marker. Resume/retry helpers ครั้งนี้ถูกใช้ไปแล้วและจะปฏิเสธ rerun; verifierเดิมปฏิเสธหลาย expansionjobs จึงต้องอ่านสถานะ/ประวัติอย่างปลอดภัยโดยไม่ POST เพิ่ม.
+
+### Diagnostics และการตรวจ offline
+
+HTTP400เพียงอย่างเดียวแยก INVALID_ARGUMENT กับ FAILED_PRECONDITION ไม่ได้ตาม [Google API errors](https://ai.google.dev/gemini-api/docs/generate-content/api-errors). ยังไม่ยืนยัน schema complexity/quota/region; HTTP status ของ expansionรอบแรกยังunknown. ตรวจ outgoing schemaแบบ injected: ideas689bytes/23nodes/depth8; expansion2281bytes/64nodes/depth8. ใช้ constraints ที่เอกสาร [structured output](https://ai.google.dev/gemini-api/docs/structured-output) รองรับ; schemaใหญ่หรือซับซ้อนอาจถูกปฏิเสธแต่ยังเป็น hypothesis. จึงไม่เปลี่ยน schema/token budget/modelจากการคาดเดา.
+
+เพิ่ม server-only providerStatus ผ่าน exactallowlist และ SCHEMA_COMPLEXITY เฉพาะ canonical bounded provider complaintที่มี INVALID_ARGUMENT. เก็บ enumเท่านั้น ไม่เก็บ actualmessage/metadata/key/header/prompt/stack; malformedstatus/detailsไม่ทำให้ข้อมูลprivateออกlog. Request/retries/fallback/publicerrorเดิมคงอยู่. Codeนี้เป็น preparationสำหรับคำขออนาคต; PID17440ยังโหลด bf276fbก่อน delta จึงกู้ statusย้อนหลังไม่ได้.
+
+Independent review source: READY/noP1P2. Targeted Node **54/54** injected/syntheticผ่านใน11.761s; build/สามtypechecks/lintผ่าน. Retry helper offline **11/11** ผ่านก่อนใช้จริง; ไม่ใช่providerproof. Full217/216pass/0fail/1WindowsPOSIXskipพร้อมFFmpeg/FFprobeผูกcheckpointbf276fb; ไม่ได้rerunfullsuite/browser/responsive/MP4สำหรับ diagnostics delta. Premium bundlesยัง index-Cx75inse.css/index-Lz5dMZN5.js, PWA9publicassets; ไม่มี UI/schema/env/dependency/CI change.
+
+### ขั้นตอนต่อไป
+
+หยุด generation ไว้ตามสิทธิ์ที่ใช้ครบแล้ว. หาก Ownerอนุมัติคำขอเพิ่มในภายหลัง ให้ใช้ canary/selectionเดิมและใหม่source diagnosticsหลังbackup/idle/schema/historycheck; จำกัดจำนวนที่อนุมัติด้วย markerใหม่ ไม่ลบ markerเก่าและไม่ reuse helperที่ใช้แล้ว. Owner3006 activationยังรอ isolated selected-onlypipelineผ่านโดยรักษา savedMock/data. Driveยังต้องOAuth/consentและliveupload/download/approvedrestore; Cloudยังต้องapprovedSupabase/HTTPS/schema/deploy/disconnectednotebookproof. PR2/PR3คงDraft/unmerged; GoogleFlowเป็นprimaryassistedvideo.
+
+---
+
+## รอบแรก — หลักฐาน historical ก่อน Owner อนุมัติ retry
+
+ข้อความและคำแนะนำรอบแรกด้านล่างเป็นประวัติ; approval/retryหนึ่งครั้งที่เคยรอได้รับและใช้แล้วตามผลล่าสุดด้านบน. PID7552และสถานะรอretryเดิมไม่ใช่สถานะปัจจุบัน.
+
 ทดสอบหนึ่งรอบตามที่ Owner อนุญาต หลังพบ configuration แบบ Windows DPAPI พร้อมคำยืนยัน Free Tier/Billing disabled และ ACL เฉพาะผู้ใช้ปัจจุบัน. คำยืนยันนี้มาจาก Owner; โปรแกรมไม่ได้ตรวจสถานะ billing ผ่าน API. ไม่มีการเปิด Billing หรือสลับไป Paid Tier/OpenAI/Mock.
 
 ## ผลจริง

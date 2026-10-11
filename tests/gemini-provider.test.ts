@@ -378,9 +378,54 @@ test('Gemini failure diagnostics distinguish HTTP, transport and body without re
     if (fixture.reason !== undefined) assert.equal(diagnostic.reason, fixture.reason.startsWith('private') ? 'UNKNOWN' : fixture.reason);
     else assert(!('reason' in diagnostic));
     assert(Object.isFrozen(diagnostic));
-    assert(Object.keys(diagnostic).every(name => ['provider','operation','model','phase','errorCode','httpStatus','reason'].includes(name)));
+    assert(Object.keys(diagnostic).every(name => ['provider','operation','model','phase','errorCode','httpStatus','reason','providerStatus','requestIssue'].includes(name)));
     const output = JSON.stringify(diagnostics);
     for (const privateValue of [key, input.brief, selected.logline.en, 'private', 'metadata']) assert(!output.includes(privateValue));
+  }
+});
+
+test('Gemini distinguishes only allowlisted HTTP400 statuses and canonical schema complaints without logging their messages', async () => {
+  const fixtures = [
+    { status: 'INVALID_ARGUMENT', message: `The specified schema produces a constraint that has too many states for serving. private ${key}`, issue: 'SCHEMA_COMPLEXITY' },
+    { status: 'INVALID_ARGUMENT', message: `The response schema is too complex. private ${key}`, issue: 'SCHEMA_COMPLEXITY' },
+    { status: 'INVALID_ARGUMENT', message: `private ${key} malformed request`, issue: undefined },
+    { status: 'FAILED_PRECONDITION', message: `private ${key} schema is too complex`, issue: undefined },
+    { status: `private ${key}`, message: `The response schema is too complex. private ${key}`, issue: undefined },
+    { status: 'INVALID_ARGUMENT', message: `The response schema is too complex.${'x'.repeat(4096)}`, issue: undefined },
+  ];
+  for (const fixture of fixtures) {
+    let calls = 0; const diagnostics: GeminiFailureDiagnostic[] = [];
+    const provider = createGeminiProvider({ apiKey: key, freeTierConfirmed: true, onDiagnostic: value => { diagnostics.push(value); }, fetch: async () => {
+      calls++; return jsonResponse({ error: { code: 400, status: fixture.status, message: fixture.message, details: [{ metadata: { key } }] } }, 400);
+    } });
+    await assert.rejects(provider.expandStory(input, selected), safeError('AI_REQUEST_FAILED'));
+    assert.equal(calls, 1); assert.equal(diagnostics.length, 1);
+    assert.equal(diagnostics[0].providerStatus, fixture.status.startsWith('private') ? 'UNKNOWN' : fixture.status);
+    assert.equal(diagnostics[0].requestIssue, fixture.issue); assert.equal(diagnostics[0].httpStatus, 400);
+    const logged = JSON.stringify(diagnostics); assert(!logged.includes(key)); assert(!logged.includes('private')); assert(!logged.includes('message'));
+  }
+});
+
+test('Gemini retains safe error status independently of malformed details and recognizes only trusted ErrorInfo reasons', async () => {
+  const fixtures: Array<{ details: unknown; status: unknown; code: string; reason?: string }> = [
+    { details: `private ${key}`, status: 'INVALID_ARGUMENT', code: 'AI_REQUEST_FAILED' },
+    { details: null, status: 'FAILED_PRECONDITION', code: 'AI_REQUEST_FAILED' },
+    { details: [null, { metadata: { key } }], status: { key }, code: 'AI_REQUEST_FAILED' },
+    { details: [null, { '@type': 'type.googleapis.com/google.rpc.ErrorInfo', domain: 'googleapis.com', reason: 'API_KEY_INVALID', metadata: { key } }],
+      status: 'INVALID_ARGUMENT', code: 'AI_ACCESS_DENIED', reason: 'API_KEY_INVALID' },
+    { details: [{ '@type': 'type.googleapis.com/google.rpc.ErrorInfo', domain: 'private.test', reason: 'API_KEY_INVALID' }],
+      status: 'INVALID_ARGUMENT', code: 'AI_REQUEST_FAILED' },
+  ];
+  for (const fixture of fixtures) {
+    let calls = 0; const diagnostics: GeminiFailureDiagnostic[] = [];
+    const provider = createGeminiProvider({ apiKey: key, freeTierConfirmed: true, onDiagnostic: value => { diagnostics.push(value); }, fetch: async () => {
+      calls++; return jsonResponse({ error: { status: fixture.status, message: { key }, details: fixture.details } }, 400);
+    } });
+    await assert.rejects(provider.expandStory(input, selected), safeError(fixture.code));
+    assert.equal(calls, 1); assert.equal(diagnostics.length, 1);
+    assert.equal(diagnostics[0].providerStatus, typeof fixture.status === 'string' ? fixture.status : 'UNKNOWN');
+    assert.equal(diagnostics[0].reason, fixture.reason); assert.equal(diagnostics[0].requestIssue, undefined);
+    const logged = JSON.stringify(diagnostics); assert(!logged.includes(key)); assert(!logged.includes('private')); assert(!logged.includes('message'));
   }
 });
 

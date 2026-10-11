@@ -51,7 +51,7 @@ shared/contracts.ts, ROADMAP.md and TASKS.md. Status files record evidence, not 
 
 ## Checkpoint state
 
-Latest Phase2 live checkpoint: isolated Gemini10ideas/one selection VERIFIED, selected expansion failed AI_REQUEST_FAILED and live scenes/prompts BLOCKED; no automatic retry. Owner3006 stays RC/Mock with original data. Private diagnostics and Windows PS5/PS7 readiness fixes reviewed/tested. See [current live result](docs/GEMINI_LIVE_RESULT_20261011_TH.md); no main merge/deployment/billing changes.
+Latest Phase2 live checkpoint: Gemini10ideas/one selection VERIFIED. Owner-approved one additional expansion retry has been consumed: job599d80d9 failed AI_REQUEST_FAILED/HTTP400; providerStatus/root cause unknown and live scenes/prompts BLOCKED. No more generation without new explicit approval; existing cached canary retained. New safe status diagnostics reviewed; targeted54/54/build/typechecks/lint passed. Owner3006 stays RC/Mock with original data. See [current live result](docs/GEMINI_LIVE_RESULT_20261011_TH.md); PR2/PR3 unmerged, no deployment/billing changes.
 
 Current release supersedes the historical integration checkpoint below. Branch
 `release/v1-real-world` combines reviewed integration cfa6554 with Premium Cinematic V2

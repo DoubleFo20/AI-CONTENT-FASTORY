@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-11 — one approved expansion retry and safe status diagnostics
+
+- Used exactly one Owner-approved Free Tier retry on the existing cached canary; newjob599d80d9 failedAI_REQUEST_FAILED/HTTP400. Preserved10ideas/selection/originaljobs; normalcanarylogoutconfirmed. No additional generation/fallback/OpenAI/Billing/Ownerdatawrites. Live package/scenes/prompts remainBLOCKED; see [report](docs/GEMINI_LIVE_RESULT_20261011_TH.md).
+- Added allowlisted providerStatus and fixed canonical schema-complaint classification without rawmessages/metadata/secrets; malformeddetails do not erase safestatus. No request/schema/model/budget changes. Independentread-onlyreviewREADY/noP1P2.
+- Targeted54/54injected plus privatehelper11/11offline; build/3typechecks/lintpassed. Full217/216pass/1WindowsPOSIXskip/FFmpeg evidence belongs to previousbf276fb checkpoint; no new browser/responsive/MP4/liveFlow/Drive/Cloudclaim.
+- Owner3006HTTP200/read-onlybaselinepreserved; PremiumUI/bundles/schema/env/dependenciesunchanged. PR2/PR3remainDraft/unmerged. Nextgenerationneedsnewexplicitapproval; Drive/Cloudexternalgatesunchanged.
+
 ## 2026-10-11 — guarded live Gemini result and bounded Windows startup
 
 - Final full Node regression 217 total/216 passed/0 failed/1 Windows POSIX skip, including isolated FFmpeg/FFprobe exports; docs/PWA/secrets validation and staged diff check passed. Browser/responsive evidence remains the previous source-specific checkpoint.

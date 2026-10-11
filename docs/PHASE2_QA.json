@@ -2,7 +2,7 @@
   "sourceCommit": "de462843a2847e850334730c004f8b1d8f01e0b6",
   "releaseBase": "ba327e2364e0a14f36629e4dc9376de6b827f10e",
   "date": "2026-10-10",
-  "scope": "Reviewed Phase2 preparations with synthetic/injected regression and isolated browser QA; no live AI/Drive/cloud proof",
+  "scope": "Cumulative Phase2 evidence: historical synthetic/browser checkpoints, live Gemini ten ideas and one selection, one additional approved expansion retry failed HTTP400. No successful live expansion/Drive/cloud proof; current preparation source is pinned by approvedExpansionRetry.providerDiagnosticPreparation.sourceHashes.",
   "tests": {
     "command": "npm.cmd test",
     "exitCode": 0,
@@ -475,13 +475,15 @@
   },
   "live": {
     "openai": "BLOCKED_PENDING_NEW_OWNER_APPROVAL_PREVIOUS_QUOTA_NO_NEW_CALL",
-    "gemini": "PREPARED_KEY_AND_FREE_TIER_CONFIRMATION_REQUIRED_NO_LIVE_CALL",
+    "gemini": "LIVE_IDEAS_AND_SELECTION_VERIFIED_APPROVED_RETRY_FAILED_HTTP400_EXPANSION_BLOCKED",
     "drive": "UNVERIFIED_OAUTH_MISSING",
     "driveRestore": "UNVERIFIED_NO_CANARY_EVICTION_APPROVAL",
     "supabaseCloudMobile": "UNVERIFIED_APPROVED_PROJECT_HOST_REQUIRED"
   },
-  "status": "PHASE2_PREPARED_LIVE_GATES_PENDING",
+  "status": "LIVE_IDEAS_VERIFIED_EXPANSION_BLOCKED",
   "usage": {
+    "historical": true,
+    "supersededBy": "approvedExpansionRetry.usageRemaining",
     "source": "Codex get_usage_limits",
     "primaryUsedPercent": 55,
     "primaryRemainingPercent": 45,
@@ -969,6 +971,133 @@
       "server/index.ts": "f27f38d84272a480234f5bf57a982479fd99593fac7513f98a4cb17969e3164d",
       "tests/gemini-provider.test.ts": "a7087b34d2504a4acf146f9314dc7c210d05253555296fc6243eafbf26d66811"
     },
-    "nextTask": "Owner approval for one Free Tier retry of existing canary expansion, no new ideas; activate updated diagnostics on same canary data after idle/backup/schema checks. Owner3006 activation only after complete isolated live proof."
+    "nextTask": "Owner approval for one Free Tier retry of existing canary expansion, no new ideas; activate updated diagnostics on same canary data after idle/backup/schema checks. Owner3006 activation only after complete isolated live proof.",
+    "historical": true,
+    "supersededBy": "approvedExpansionRetry"
+  },
+  "approvedExpansionRetry": {
+    "date": "2026-10-11",
+    "status": "LIVE_IDEAS_VERIFIED_EXPANSION_BLOCKED",
+    "liveApplicationSource": "bf276fb7e0d4a443057467bb8c8404ffa299b157",
+    "origin": "http://127.0.0.1:3013",
+    "pid": 17440,
+    "canaryProjectId": "cc629e54-668e-4ff1-82fe-c5904b4edbcc",
+    "previousExpansionJobId": "59245471-320e-4834-aa24-5e20ea1497a6",
+    "retryJobId": "599d80d9-7412-466f-9600-a0e62485e1e6",
+    "ownerAuthorizedAdditionalAttempts": 1,
+    "generationRetryPosts": 1,
+    "additionalBudgetRemaining": 0,
+    "cumulativeGenerationAttempts": {
+      "ideas": 1,
+      "expansion": 2,
+      "total": 3
+    },
+    "freeTierAttestedByOwner": true,
+    "billingVerifiedByTool": false,
+    "expansion": {
+      "status": "failed",
+      "progress": 15,
+      "errorCode": "AI_REQUEST_FAILED",
+      "phase": "http",
+      "httpStatus": 400,
+      "at": "2026-10-11T01:42:47.427Z",
+      "providerStatus": null,
+      "reason": null,
+      "rootCause": "UNKNOWN",
+      "usage": null,
+      "packagePresent": false,
+      "scenePromptsVerified": false
+    },
+    "ideasUsage": {
+      "inputTokens": 254,
+      "outputTokens": 1307,
+      "totalTokens": 1561
+    },
+    "preservation": {
+      "ideasPreserved": true,
+      "selectedPreserved": true,
+      "accountsPreserved": true,
+      "schemaPreserved": true,
+      "ideasCount": 10,
+      "packagePresent": false,
+      "activeJobs": 0,
+      "jobCount": 3,
+      "jobHistoryPreserved": true,
+      "databaseWrites": false
+    },
+    "logoutConfirmed": true,
+    "consistentBackupVerified": true,
+    "owner3006": {
+      "healthHttpStatus": 200,
+      "baselinePreserved": true,
+      "databaseWrites": false,
+      "mode": "mock",
+      "users": 1,
+      "projects": 1,
+      "jobs": 4,
+      "activeJobs": 0,
+      "clips": 0,
+      "exports": 0
+    },
+    "automaticRetries": 0,
+    "billingChanged": false,
+    "openaiRequests": 0,
+    "fallback": false,
+    "privateHelperOfflineTests": {
+      "passed": 11,
+      "failed": 0,
+      "kind": "INJECTED_SYNTHETIC",
+      "beforeLiveRetry": true,
+      "postRetryRerunPassed": 11,
+      "postRetryRerunFailed": 0,
+      "postRetryRerunDurationMs": 652.7076
+    },
+    "providerDiagnosticPreparation": {
+      "baseSource": "bf276fb7e0d4a443057467bb8c8404ffa299b157",
+      "activeInLiveRuntime": false,
+      "publicRequestSchemaModelBudgetChanged": false,
+      "retrospectiveRootCauseClaimed": false,
+      "independentReview": "READY_NO_P1_P2_SOURCE_ONLY",
+      "tests": {
+        "total": 54,
+        "passed": 54,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 11760.5499,
+        "kind": "INJECTED_SYNTHETIC"
+      },
+      "checks": {
+        "build": "PASSED",
+        "threeTypechecks": "PASSED",
+        "lint": "PASSED",
+        "docs": "PASSED_27_ARTIFACTS",
+        "pwa": "PASSED_PUBLIC_SHELL_PRIVATE_API_EXCLUSION",
+        "secrets": "PASSED_171_TRACKED_FILES_NO_VALUES_PRINTED",
+        "fullSuiteRerun": false,
+        "mp4Rerun": false,
+        "browserRerun": false
+      },
+      "sourceHashes": {
+        "server/ai/gemini.ts": "8f673fced5492ddd4173fabf1f3822f852be311327be4db25526858d0a56a78c",
+        "tests/gemini-provider.test.ts": "fe1821fb2d8f0697ecf26dd9f4b3e3624da0754e13dd286e0bf607f22d853711"
+      }
+    },
+    "commands": [
+      "node --import tsx --test --test-concurrency=1 tests/gemini-provider.test.ts tests/ai-provider-routing.test.ts tests/gemini-live-verifier.test.ts tests/ai-integration.test.ts tests/ai-usage.test.ts",
+      "npm.cmd run build",
+      "npm.cmd run lint",
+      "node .tmp/check-owner-phaseA.mjs (release-v1; read-only)",
+      "node --test .tmp/approved-retry-offline.test.mjs (post-retry; injected)",
+      "npm.cmd run validate:docs",
+      "npm.cmd run validate:pwa",
+      "npm.cmd run validate:secrets",
+      "git diff --check"
+    ],
+    "usageRemaining": {
+      "primary": 52,
+      "secondary": 18
+    },
+    "report": "docs/GEMINI_LIVE_RESULT_20261011_TH.md",
+    "nextTask": "Observe existing cached canary only. Any additional generation needs new explicit Owner authorization and a new bounded marker/preflight on unchanged data. Drive OAuth/live verification and approved Supabase/HTTPS/deployment remain external gates."
   }
 }
