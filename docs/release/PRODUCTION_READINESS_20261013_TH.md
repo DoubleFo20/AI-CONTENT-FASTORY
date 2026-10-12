@@ -1,6 +1,11 @@
 # Production V1 checkpoint — 2026-10-13
 
-สถานะ **งานในเครื่องผ่าน / เปิด Owner app รออนุมัติ / วิดีโอ Flow จริงยังไม่ผ่าน acceptance**
+สถานะ **Owner app เปิดแล้วใน Mock / Gemini backend configured / วิดีโอ Flow จริงยังไม่ผ่าน acceptance**
+
+หลัง checkpoint7f759f7 OwnerอนุมัติเปิดและRootเปิด pinnedaadf62d/PID10944 สำเร็จ
+health/authstatus200, anonymousprojects401, setupRequiredfalse, assetsSHAและข้อมูลก่อน–หลังตรง
+ไม่มีAIrequests/Billing/modechange Ownerpasswordlogin/Gemini generationบนOwnerappยังต้องตรวจ
+หัวข้อผลเตรียมด้านล่างเก็บ historicaloffline/pendingapproval ไว้ตามลำดับเหตุการณ์
 ไม่ merge main, ไม่ deploy, ไม่ใช้เครดิตหรือคำขอ AI เพิ่ม
 
 ## ผลที่ทำและตรวจจริง
@@ -65,9 +70,9 @@ Antigravity PASS เดิมผูก source 3e9c1aa เท่านั้น; 
 
 | ความสามารถ | สถานะ | ขอบเขตจริง |
 |---|---|---|
-| Local story/import/editor/export/persistence | VERIFIED | isolated Mock text + synthetic media/API/FFmpeg; Owner3006 รอเปิด |
+| Local story/import/editor/export/persistence | VERIFIED | isolated Mock text + synthetic media/API/FFmpeg; Owner3006 เปิด Mock แล้ว, password login ยังรอ Owner ตรวจ |
 | Gemini text | VERIFIED | canary ที่อนุมัติรอบก่อน; งบ request เดิมเหลือ 0; ยังไม่ใช้บน Owner app |
-| Owner3006 activation/rollback | PREPARED | verified backup/copy/frozen builds; explicit runtime approval pending |
+| Owner3006 activation/rollback | VERIFIED / PREPARED | approved startup/data preservation verified; rollback prepared, not executed; Owner password login pending |
 | Google Flow production | PREPARED | cached EN prompts/TH guidance; ภาพอ้างอิง/คลิปจริง/เครดิตและ editorial รอ Owner |
 | Google Drive | PREPARED / BLOCKED | implementation/injected tests; OAuth และ live upload/download/restore/checksum ยังไม่ผ่าน |
 | Mobile/cloud | PREPARED / BLOCKED | foundation/tests; ไม่มี deployed HTTPS/app-specific Supabase/offline notebook proof |
@@ -76,8 +81,7 @@ Antigravity PASS เดิมผูก source 3e9c1aa เท่านั้น; 
 
 ## ขั้นตอนที่ต้องทำต่อ
 
-Owner อนุมัติ [แผนเปิด 3006](../OWNER3006_ACTIVATION_TH.md) ก่อนเปลี่ยน runtime
-Root จะตรวจ fingerprints/state/port/idle ใหม่และเปิด pinned aadf62d แบบคง Mock
+Owner อนุมัติ [แผนเปิด 3006](../OWNER3006_ACTIVATION_TH.md) แล้ว Rootเปิดและตรวจผ่าน
 โดยใช้ข้อมูลปัจจุบันเดิม ไม่ใช้ backup ทับ; ให้ Owner login และสั่งงานจริงเอง
 เตรียม Flow refs/clips ตาม private handoff, ตั้ง Drive OAuth และเลือก Supabase/HTTPS host
 โดยไม่เปิด billing/deploy/publishเอง ทุก live integration ต้องมีผลตรวจแยก

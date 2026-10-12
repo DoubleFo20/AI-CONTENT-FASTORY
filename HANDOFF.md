@@ -1,5 +1,27 @@
 # Handoff
 
+STATUS: OWNER3006_RUNNING_MOCK_GEMINI_BACKEND_CONFIGURED
+RELEASE_READINESS: LOCAL_OWNER_APP_RUNNING_REAL_VIDEO_AND_LIVE_INTEGRATIONS_PENDING
+Updated: 2026-10-13 (Asia/Bangkok)
+
+Owner อนุมัติเปิด Owner3006 และคง Mock Mode แล้ว Root บันทึก fresh trusted receipt ผูก frozen aadf62d/plan SHA/storage/port และใช้ prepared launcherที่reviewedเพียงครั้งเดียว Startupผ่าน PID10944/127.0.0.1:3006/schema/integrity/0active/frozenbundle+deps+Node fingerprints/privateACL ตรวจข้อมูลทุกตารางและ sidecar/media ก่อน–หลังตรงกัน ไม่คืนbackupทับ ไม่สร้างsession/job/AI ใหม่
+
+Poststart health200/authstatus200/setupRequired=false/anonymousprojects401 และ HTML/assets SHAตรง frozenPremiumbuild Gemini keyอ่านจากexisting privateDPAPIและส่งเฉพาะbackend พร้อมOwner FreeTierconfirmation; Geminiยังไม่ถูกเรียกบนOwnerapp การเริ่มครั้งนี้ไม่ตรวจBillingใหม่ผ่านGoogle APIและไม่ใช้เครดิต Ownerต้องloginด้วยpasswordเดิมและตรวจSettings/projectเอง ModeปัจจุบันMockตามapproval OpenAI/Drive/cloudcredentialsไม่ส่ง ไม่มีpublicdeploy/merge/publish
+
+Code checkpoint7f759f7ผ่าน final250tests/249pass/0fail/1WindowsPOSIXskip, lint/build/สามtypechecks/PWA/docs/secrets191tracked ก่อนเปิดจริง Appsourceที่เปิดคือaadf62d (sameexistingruntime/AI/UI; newofflineCLI/planner/testsอยู่ใน7f759f7) ไม่ได้reruntestsเพราะรอบนี้เปลี่ยนเอกสาร/runtimecheckpointเท่านั้น Browserplayback/responsive/passwordsigninยังไม่verified(CUAkernelassets os3)
+
+Production Flow bundleล่าสุดใช้cachedGemini10ideas/selection/package3scenes6+6+8s ไม่สร้างAIใหม่ แต่ขาดrealFlowclips3ฉาก/ภาพอ้างอิง/editorial+verifiedcreditrate DriveรอOwnerOAuthsetup/consent/livechecks Cloudไม่มีapprovedappSupabase/HTTPS/pairing/offlineproof Publishingเป็นpureplan/executionAllowed=false ไม่มีtransport/scheduler Metaofficialdocsยัง429จากRootตรวจเพิ่ม
+
+NEXT_TASK: Owner login ที่ http://127.0.0.1:3006 แล้วตรวจข้อมูลเดิม; เลือกGeminiเมื่อพร้อมสั่งงานจริงเองตามFreeTier policy Rootห้ามสลับจากMock/สร้างAIใช้testapprovalเก่าเอง หากต้องRootlivecanaryเพิ่มต้องnewscopedapprovalงบชัดเจน ใช้privateFlowbundle-v2เพื่อผลิต/นำเข้าคลิปที่Ownerอนุมัติ ตรวจrealMP4playback/export/reopen ต่อ ขอDrivecredentials/OAuthเมื่อOwnerพร้อม ไม่ลบmedia/cutover Cloud/publishingexternalgatesแยก PR2/3คงDraft/unmerged
+
+Usage authoritative ล่าสุดเหลือ30%/79% (5hr/week), สูงกว่า7% ไม่มีresetcredit/scheduler/automaticresume
+
+[แผนเปิด/rollback](docs/OWNER3006_ACTIVATION_TH.md), [readiness](docs/release/PRODUCTION_READINESS_20261013_TH.md), [Owner actions](docs/PRODUCTION_OWNER_ACTIONS_TH.md)
+
+---
+
+## Previous checkpoint — historical (7f759f7 / ก่อนอนุมัติเปิด)
+
 STATUS: OWNER_ACTIVATION_PREPARED_PRODUCTION_EXTERNAL_GATES_PENDING
 RELEASE_READINESS: LOCAL_PIPELINE_VERIFIED_GEMINI_CANARY_VERIFIED_OWNER3006_OFFLINE_APPROVAL_PENDING
 Updated: 2026-10-13 (Asia/Bangkok)

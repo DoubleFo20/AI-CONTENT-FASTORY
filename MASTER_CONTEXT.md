@@ -100,3 +100,7 @@ See PROJECT_STATUS.md and HANDOFF.md for actual checks and next actions.
 ## Production checkpoint — 2026-10-13
 
 Owner3006 is currently offline; approved runtime start is pending. Frozen aadf62d + rollback6a9386e and verified original-data backup/restoredcopy are prepared without activating Gemini. Local250tests/249passes/1skip and synthetic20s H.264/AAC render/persistence passed. FlowCLI exports cachedrealtext privately with canonical clipnames; ownerrefs/clips missing. Publishing is pure PREPARED planning only, executionAllowed=false, noOAuth/HTTP/durablejob/scheduler. Drive/cloud remain externally gated; no approved app-specific Supabase project/HTTPS deployment. See PROJECT_STATUS and HANDOFF for current gates; old running PIDs are historical evidence only. No new AI calls or reuse of spent canary approval.
+
+## Owner runtime superseding checkpoint — 2026-10-13
+
+After explicit human approval Owner3006 now runs pinnedaadf62d/PID10944 on originaldata/savedMock, GeminiDPAPIbackendconfigured only; health/auth/401/staticasset hashes and startup preservation verified. NoAIcalls/Billing/modechange. The previous offline/pending note is historical; Ownerpasswordlogin/realgeneration/Flowclips/Drive/cloud/publishingremain separate acceptance gates.

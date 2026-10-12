@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-13 — เปิด Owner3006 หลัง explicit approval
+
+- เปิด frozenaadf62d/PID10944/originaldata/savedMock ด้วยGeminiDPAPIbackend config และไม่มีOpenAI/Drive/cloud keys
+- Trustedreceipt/one-attempt/preflight/idle/schema/ACL/fingerprints/data-before-afterผ่าน health200/auth200/setupfalse/anonymous401/staticassetsSHAตรง
+- ไม่สร้างAI/newjob/session ไม่เปลี่ยนBilling ไม่คืนDBทับ Passwordsignin/OwnerGemini generation/playbackยังต้องตรวจแยก PR2/3unmerged
+
+
 ## 2026-10-13 — safe Owner activation และ production preparation
 
 - Verified original SQLite/storage backup + restored-copy3014 API checks; Owner3006 ยัง offline/pendingapproval คง savedMock ไม่มี AI/runtimechange

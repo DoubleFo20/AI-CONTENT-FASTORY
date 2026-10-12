@@ -3,8 +3,8 @@
   "sourceBase": "aadf62d7a791f09bf8b6da8fd0ceb4f2cc04f158",
   "rollbackSource": "6a9386eac19719e25932d8485bae36cd5312b37a",
   "owner3006": {
-    "status": "OFFLINE_WAITING_FOR_EXPLICIT_OWNER_APPROVAL",
-    "startedThisCheckpoint": false,
+    "status": "RUNNING_MOCK_GEMINI_CONFIGURED_NO_GENERATION",
+    "startedThisCheckpoint": true,
     "dataPreserved": true,
     "accounts": 1,
     "projects": 1,
@@ -13,7 +13,12 @@
     "exports": 0,
     "activeJobs": 0,
     "savedMode": "mock",
-    "passwordLogin": "OWNER_CHECK_REQUIRED_AFTER_APPROVED_START"
+    "passwordLogin": "OWNER_CHECK_REQUIRED_AFTER_APPROVED_START",
+    "pid": 10944,
+    "health": 200,
+    "authStatus": 200,
+    "anonymousProjects": 401,
+    "staticAssetHashesMatch": true
   },
   "backup": {
     "consistentSqlite": true,
@@ -40,12 +45,20 @@
   },
   "activation": {
     "sourceReview": "READY_AFTER_ACL_EXITCODE_FIX",
-    "runtimeExecuted": false,
+    "runtimeExecuted": true,
     "trustedOwnerReceiptRequired": true,
     "initialMode": "mock",
     "sameCurrentStorage": true,
     "automaticDatabaseRestore": false,
-    "previousLiveBudgetRemaining": 0
+    "previousLiveBudgetRemaining": 0,
+    "runtimeOwnerApproval": "EXPLICIT_HUMAN_APPROVAL_RECORDED",
+    "startupVerified": true,
+    "dataPreservedAtStartup": true,
+    "geminiBackendKeyConfigured": true,
+    "geminiFreeTierConfirmationSource": "EXISTING_OWNER_PRIVATE_DPAPI_ATTESTATION",
+    "billingIndependentlyRecheckedAtStartup": false,
+    "newAiRequests": 0,
+    "actualRollbackExecuted": false
   },
   "flow": {
     "status": "PREPARED",

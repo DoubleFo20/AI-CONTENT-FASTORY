@@ -5,9 +5,10 @@ Local V1 ผ่านการทดสอบด้วย Mock text และ sy
 
 ## 1. เปิดแอป Owner
 
-อนุมัติแผน [Owner3006](OWNER3006_ACTIVATION_TH.md) ก่อนเปิด pinned build จาก PR #3
-ข้อมูลเดิมจะคงอยู่และเริ่มใน Mock Mode การเปิดแอปไม่ใช่การอนุมัติเรียก Gemini เพิ่ม
-หลังเปิด Owner ต้อง login ด้วยรหัสผ่านเดิมและตรวจ project ของตนเอง
+Owner อนุมัติและเปิด [Owner3006](OWNER3006_ACTIVATION_TH.md) สำเร็จแล้ว
+ใช้ pinned aadf62d/Premium UI/ข้อมูลเดิมและคงMockModeที่ http://127.0.0.1:3006
+Owner login ด้วยรหัสผ่านเดิมแล้วตรวจproject/Settings Gemini keyอยู่backendพร้อมเลือก
+ยังไม่สั่งgenerationหรือเปลี่ยนmodeให้เอง การเปิดแอปไม่ใช่การอนุมัติใช้testbudgetเก่า
 
 ## 2. คลิปจริงชุดแรก 20 วินาที
 

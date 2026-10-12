@@ -1,9 +1,14 @@
 # แผนเปิด Owner3006 อย่างปลอดภัย — 2026-10-13
 
-สถานะ **PREPARED / WAITING_FOR_OWNER_APPROVAL**. ยังไม่เปิดหรือเปลี่ยนแอป Owner
-และไม่ได้เรียก Gemini เพิ่ม การอนุมัติทดสอบ canary รอบก่อนใช้ครบแล้ว
+สถานะ **START_VERIFIED / RUNNING_MOCK**. Owner อนุมัติเปิดแล้วเมื่อ checkpoint นี้
+เปิด frozen aadf62d ที่3006/PID10944 ด้วยข้อมูลเดิมและคงMock ตรวจhealth/auth/401/assets
+และข้อมูลก่อน–หลังผ่าน Gemini configอยู่เฉพาะbackend ไม่ได้เรียกAIเพิ่มหรือBilling
+Owner password login ยังต้อง Owner ตรวจ การอนุมัติทดสอบ canary รอบก่อนใช้ครบแล้ว
 
-## สิ่งที่จะอนุมัติ
+ข้อความในหัวข้อหลักฐานด้านล่างบันทึกช่วงเตรียมก่อนเปิด ปัจจุบันไม่ใช่สถานะ offline
+rollback ยัง PREPARED เท่านั้น ไม่มีการ rollback หรือคืนข้อมูลจาก backup
+
+## สิ่งที่ Owner อนุมัติแล้ว
 
 เปิดแอปเฉพาะ `http://127.0.0.1:3006` จาก build ที่ตรึงกับ PR #3
 `aadf62d7a791f09bf8b6da8fd0ceb4f2cc04f158` โดยใช้ storage เดิมของ Owner
@@ -42,7 +47,7 @@ build ที่ตรึงไว้สำหรับการเปิด Owne
 - `npm.cmd run build` ผ่านทั้ง candidate และ rollback ใน worktree แยก
   stylesheet และ production/editor/storage panels คง Premium Cinematic V2
 
-## ขั้นตอนหลัง Owner อนุมัติ
+## ขั้นตอนเปิดที่ทำแล้วและการตรวจต่อโดย Owner
 
 1. ตรวจ source/build/dependency/Node fingerprints, schema, integrity, mode,
    บัญชี/ประวัติ/ไฟล์ และ jobs ที่ active ซ้ำก่อนเปิด หากเปลี่ยนให้หยุดตรวจใหม่
