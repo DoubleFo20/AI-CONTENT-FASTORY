@@ -59,7 +59,10 @@ integration มีใน source แต่สถานะจริง **PREPARED 
 2. ลงทะเบียน callback ตรงตัว:
    `http://127.0.0.1:3006/api/integrations/drive/callback`
    ใช้ `127.0.0.1` ใน browser ให้ตรงกับ callback และ session เดิม
-3. ตั้งเฉพาะ backend process/service private environment:
+3. ใช้ [Drive local private setup](DRIVE_LOCAL_SETUP_TH.md) ใส่ client ID/secretแบบhidden
+   ไฟล์ DPAPI อยู่ .tmp/drive-private/credentials.local มีvaultkeyสร้างครั้งเดียว
+   helperไม่โหลดเข้าสู่Owner3006เอง Rootจะreviewloader/ขอrestartapprovalเมื่อพร้อม
+   Mappingสำหรับ backend process/service private environment:
    `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`,
    `ACF_DRIVE_ALLOWED_REDIRECT_URIS` (callback เดียวกันทั้งสองตัว),
    `ACF_TOKEN_ENCRYPTION_KEY` (canonical Base64 ของ random 32 bytes)

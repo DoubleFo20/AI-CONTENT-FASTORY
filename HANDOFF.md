@@ -1,5 +1,29 @@
 # Handoff
 
+STATUS: OWNER3006_RUNNING_MOCK_DRIVE_PRIVATE_SETUP_PREPARED
+RELEASE_READINESS: LOCAL_OWNER_APP_READY_FOR_LOGIN_REAL_FLOW_AND_LIVE_STORAGE_PENDING
+Updated: 2026-10-13 (Asia/Bangkok)
+
+Owner3006 ยังเปิด pinnedaadf62d/PID10944/dataเดิม/Mock หลังexplicitapproval; Gemini keyพร้อมเฉพาะbackendแต่Rootไม่สลับmode/สร้างAI งานเตรียมDriveรอบนี้ไม่มีrestart/env/Ownerdata/OAuth/networkchange Ownerแจ้งว่ากำลังเตรียม Drive OAuth private configurationแล้ว ไม่ถือเป็นcredentialreadyหรือconsent
+
+เพิ่ม scripts/drive-local.ps1 Status/Configure only +tests/drive-local-helper.test.ts แบบoffline: hiddenlocalinput/current-userDPAPI/random32-byte vaultkey/protectedprivateACL/no-reparse/strictboundedJSON/atomicnooverwrite ไม่rotation/delete/network/load/start Statusไม่decryptและไม่claimconnected Existing.tmpACLตรวจเท่านั้นไม่repair Source independentreviewREADY/noP1 มีP2inheritanceassertionที่documented; filesสร้างexplicitprivateACL
+
+Rootactual scoped WindowsPS5.1/th-TH tests9/9/fail0/skip0 (final35.93s; fixturemarkerแก้ให้ไม่ดูเป็นrealcredentialโดยไม่เปลี่ยนsecretguard), narrowlint/tests typecheckผ่าน Statusบนintegrationrootจริงรายงานconfigabsent/0liveOAuth ไม่มีrealcredentialsถูกสร้าง ก่อนhelpercode7f759f7full250tests/249pass/1WindowsPOSIXskip/build/สามtypechecksผ่าน ไม่อ้างว่าrerunfull259เมื่อยังไม่ได้รัน
+
+ตรวจ cachedrealGemini20s/6+6+8 packageเข้าexistingeditorโดยตรงกับSYNTHETIC_MEDIA บนprivatefixtureใหม่: 720x1280/H.264/AAC20.021029s/FFprobefullFFmpegdecodeผ่าน music/SFX/THsubtitle encoding/normalizationenabled ค่าloudnessจริง/readability/browserplaybackยังNOT_VERIFIED ไม่มีDB/API/Ownerappwrites/AIเพิ่ม ไม่ใช่realFlowvideo
+
+NEXT_TASK: Ownerlogin3006ตรวจข้อมูล/Settings และเลือกGeminiเมื่อจะสั่งงานจริงเอง; แยกnewAIapprovalจากtestbudgetเก่าที่เหลือ0 Ownerตั้งDriveWebOAuthprivateตามคู่มือแล้วให้Rootเตรียมreviewedloader/backendenvและขอrestartapprovalแยก ก่อนhumanOAuthconsent/livecanaryupload-download-restore-checksum ห้ามautoใช้Config/cutover/delete Rootยังต้องrealFlowrefs/clips/Ownerbudget/editorial, HTTPSapprovedappSupabase/pairing/liveofflineproof, publishingtransport/scopes/approval PR2/3คงDraft/unmerged
+
+Usage authoritative ล่าสุดเหลือ9%/76% (5hr/week), สูงกว่า7%; ตรวจอีกครั้งก่อนstartfeature/agent หาก<=7หยุดและทำsmallestcheckpoint ไม่มีresetcredit/scheduler/automaticresume
+
+[Drive private setup](docs/DRIVE_LOCAL_SETUP_TH.md), [readiness](docs/release/PRODUCTION_READINESS_20261013_TH.md), [Owner actions](docs/PRODUCTION_OWNER_ACTIONS_TH.md)
+
+Private cached-realtext/syntheticmedia proof: .tmp/production-acceptance/cached-gemini-20s-20261013-v2/synthetic-proof-Xxda1a/exports/b312601e-6542-4825-b689-6fab5af04280.mp4 + PROVENANCE.private.jsonในparent; REAL_GEMINI_CACHED_PACKAGE/SYNTHETIC_MEDIA only. Helpers/sourcehash/testresultsอยู่docs/release/evidence ไม่มีactualDriveconfig/loader รอOwner การอนุมัติเปิดOwner3006ใช้แล้ว ห้ามrerunreceipt/attempt
+
+---
+
+## Previous checkpoint — historical (7f34f91)
+
 STATUS: OWNER3006_RUNNING_MOCK_GEMINI_BACKEND_CONFIGURED
 RELEASE_READINESS: LOCAL_OWNER_APP_RUNNING_REAL_VIDEO_AND_LIVE_INTEGRATIONS_PENDING
 Updated: 2026-10-13 (Asia/Bangkok)

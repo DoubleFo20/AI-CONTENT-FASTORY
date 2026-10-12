@@ -104,3 +104,7 @@ Owner3006 is currently offline; approved runtime start is pending. Frozen aadf62
 ## Owner runtime superseding checkpoint — 2026-10-13
 
 After explicit human approval Owner3006 now runs pinnedaadf62d/PID10944 on originaldata/savedMock, GeminiDPAPIbackendconfigured only; health/auth/401/staticasset hashes and startup preservation verified. NoAIcalls/Billing/modechange. The previous offline/pending note is historical; Ownerpasswordlogin/realgeneration/Flowclips/Drive/cloud/publishingremain separate acceptance gates.
+
+## Drive credential preparation — 2026-10-13
+
+Drive local helper now Status/Configure-only DPAPIprivateconfig, no runtime loader/restart/network. Owner preparingWebclient config; Root9/9offlinePS5.1th-THtests/lint/teststypecheck passed. Owner3006 unchangedMock. CachedrealGemini20s portrait syntheticrender+decodepassed but realFlowclips/Ownerlogin/liveDrive/cloud/publishingstill externalgates.

@@ -96,7 +96,30 @@
     "ownerOauth": "BLOCKED",
     "liveUploadDownloadRestoreChecksum": false,
     "localMediaDeletion": false,
-    "primaryStorageCutover": false
+    "primaryStorageCutover": false,
+    "privateSetupHelper": "PREPARED_STATUS_CONFIGURE_ONLY",
+    "privateHelperTests": {
+      "total": 9,
+      "pass": 9,
+      "fail": 0,
+      "skip": 0,
+      "runtime": "WindowsPowerShell5.1 th-TH",
+      "rootRerun": true,
+      "finalDurationMs": 35934.4059
+    },
+    "realLocalConfigurationPresent": false,
+    "ownerPreparingConfiguration": true,
+    "helperDecryptsInStatus": false,
+    "approvedRuntimeLoader": "NOT_IMPLEMENTED",
+    "review": {
+      "status": "READY",
+      "p1": 0,
+      "p2": "existingDirectoryInheritanceFlagsNotExplicitlyAsserted_newDirectoriesAndFilesExplicitPrivate"
+    },
+    "secretGuardUnchanged": true,
+    "testFixtureMarkerAdjustedForSecretGuard": true,
+    "finalHelperSourceSha256": "0be53074593360a88c08ed53163104b99bbbdb8d639eb38b573847d20458e4f4",
+    "finalTestSourceSha256": "d154e36311300be3dd88ef33e9ff64bf2b0d35aa6b404d4d237ec5ac62127b53"
   },
   "cloud": {
     "status": "PREPARED",
@@ -169,6 +192,39 @@
     "pwaPublicAssets": 9,
     "postFilenameFixLintAndTestsTypecheck": true,
     "sourceOnlyOpenerSyntax": true,
-    "liveAiRequests": 0
+    "liveAiRequests": 0,
+    "privateDriveHelperScoped": {
+      "total": 9,
+      "pass": 9,
+      "fail": 0,
+      "skip": 0
+    },
+    "fullFinalIncludesDriveLocalHelper": false
+  },
+  "cachedGeminiSyntheticPortrait": {
+    "text": "REAL_GEMINI_CACHED_PACKAGE",
+    "media": "SYNTHETIC_MEDIA",
+    "realFlowVerified": false,
+    "newAiRequests": 0,
+    "ownerAppChanged": false,
+    "sourceSnapshotUnchanged": true,
+    "durationSeconds": 20.021029,
+    "width": 720,
+    "height": 1280,
+    "videoCodec": "h264",
+    "audioCodec": "aac",
+    "sceneDurations": [
+      6,
+      6,
+      8
+    ],
+    "thaiSubtitleEncodingCompleted": true,
+    "subtitleVisualReadability": "NOT_VERIFIED",
+    "musicAndSfx": true,
+    "normalizationEnabled": true,
+    "finalMusicSfxLoudnessMeasured": false,
+    "ffmpegDecode": true,
+    "browserPlayback": "NOT_VERIFIED",
+    "sha256": "e849acaf9478444b086f4358ce969daccec1783557db19bea4442be7f46467c5"
   }
 }

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-13 — Drive private setup และ cached portrait smoke
+
+- เพิ่ม2files Status/Configure privateDPAPIWebclient/vaultkey helper ไม่มีnetwork/loader/runtimechange; Root9/9PS5.1th-TH/narrowlint/teststypecheckผ่าน independentreviewREADY/knownP2documented
+- OwnerกำลังเตรียมDriveconfiguration ยังไม่มีactualcredentials/consent/live roundtrip และOwner3006คงMock/pinnedAADF
+- CachedrealGemini20s portrait→syntheticclip/musicSFX/THsubtitleencoding→realMP4/FFprobe/fullFFmpegdecodeผ่าน ไม่claimrealFlow/browser/loudness/visualreadabilityและไม่สร้างAIเพิ่ม
+
+
 ## 2026-10-13 — เปิด Owner3006 หลัง explicit approval
 
 - เปิด frozenaadf62d/PID10944/originaldata/savedMock ด้วยGeminiDPAPIbackend config และไม่มีOpenAI/Drive/cloud keys
