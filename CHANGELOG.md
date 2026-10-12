@@ -1,5 +1,88 @@
 # Changelog
 
+## 2026-10-13 — usage safety checkpoint
+
+- Authoritative remaining7%/76% (5hr/week): STATUS PAUSED_FOR_USAGE_RESET, stopnewfeatures/spawns, safeunit/docs/push only; noautomaticresume/resetcredit
+- Owner3006 approved+pinnedAADF/dataเดิม/Mockยังเปิด; noAI/Flowcredits/Billing/merge/deploy/publication
+- privatebilingualcaptiondraftจากcachedselectionเตรียมแบบdeterministic/noAI/nonpublished; realFlowrefs/clipsและDriveOAuthยังpending พร้อมexactNEXT_TASK
+
+
+## 2026-10-13 — Drive private setup และ cached portrait smoke
+
+- เพิ่ม2files Status/Configure privateDPAPIWebclient/vaultkey helper ไม่มีnetwork/loader/runtimechange; Root9/9PS5.1th-TH/narrowlint/teststypecheckผ่าน independentreviewREADY/knownP2documented
+- OwnerกำลังเตรียมDriveconfiguration ยังไม่มีactualcredentials/consent/live roundtrip และOwner3006คงMock/pinnedAADF
+- CachedrealGemini20s portrait→syntheticclip/musicSFX/THsubtitleencoding→realMP4/FFprobe/fullFFmpegdecodeผ่าน ไม่claimrealFlow/browser/loudness/visualreadabilityและไม่สร้างAIเพิ่ม
+
+
+## 2026-10-13 — เปิด Owner3006 หลัง explicit approval
+
+- เปิด frozenaadf62d/PID10944/originaldata/savedMock ด้วยGeminiDPAPIbackend config และไม่มีOpenAI/Drive/cloud keys
+- Trustedreceipt/one-attempt/preflight/idle/schema/ACL/fingerprints/data-before-afterผ่าน health200/auth200/setupfalse/anonymous401/staticassetsSHAตรง
+- ไม่สร้างAI/newjob/session ไม่เปลี่ยนBilling ไม่คืนDBทับ Passwordsignin/OwnerGemini generation/playbackยังต้องตรวจแยก PR2/3unmerged
+
+
+## 2026-10-13 — safe Owner activation และ production preparation
+
+- Verified original SQLite/storage backup + restored-copy3014 API checks; Owner3006 ยัง offline/pendingapproval คง savedMock ไม่มี AI/runtimechange
+- Prepared frozen aadf62d activation +6a9386e rollback; independentreviewแก้ hardlink/listener/ACL guard ไม่ restoreDBอัตโนมัติ
+- Added offline private Flow handoff with canonical scene-ID filenames and no regeneration; cached Gemini20s3scenes/refs+realclips pending
+- Added synthetic20s API/reference/clip/audio/editor/export/download/reopen regression and pure YouTube/FB publishingplanner (executionAllowed=false)
+- Final250tests/249pass/0fail/1WindowsPOSIXskip; build/typechecks/lintผ่าน Browserใหม่ยังunverified(CUAkernelassets error) Drive/cloud/publishing livegates pending PR2/3unmerged
+
+
+## 2026-10-12 — Gemini Free Tier selected expansion ผ่าน live หนึ่งคำขอ
+
+- Latest PR3 source8f95c16/implementation921ce7b ขยายselectedcanaryสำเร็จ 3scenes/20sec/2characters/1location/2rules; input624/output1291 tokens มีไทย/อังกฤษครบ ใช้10ideas/selectionเดิม ไม่เปลี่ยนOwner3006
+- ตรวจproject/keyFreeTierและNoBillingAccountก่อนส่ง; exclusiveapproval1/1/0remaining, backup/schema/history/readonlypreservationผ่าน ไม่retry/Models/OpenAI/Paid/Billing ไม่resetusedhelpers
+- Harness15/15/Gemini62/62/production7/7/DriveCloud68pass1WindowsPOSIXskip; build/typechecks/lint/parserผ่าน CanonicalFlowcompilerใช้realcachedpackageเติมcontinuity/appearance/duration/ratio/IDs ไม่มีFlowAPI/clipgeneration
+- [ผลตรวจภาษาไทย](docs/GEMINI_EXPANSION_LIVE_RESULT_20261012_TH.md) และ [safe JSON evidence](docs/GEMINI_EXPANSION_LIVE_RESULT_20261012.json); historicalHTTP400parameterยังNOT_PROVEN PR2/PR3คงDraft/unmerged Drive/cloudยังต้องexternalauthorization/liveproof
+
+## 2026-10-12 — checkpoint ของ compact Gemini expansion (ทดสอบ offline 2026-10-11)
+
+- Source921ce7b เพิ่ม strict flat draft/local A–D assembler คง StoryPackage/API/schema/queue/UI เดิม; expansionหนึ่งrequestเหมือนเดิม ลด wire2,281→1,568ไบต์ และ Ideas schemaไม่เปลี่ยน [รายละเอียด](docs/GEMINI_EXPANSION_FIX_TH.md)
+- Scoped62/62; full227/226pass/0fail/1WindowsPOSIXskip รวม FFmpeg/FFprobe; build/สามtypechecks/lintผ่าน Independent source review READY/noP1P2 ไม่มีliveAI/Models/OpenAI/Billing/retry
+- Canary10realideas/selection/4jobs/schema/accountsอยู่ครบแบบread-only Owner3006คืนreleaseเดิมในMockโดยไม่มีexternalcredentials logicaldata/mediaก่อน–หลังตรงกัน หลังreviewhelperแก้P2 cleanup/PIDownershipแล้ว Canary3013ไม่start
+- HTTP400/INVALID_ARGUMENTspecificparameterยังNOT_PROVEN; requestใหม่ยังไม่ผ่านlive ต้องOwnerapprovalใหม่สูงสุด1selected-onlyFreeTierexpansion ไม่ใช้usedhelpersซ้ำ PR2/PR3คงDraft/unmerged Drive/Cloudexternalgatesคงเดิม
+
+## 2026-10-11 — one approved diagnostic expansion; INVALID_ARGUMENT observed
+
+- ใช้สิทธิ์ Owner-approved expansion1requestบนcachedcanaryเดิม Job3d7b6ca4 failedAI_REQUEST_FAILED/HTTP400 และครั้งนี้เก็บ providerStatusINVALID_ARGUMENT/errorResponsePARSED_ERRORได้ ยังไม่ทราบ parameter/field ที่ผิด ไม่มี package/expansionreceipt [ผลจริง](docs/GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md)
+- Consistentbackup/schema/idle/historyผ่านก่อนverifiedcanaryrestart source1538c58 Newmarkers/logsแยกold; normalcanaryCSRF/logoutconfirmed Offlinehelpertests12/12และbuild/typechecksผ่าน IndependentreviewREADY/noP1P2 ไม่มี furtherretry/Modelsprobe/OpenAI/Billing/paidfallback
+- 10realideas/selection/schema/users/old3jobhistoryอยู่ครบ; now4jobs/0active Owner3006health200/read-onlybaselinepreserved ยังRC/Mock/PremiumUI ไม่มี appsource/UI/schema/media/Ownerdata change
+- Budgetเหลือ0และPR2/PR3ยังDraft/unmerged Drive/Cloudexternalgatesคงเดิม ผลเก่ารักษาตามsource ไม่มีnewfullsuite/MP4/browserหรือliveintegration-successclaim
+
+## 2026-10-11 — offline HTTP400 investigation; Owner retains Mock
+
+- Owner ยังไม่อนุมัติ Gemini เพิ่ม; checkpointนี้ 0 live requests/0 Models API requests ไม่มี OpenAI/Billing/provider fallback หรือ runtime change
+- ตรวจ official model/v1beta endpoint/generated schema/config ไม่พบความไม่ตรง contract ที่พิสูจน์ HTTP400 ข้อจำกัดเดิมคือไม่ได้เก็บ Google body/status/reason จึงไม่อ้างว่าแก้ generation root cause แล้ว [ผลวิเคราะห์](docs/GEMINI_HTTP400_OFFLINE_REVIEW_TH.md), [redacted audit](docs/GEMINI_HTTP400_OFFLINE_AUDIT.json)
+- เพิ่ม enum-only parsing outcome/trusted invalid-field category และ targeted regression tests; request/schema/model/budget เดิม Independent source review READY/noP1P2; 56/56 injected/build/typechecks ผ่าน ก่อน lint พบ regex escape 6 จุด หลังแก้ semantics เดิม provider21/21/lint ผ่าน
+- Owner3006 HTTP200/anonymous401/read-only baseline preserved; UI/data/media/schema/env/dependencies เดิมคงอยู่ ไม่มี full suite/MP4/browser/live rerun ใหม่ PR2/PR3คงDraft/unmerged ขั้นตอน live ถัดไปต้อง approval ใหม่สำหรับ selected-only expansion 1 request; Drive/Cloud ยังรอ external authorization
+
+## 2026-10-11 — one approved expansion retry and safe status diagnostics
+
+- Used exactly one Owner-approved Free Tier retry on the existing cached canary; newjob599d80d9 failedAI_REQUEST_FAILED/HTTP400. Preserved10ideas/selection/originaljobs; normalcanarylogoutconfirmed. No additional generation/fallback/OpenAI/Billing/Ownerdatawrites. Live package/scenes/prompts remainBLOCKED; see [report](docs/GEMINI_LIVE_RESULT_20261011_TH.md).
+- Added allowlisted providerStatus and fixed canonical schema-complaint classification without rawmessages/metadata/secrets; malformeddetails do not erase safestatus. No request/schema/model/budget changes. Independentread-onlyreviewREADY/noP1P2.
+- Targeted54/54injected plus privatehelper11/11offline; build/3typechecks/lintpassed. Full217/216pass/1WindowsPOSIXskip/FFmpeg evidence belongs to previousbf276fb checkpoint; no new browser/responsive/MP4/liveFlow/Drive/Cloudclaim.
+- Owner3006HTTP200/read-onlybaselinepreserved; PremiumUI/bundles/schema/env/dependenciesunchanged. PR2/PR3remainDraft/unmerged. Nextgenerationneedsnewexplicitapproval; Drive/Cloudexternalgatesunchanged.
+
+## 2026-10-11 — guarded live Gemini result and bounded Windows startup
+
+- Final full Node regression 217 total/216 passed/0 failed/1 Windows POSIX skip, including isolated FFmpeg/FFprobe exports; docs/PWA/secrets validation and staged diff check passed. Browser/responsive evidence remains the previous source-specific checkpoint.
+
+- Real isolated Gemini ten ideas/one selection verified; ideas usage254/1307/1561. Expansion failed AI_REQUEST_FAILED; package/prompts unverified. No retries/billing/fallback/Ownerdatawrites; exact IDs and next bounded approval in [live report](docs/GEMINI_LIVE_RESULT_20261011_TH.md).
+- Fixed EOF waits in Windows launcher/test capture and WinPS5 ExitCode handle; actual PS5/PS7 th-TH14/14 each, synthetic only.
+- Added allowlisted private Gemini failure diagnostics (HTTP/transport/body/validation) with privacy/no-retry/sink-failure regressions; independent review accepted. Node targeted86/86; build/typechecks/lint passed. No UI/schema/dependencies/env/CI changes; PR2/PR3 unmerged.
+
+
+## 2026-10-10 — Gemini limited pipeline and private backend setup (usage paused)
+
+- เพิ่มexplicitselected-onlypipelinecanary/observation-onlyresume;25verifiertestsผ่าน. RoottargetedGemini/provider/Drive/cloud/presence74/74,three typechecks/full lintผ่าน;ทั้งหมดinjectedไม่live.
+- เพิ่มhidden-inputWindowsDPAPI/atomicnooverwrite/privateACL/envallowlist/freshcanary/PID+healthlauncherและคู่มือThai;independentreviewปิดP1/P2,WindowsPowerShell5 th-TH14checksผ่าน; PS7prepatch9/10timestampfailureและpostpatchยังรอตรวจ. แก้idempotentACL/firstNode/invarianttypedtimestamp/boundednetstat;independentreviewยอมรับ.
+- ตรวจOwner3006/publicAPI/anonymousdenialและread-onlydata preservationผ่าน;PremiumUI/server/schema/dependenciesคงเดิม,main/PR2/PR3ยังunmerged.
+- PrivateGeminiKey+OwnerFreeTierconfirmation/OAuth/cloudexternalgatesยังรอ ไม่มีbilling/livecalls/publicdeploy/contentpublish.
+- Authoritativeusageเหลือ3%/26% จึงSTATUS:PAUSED_FOR_USAGE_RESET; checkpoint/essentialchecksแล้วหยุด ไม่มีautomaticresume/resetcredituse. ExactNEXT_TASKอยู่HANDOFF.
+
+
 ## 2026-10-10 — Verified release and Phase2 checkpoint
 
 - แก้Drivehelp/dialogcontrast/mobileeditorfocusด้วยPremiumCinematicV2tokens;backend/schema/dependenciesคงเดิม.
@@ -25,8 +108,16 @@
 
 - STATUS: PAUSED_FOR_USAGE_RESET; authoritative remaining1% after checkpoint began at7%. No new features/agents or automatic resume.
 - Published Antigravity QA ddccf9c/PASS on source3e9c1aa integrated as evidence; RC ready for Owner approval, main/deploy unchanged.
-- Final regression 145total/144pass/0fail/1POSIXskip; Owner data preserved.
+- Final regression 180total/179pass/0fail/1POSIXskip; Owner data preserved.
+- Gemini limited to confirmed Free Tier Flash-Lite for both jobs; OpenAI requests gated by new Owner approval. Quota stops without paid fallback. Targeted TH/EN copy corrected.
 - Exact NEXT_TASK and external credential/authorization gates recorded in HANDOFF; safe checkpoint only.
+
+## 2026-10-10 — Phase2 prepared integrations
+
+- Added official Gemini text adapter, explicit Owner provider choice, normalized reported usage and verified-rate cost estimates; no paid retries or live success claim.
+- Added explicit normal-auth tiny Drive canary verifier; preserves local media and reports restoration untested rather than evicting cache.
+- Fixed independent-review Cloud provider switching risk with fail-closed lock and localized UI/error; preserved local React/Vite/Express/SQLite/FFmpeg and PremiumV2.
+- Full regressions177total/176pass/0fail/1Windows skip, build/typechecks/lint/PWA passed. OAuth/key/cloud approvals remain external gates.
 
 ## 2026-10-10 — Final release review
 

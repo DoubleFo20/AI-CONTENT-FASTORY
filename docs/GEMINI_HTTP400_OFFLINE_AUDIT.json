@@ -1,0 +1,446 @@
+{
+  "date": "2026-10-11",
+  "scope": "OFFLINE_INJECTED_SCHEMA_ONLY",
+  "sourceBase": "2e3652036a738eb8fa4dc314e16cbd3a07966e0e",
+  "rootCause": "NOT_PROVEN_RESPONSE_BODY_NOT_RETAINED",
+  "liveGeminiRequestsThisCheckpoint": 0,
+  "modelListingRequests": 0,
+  "injectedTransportCalls": 2,
+  "privateKeyRead": false,
+  "credentialsPrinted": false,
+  "ownerDecision": {
+    "mode": "mock",
+    "additionalLiveRequestsAuthorized": 0
+  },
+  "observedHistoricalGoogleFailure": {
+    "jobId": "599d80d9-7412-466f-9600-a0e62485e1e6",
+    "at": "2026-10-11T01:42:47.427Z",
+    "source": "bf276fb7e0d4a443057467bb8c8404ffa299b157",
+    "httpStatus": 400,
+    "phase": "http",
+    "errorCode": "AI_REQUEST_FAILED",
+    "providerStatus": null,
+    "reason": null,
+    "googleErrorBody": null,
+    "bodyAvailability": "NOT_RETAINED_CANNOT_RECOVER_RETROSPECTIVELY"
+  },
+  "officialContract": {
+    "model": "gemini-3.5-flash-lite",
+    "modelOutputLimit": 65536,
+    "apiVersion": "v1beta",
+    "method": "generateContent",
+    "generationFieldsPresentInReference": true,
+    "schemaKeywordsSupported": true,
+    "recommendedFormat": "responseFormat.text",
+    "usedFormat": "responseMimeType + responseJsonSchema",
+    "formatDriftProvesHistoricalFailure": false,
+    "modelListedFreeTier": true,
+    "currentAccountTierVerified": false,
+    "currentAccountRightsVerified": false,
+    "freeTierAttestedByOwnerPreviously": true,
+    "billingChanged": false,
+    "openaiRequests": 0,
+    "fallback": false
+  },
+  "requests": [
+    {
+      "operation": "ideas",
+      "endpoint": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "requestBody": {
+        "store": false,
+        "systemInstruction": "[OMITTED_STORY_DATA]",
+        "contents": "[OMITTED_STORY_DATA]",
+        "generationConfig": {
+          "candidateCount": 1,
+          "maxOutputTokens": 6000,
+          "responseMimeType": "application/json",
+          "responseJsonSchema": {
+            "type": "object",
+            "properties": {
+              "ideas": {
+                "minItems": 10,
+                "maxItems": 10,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "object",
+                      "properties": {
+                        "th": {
+                          "type": "string"
+                        },
+                        "en": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "th",
+                        "en"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "logline": {
+                      "type": "object",
+                      "properties": {
+                        "th": {
+                          "type": "string"
+                        },
+                        "en": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "th",
+                        "en"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "hook": {
+                      "type": "object",
+                      "properties": {
+                        "th": {
+                          "type": "string"
+                        },
+                        "en": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "th",
+                        "en"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "title",
+                    "logline",
+                    "hook"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "ideas"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "schema": {
+        "bytes": 689,
+        "jsonContainerNodes": 23,
+        "jsonContainerDepth": 8,
+        "schemaObjects": 5,
+        "schemaProperties": 11,
+        "arrayBoundPairs": 1,
+        "numericBoundPairs": 0,
+        "sha256": "526be79356d0ffcca8c0087680961e0bbf8384d783122b0cc018f9fc05ca0d66"
+      }
+    },
+    {
+      "operation": "expand",
+      "endpoint": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json",
+        "x-goog-api-key": "[REDACTED]"
+      },
+      "requestBody": {
+        "store": false,
+        "systemInstruction": "[OMITTED_STORY_DATA]",
+        "contents": "[OMITTED_STORY_DATA]",
+        "generationConfig": {
+          "candidateCount": 1,
+          "maxOutputTokens": 12000,
+          "responseMimeType": "application/json",
+          "responseJsonSchema": {
+            "type": "object",
+            "properties": {
+              "storyBible": {
+                "type": "object",
+                "properties": {
+                  "th": {
+                    "type": "string"
+                  },
+                  "en": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "th",
+                  "en"
+                ],
+                "additionalProperties": false
+              },
+              "characters": {
+                "minItems": 1,
+                "maxItems": 6,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "visualDescriptionEn": {
+                      "type": "string"
+                    },
+                    "background": {
+                      "type": "object",
+                      "properties": {
+                        "th": {
+                          "type": "string"
+                        },
+                        "en": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "th",
+                        "en"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "visualDescriptionEn",
+                    "background"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "locations": {
+                "minItems": 1,
+                "maxItems": 6,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "object",
+                      "properties": {
+                        "th": {
+                          "type": "string"
+                        },
+                        "en": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "th",
+                        "en"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "visualDescriptionEn": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "object",
+                      "properties": {
+                        "th": {
+                          "type": "string"
+                        },
+                        "en": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "th",
+                        "en"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "visualDescriptionEn",
+                    "description"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "continuityRules": {
+                "minItems": 1,
+                "maxItems": 12,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "th": {
+                      "type": "string"
+                    },
+                    "en": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "th",
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "scenes": {
+                "minItems": 3,
+                "maxItems": 12,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "order": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 12
+                    },
+                    "title": {
+                      "type": "object",
+                      "properties": {
+                        "th": {
+                          "type": "string"
+                        },
+                        "en": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "th",
+                        "en"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "durationSeconds": {
+                      "type": "integer",
+                      "minimum": 4,
+                      "maximum": 20
+                    },
+                    "explanationTh": {
+                      "type": "string"
+                    },
+                    "flowPromptEn": {
+                      "type": "string"
+                    },
+                    "narration": {
+                      "type": "object",
+                      "properties": {
+                        "th": {
+                          "type": "string"
+                        },
+                        "en": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "th",
+                        "en"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "characterIds": {
+                      "minItems": 1,
+                      "maxItems": 6,
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "locationId": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "order",
+                    "title",
+                    "durationSeconds",
+                    "explanationTh",
+                    "flowPromptEn",
+                    "narration",
+                    "characterIds",
+                    "locationId"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "storyBible",
+              "characters",
+              "locations",
+              "continuityRules",
+              "scenes"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "schema": {
+        "bytes": 2281,
+        "jsonContainerNodes": 64,
+        "jsonContainerDepth": 8,
+        "schemaObjects": 11,
+        "schemaProperties": 36,
+        "arrayBoundPairs": 5,
+        "numericBoundPairs": 2,
+        "sha256": "60bad99120d5082eb81616adea3842d9142d4774fea5ee02269ee233602ce524"
+      }
+    }
+  ],
+  "diagnostics": {
+    "errorResponse": [
+      "PARSED_ERROR",
+      "INVALID_ENVELOPE",
+      "MALFORMED_JSON",
+      "BODY_READ_FAILED"
+    ],
+    "invalidField": [
+      "RESPONSE_SCHEMA",
+      "GENERATION_CONFIG",
+      "CONTENTS",
+      "SYSTEM_INSTRUCTION",
+      "MODEL",
+      "UNKNOWN"
+    ],
+    "providerMessageRetained": false,
+    "rawDescriptionsRetained": false,
+    "retrospectivelyRecovered": false,
+    "publicRequestSchemaModelBudgetChanged": false,
+    "liveRuntimeUpdated": false
+  },
+  "sources": [
+    "https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite",
+    "https://ai.google.dev/api/generate-content",
+    "https://ai.google.dev/gemini-api/docs/generate-content/structured-output",
+    "https://ai.google.dev/gemini-api/docs/pricing#gemini-3.5-flash-lite",
+    "https://ai.google.dev/gemini-api/docs/billing",
+    "https://ai.google.dev/gemini-api/docs/generate-content/api-errors"
+  ],
+  "sourceHashes": {
+    "server/ai/gemini.ts": "72f26909430db732484fab16fbb547adbdb4a44c2ec44ee02d0aa54c492ed09d",
+    "tests/gemini-provider.test.ts": "fd6ebe8b4198d09bd69099117a6dada751c0cb7a67c12af6f6642f0c7fcde492"
+  }
+}

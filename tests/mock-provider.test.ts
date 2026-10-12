@@ -112,7 +112,7 @@ test('router projects only five brief fields and the selected idea, removing pri
       return packageResult();
     },
   };
-  const configured = createConfiguredAiProvider({ mode: 'openai', apiKey: 'test-key-should-not-appear', openai });
+  const configured = createConfiguredAiProvider({ openaiApproved: true, mode: 'openai', apiKey: 'test-key-should-not-appear', openai });
   const project = Object.assign({}, brief, {
     ideas: [{ id: 'secret_alternative', title: { en: 'SECRET_ALTERNATIVE' } }],
     selectedIdeaId: 'private_selected_id', package: { private: 'PRIVATE_PACKAGE' }, ownerId: 'PRIVATE_OWNER',
@@ -127,7 +127,7 @@ test('router projects only five brief fields and the selected idea, removing pri
 
 test('auto mode without an API key selects mock without attempting OpenAI', async () => {
   const calls = { count: 0 };
-  const configured = createConfiguredAiProvider({ mode: 'auto', apiKey: '  ', openai: failingProvider('AI_NOT_CONFIGURED', calls) });
+  const configured = createConfiguredAiProvider({ openaiApproved: true, mode: 'auto', apiKey: '  ', openai: failingProvider('AI_NOT_CONFIGURED', calls) });
   assert.deepEqual(configured.status(), { mode: 'auto', active: 'mock', fallbackReason: 'not_configured' });
   assert.equal((await configured.provider.generateIdeas(brief)).length, 10);
   assert.equal(calls.count, 0);
@@ -140,7 +140,7 @@ test('auto mode falls back on quota/access/unconfigured once and stays on labell
     ['AI_NOT_CONFIGURED', 'not_configured'],
   ] as const) {
     const calls = { count: 0 };
-    const configured = createConfiguredAiProvider({ mode: 'auto', apiKey: 'test-key', openai: failingProvider(code, calls) });
+    const configured = createConfiguredAiProvider({ openaiApproved: true, mode: 'auto', apiKey: 'test-key', openai: failingProvider(code, calls) });
     const first = await configured.provider.generateIdeas(brief);
     const second = await configured.provider.generateIdeas(brief);
     assert.equal(first.length, 10);
@@ -154,7 +154,7 @@ test('auto mode falls back on quota/access/unconfigured once and stays on labell
 test('auto mode does not fall back for ambiguous, refusal, invalid, timeout, or rate-limit failures', async () => {
   for (const code of ['AI_REFUSED', 'AI_INVALID_OUTPUT', 'AI_TIMEOUT', 'AI_RATE_LIMITED', 'AI_REQUEST_FAILED'] as const) {
     const calls = { count: 0 };
-    const configured = createConfiguredAiProvider({ mode: 'auto', apiKey: 'test-key', openai: failingProvider(code, calls) });
+    const configured = createConfiguredAiProvider({ openaiApproved: true, mode: 'auto', apiKey: 'test-key', openai: failingProvider(code, calls) });
     await assert.rejects(configured.provider.generateIdeas(brief), (error: unknown) => {
       assert.ok(error instanceof AiProviderError);
       assert.equal(error.code, code);
@@ -172,7 +172,7 @@ test('router redacts unexpected provider errors and attempts the provider once',
     async generateIdeas() { calls += 1; throw new Error('private key test-secret'); },
     async expandStory() { calls += 1; throw new Error('private key test-secret'); },
   };
-  const configured = createConfiguredAiProvider({ mode: 'auto', apiKey: 'test-secret', openai });
+  const configured = createConfiguredAiProvider({ openaiApproved: true, mode: 'auto', apiKey: 'test-secret', openai });
   await assert.rejects(configured.provider.generateIdeas(brief), (error: unknown) => {
     assert.ok(error instanceof AiProviderError);
     assert.equal(error.code, 'AI_REQUEST_FAILED');
@@ -185,7 +185,7 @@ test('router redacts unexpected provider errors and attempts the provider once',
 
 test('explicit mock mode never calls OpenAI and reports its configured provenance', async () => {
   const calls = { count: 0 };
-  const configured = createConfiguredAiProvider({ mode: 'mock', apiKey: 'test-key', openai: failingProvider('AI_REQUEST_FAILED', calls) });
+  const configured = createConfiguredAiProvider({ openaiApproved: true, mode: 'mock', apiKey: 'test-key', openai: failingProvider('AI_REQUEST_FAILED', calls) });
   assert.deepEqual(configured.status(), { mode: 'mock', active: 'mock', fallbackReason: null });
   assert.equal((await configured.provider.generateIdeas(brief)).length, 10);
   assert.equal(calls.count, 0);
@@ -197,14 +197,14 @@ test('invalid runtime and environment modes fail closed without provider calls o
   const previousMode = process.env.ACF_AI_MODE;
   try {
     assert.throws(
-      () => createConfiguredAiProvider({ mode: 'mokk' as AiMode, openai }),
+      () => createConfiguredAiProvider({ openaiApproved: true, mode: 'mokk' as AiMode, openai }),
       (error: unknown) => error instanceof AiProviderError && error.code === 'AI_NOT_CONFIGURED' && !error.message.includes('mokk'),
     );
     assert.equal(calls.count, 0);
 
     process.env.ACF_AI_MODE = 'mokk';
     assert.throws(
-      () => createConfiguredAiProvider({ openai }),
+      () => createConfiguredAiProvider({ openaiApproved: true, openai }),
       (error: unknown) => error instanceof AiProviderError && error.code === 'AI_NOT_CONFIGURED' && !error.message.includes('mokk'),
     );
     assert.equal(calls.count, 0);

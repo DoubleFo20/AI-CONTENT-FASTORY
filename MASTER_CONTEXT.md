@@ -1,6 +1,6 @@
 # AI Content Factory — master context
 
-Updated: 2026-10-10 (Asia/Bangkok). This is an existing local application with an opt-in cloud target in
+Updated: 2026-10-13 (Asia/Bangkok). This is an existing local application with an opt-in cloud target in
 `D:\xampp\htdocs\Ai-content-factory`, not a PHP application merely because XAMPP hosts
 the directory. Node 24.18.0, npm 11.16.0, Git 2.51.1 and FFmpeg 8.1.1 were discovered.
 
@@ -51,6 +51,8 @@ shared/contracts.ts, ROADMAP.md and TASKS.md. Status files record evidence, not 
 
 ## Checkpoint state
 
+Latest Phase2 checkpoint — 2026-10-12: LIVE_GEMINI_SELECTED_EXPANSION_VERIFIED on PR3 source8f95c16/implementation921ce7b. Owner-approved ONE Free Tier expansion accepted, 3scenes/20sec/2characters/1location/2rules, input624/output1291 tokens; original10realideas/selection/history/accounts/media preserved. AI Studio project/key Free tier and No billing account observed before request, masked suffix matched privately; no independent key identity query. Harness15/15/Gemini62/62/production7/7/DriveCloud68pass1WindowsPOSIXskip/build/typechecks/lint/parser passed. Canonical assisted Flow prompts include continuity/appearance/duration/ratio/IDs; no live video. Owner3006 remains original RC/Mock/Premium/process22544 with unchanged data/media, no activation/restart. Historical HTTP400 specific parameter still NOT_PROVEN. Budget1/1 consumed; never reuse/reset used helpers or send another live request without fresh approval. [ผลจริง](docs/GEMINI_EXPANSION_LIVE_RESULT_20261012_TH.md). PR2/PR3 Draft/unmerged, Drive/cloud authorization/live proof remain external gates.
+
 Current release supersedes the historical integration checkpoint below. Branch
 `release/v1-real-world` combines reviewed integration cfa6554 with Premium Cinematic V2
 be29e0a in `.worktrees/release-v1`. It preserves React/Vite + Express/SQLite and the existing
@@ -94,3 +96,15 @@ in docs/UI_SPEC.md and docs/DESIGN_SYSTEM.md through Antigravity's owned worktre
 270 prototype layout checks do not accept the future implemented app. UI work can proceed
 without live API access. Real Flow creative acceptance remains a separate external gate.
 See PROJECT_STATUS.md and HANDOFF.md for actual checks and next actions.
+
+## Production checkpoint — 2026-10-13
+
+Owner3006 is currently offline; approved runtime start is pending. Frozen aadf62d + rollback6a9386e and verified original-data backup/restoredcopy are prepared without activating Gemini. Local250tests/249passes/1skip and synthetic20s H.264/AAC render/persistence passed. FlowCLI exports cachedrealtext privately with canonical clipnames; ownerrefs/clips missing. Publishing is pure PREPARED planning only, executionAllowed=false, noOAuth/HTTP/durablejob/scheduler. Drive/cloud remain externally gated; no approved app-specific Supabase project/HTTPS deployment. See PROJECT_STATUS and HANDOFF for current gates; old running PIDs are historical evidence only. No new AI calls or reuse of spent canary approval.
+
+## Owner runtime superseding checkpoint — 2026-10-13
+
+After explicit human approval Owner3006 now runs pinnedaadf62d/PID10944 on originaldata/savedMock, GeminiDPAPIbackendconfigured only; health/auth/401/staticasset hashes and startup preservation verified. NoAIcalls/Billing/modechange. The previous offline/pending note is historical; Ownerpasswordlogin/realgeneration/Flowclips/Drive/cloud/publishingremain separate acceptance gates.
+
+## Drive credential preparation — 2026-10-13
+
+Drive local helper now Status/Configure-only DPAPIprivateconfig, no runtime loader/restart/network. Owner preparingWebclient config; Root9/9offlinePS5.1th-THtests/lint/teststypecheck passed. Owner3006 unchangedMock. CachedrealGemini20s portrait syntheticrender+decodepassed but realFlowclips/Ownerlogin/liveDrive/cloud/publishingstill externalgates.

@@ -1,0 +1,110 @@
+{
+  "date": "2026-10-11",
+  "scope": "LIVE_GEMINI_OWNER_APPROVED_SINGLE_DIAGNOSTIC_EXPANSION",
+  "sourceCommit": "1538c58da2c7283b73d6fc2eedb50ec87acdadb5",
+  "projectId": "cc629e54-668e-4ff1-82fe-c5904b4edbcc",
+  "retryJobId": "3d7b6ca4-00e8-4523-8d7f-78fef2c1038c",
+  "ownerAuthorizedAdditionalGenerationRequests": 1,
+  "generationRetryPosts": 1,
+  "additionalAttemptsRemaining": 0,
+  "cumulativeGenerationAttempts": {
+    "ideas": 1,
+    "expansion": 3,
+    "total": 4
+  },
+  "outcome": {
+    "status": "FAILED",
+    "errorCode": "AI_REQUEST_FAILED",
+    "progress": 15,
+    "packagePresent": false,
+    "scenesAndPromptsVerified": false,
+    "expansionUsage": null
+  },
+  "normalizedGoogleDiagnostic": {
+    "event": "GEMINI_REQUEST_FAILED",
+    "at": "2026-10-11T02:51:33.284Z",
+    "provider": "gemini",
+    "operation": "expand",
+    "model": "gemini-3.5-flash-lite",
+    "errorCode": "AI_REQUEST_FAILED",
+    "phase": "http",
+    "runtimePid": 15272,
+    "sourceCommit": "1538c58da2c7283b73d6fc2eedb50ec87acdadb5",
+    "httpStatus": 400,
+    "providerStatus": "INVALID_ARGUMENT",
+    "errorResponse": "PARSED_ERROR",
+    "reason": null,
+    "invalidField": null,
+    "requestIssue": null
+  },
+  "diagnosis": {
+    "providerStatusNowObserved": "INVALID_ARGUMENT",
+    "specificParameterRootCause": "NOT_PROVEN",
+    "rawGoogleMessageOrBodyRetained": false,
+    "inferredQuotaOrSchemaOrModelOrRegionCause": false
+  },
+  "ideasUsage": [
+    {
+      "operation": "ideas",
+      "inputTokens": 254,
+      "outputTokens": 1307,
+      "totalTokens": 1561,
+      "jobId": "3ddfc8e6-d53d-4472-8e0b-503aa2e1a57c"
+    }
+  ],
+  "preservation": {
+    "activeJobs": 0,
+    "ideasCount": 10,
+    "jobCount": 4,
+    "ideasPreserved": true,
+    "selectedPreserved": true,
+    "accountsPreserved": true,
+    "schemaPreserved": true,
+    "priorJobHistoryPreserved": true,
+    "packagePresent": false,
+    "databaseWrites": false,
+    "jobId": "3d7b6ca4-00e8-4523-8d7f-78fef2c1038c",
+    "status": "failed",
+    "progress": 15,
+    "errorCode": "AI_REQUEST_FAILED",
+    "sourceCommit": "1538c58da2c7283b73d6fc2eedb50ec87acdadb5",
+    "generationRetryPosts": 1,
+    "logoutConfirmed": true,
+    "databaseWritesScope": "READ_ONLY_POST_REQUEST_VERIFICATION_ONLY"
+  },
+  "owner3006": {
+    "healthHttpStatus": 200,
+    "baselinePreserved": true,
+    "mode": "mock",
+    "databaseWrites": false,
+    "restarted": false,
+    "uiChanged": false,
+    "users": 1,
+    "projects": 1,
+    "jobs": 4,
+    "activeJobs": 0,
+    "clips": 0,
+    "exports": 0
+  },
+  "freeTierAttestedByOwner": true,
+  "billingVerifiedByTool": false,
+  "billingChanged": false,
+  "openaiRequests": 0,
+  "modelListingRequests": 0,
+  "automaticRetries": 0,
+  "fallback": false,
+  "consistentBackupAndIntegrityVerified": true,
+  "sourceSchemaMatchVerified": true,
+  "helperReview": "READY_NO_P1_P2_READ_ONLY",
+  "helperOfflineTests": {
+    "total": 12,
+    "passed": 12,
+    "failed": 0,
+    "durationMs": 4388.3664,
+    "kind": "INJECTED_SYNTHETIC"
+  },
+  "buildIncludingThreeTypechecks": "PASSED",
+  "newRuntimePid": 15272,
+  "previousCanaryPid": 17440,
+  "report": "docs/GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md"
+}

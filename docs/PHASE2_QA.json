@@ -1,0 +1,1947 @@
+{
+  "sourceCommit": "de462843a2847e850334730c004f8b1d8f01e0b6",
+  "releaseBase": "ba327e2364e0a14f36629e4dc9376de6b827f10e",
+  "date": "2026-10-10",
+  "scope": "Cumulative source-specific Phase2 evidence. Latest Owner-approved single diagnostic expansion failed HTTP400/INVALID_ARGUMENT. Specific parameter root cause and live package remain unproven; no further generation authorized. Historical live/offline results retained.",
+  "tests": {
+    "command": "npm.cmd test",
+    "exitCode": 0,
+    "total": 204,
+    "passed": 203,
+    "failed": 0,
+    "skipped": 1,
+    "durationMs": 91242.6994,
+    "skipReason": "POSIX vault permissions on Windows",
+    "sourceNote": "Full204 at semantic additions86dbbb5; later only CSS/native-dialog/frontend focus repairs, followed by build/three typechecks/scopedlint and targeted browser tests. No backend/shared change after full204."
+  },
+  "checks": {
+    "buildIncludingThreeTypechecks": "PASS_AFTER_FINAL_MODAL_FOCUS_REPAIR",
+    "lint": "PASS_FULL_INCLUDING_FINAL_BROWSER_REGRESSION_AND_SECRET_GUARD",
+    "pwa": "PASS_9_PUBLIC_ASSETS_PRIVATE_API_EXCLUDED",
+    "docs": "PASS_27_ARTIFACTS",
+    "secrets": "PASS_STAGED_FILES_AND_TWO_SYNTHETIC_NEGATIVE_CASES_PLUS_CLEAN_POSITIVE_NO_VALUES_PRINTED",
+    "whitespace": "PASS_FINAL_STAGED_DIFF_CHECK"
+  },
+  "independentReview": {
+    "geminiDriveUsage": "ACCEPTED",
+    "cloudModeSwitchFinding": "FIXED_FAIL_CLOSED_AI_MODE_LOCKED",
+    "reReviewTests": "PASS_2_OF_2",
+    "remainingP1P2": 0,
+    "geminiCanary": "ACCEPTED_NO_P1_P2; unchanged verifier after review;14tests incl actual HTTP with injected Gemini",
+    "workerPresence": "ACCEPTED_NO_P1_P2;10tests; no routes/auth/durableCAS"
+  },
+  "browserPhase2": {
+    "sourceCommit": "86dbbb58727ae38e7ebc3d01f127cfc6c3389adf",
+    "result": "PASS_36_OF_36",
+    "pages": [
+      "settings",
+      "ideas",
+      "bibles",
+      "scenes",
+      "preview",
+      "login"
+    ],
+    "interfaceLocales": [
+      "th",
+      "en"
+    ],
+    "contentMode": "TH+EN",
+    "widthsCssPx": [
+      360,
+      768,
+      1440
+    ],
+    "caseCount": 36,
+    "passed": 36,
+    "horizontalOverflowCases": 0,
+    "settingsVerified": "Actual dialog heading and provider controls, not hash alone",
+    "drivePreview360": "Block layout302px in336pxparent; Root inspected TH/EN images",
+    "liveCalls": false,
+    "serverStopped": true,
+    "limits": "Browser viewport simulation; no physical mobile or live provider proof",
+    "cases": [
+      {
+        "view": "settings",
+        "locale": "th",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "th",
+        "contentMode": "th+en",
+        "providerControls": 1
+      },
+      {
+        "view": "ideas",
+        "locale": "th",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "bibles",
+        "locale": "th",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "scenes",
+        "locale": "th",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "preview",
+        "locale": "th",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "settings",
+        "locale": "th",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "th",
+        "contentMode": "th+en",
+        "providerControls": 1
+      },
+      {
+        "view": "ideas",
+        "locale": "th",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "bibles",
+        "locale": "th",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "scenes",
+        "locale": "th",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "preview",
+        "locale": "th",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "settings",
+        "locale": "th",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "th",
+        "contentMode": "th+en",
+        "providerControls": 1
+      },
+      {
+        "view": "ideas",
+        "locale": "th",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "bibles",
+        "locale": "th",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "scenes",
+        "locale": "th",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "preview",
+        "locale": "th",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "settings",
+        "locale": "en",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "en",
+        "contentMode": "th+en",
+        "providerControls": 1
+      },
+      {
+        "view": "ideas",
+        "locale": "en",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "bibles",
+        "locale": "en",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "scenes",
+        "locale": "en",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "preview",
+        "locale": "en",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "settings",
+        "locale": "en",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "en",
+        "contentMode": "th+en",
+        "providerControls": 1
+      },
+      {
+        "view": "ideas",
+        "locale": "en",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "bibles",
+        "locale": "en",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "scenes",
+        "locale": "en",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "preview",
+        "locale": "en",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "settings",
+        "locale": "en",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "en",
+        "contentMode": "th+en",
+        "providerControls": 1
+      },
+      {
+        "view": "ideas",
+        "locale": "en",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "bibles",
+        "locale": "en",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "scenes",
+        "locale": "en",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "preview",
+        "locale": "en",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "login",
+        "locale": "th",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "login",
+        "locale": "th",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "login",
+        "locale": "th",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "th",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "login",
+        "locale": "en",
+        "width": 360,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 360,
+        "documentWidth": 360,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "login",
+        "locale": "en",
+        "width": 768,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 768,
+        "documentWidth": 768,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      },
+      {
+        "view": "login",
+        "locale": "en",
+        "width": 1440,
+        "loaded": true,
+        "overflow": false,
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "storedLocale": "en",
+        "contentMode": "th+en"
+      }
+    ]
+  },
+  "ownerData": {
+    "baselinePreserved": true,
+    "databaseWrites": false,
+    "owners": 1,
+    "projects": 1,
+    "jobs": 4,
+    "cachedMockIdeas": 10,
+    "activeJobs": 0
+  },
+  "live": {
+    "openai": "BLOCKED_PENDING_NEW_OWNER_APPROVAL_PREVIOUS_QUOTA_NO_NEW_CALL",
+    "gemini": "LIVE_IDEAS_AND_SELECTION_VERIFIED_APPROVED_RETRY_FAILED_HTTP400_EXPANSION_BLOCKED",
+    "drive": "UNVERIFIED_OAUTH_MISSING",
+    "driveRestore": "UNVERIFIED_NO_CANARY_EVICTION_APPROVAL",
+    "supabaseCloudMobile": "UNVERIFIED_APPROVED_PROJECT_HOST_REQUIRED"
+  },
+  "status": "LIVE_IDEAS_VERIFIED_EXPANSION_BLOCKED",
+  "usage": {
+    "historical": true,
+    "supersededBy": "approvedExpansionRetry.usageRemaining",
+    "source": "Codex get_usage_limits",
+    "primaryUsedPercent": 55,
+    "primaryRemainingPercent": 45,
+    "secondaryUsedPercent": 68,
+    "secondaryRemainingPercent": 32,
+    "stopAtRemainingPercent": 7,
+    "automaticResume": false
+  },
+  "safetyPolicyTests": {
+    "command": "npm.cmd test",
+    "exitCode": 0,
+    "total": 180,
+    "passed": 179,
+    "failed": 0,
+    "skipped": 1,
+    "durationMs": 79216.4403,
+    "independentReReview": "ACCEPTED_NO_P1_P2",
+    "scope": "Gemini confirmed Free Tier Flash-Lite only; OpenAI explicit approval before any request; all synthetic/injected"
+  },
+  "safetyPolicyChecks": {
+    "buildIncludingThreeTypechecksAfterFinalThaiEnglishCopy": "PASS",
+    "lint": "PASS",
+    "docs": "PASS_27_ARTIFACTS",
+    "secrets": "PASS_151_TRACKED_FILES_NO_VALUES_PRINTED",
+    "ownerPreservationFinalReadOnlyCheck": "PASS_NO_DATABASE_WRITES"
+  },
+  "antigravity": {
+    "qaCommit": "ddccf9ce18a13425b480f02313f8d0ccbe6261c0",
+    "testedSource": "3e9c1aaab0143f94581ddf3ed4f0b2046e60b137",
+    "result": "PASS_LOCAL_V1_NO_LIVE_PROVIDER_CLAIM"
+  },
+  "previousRegression": {
+    "sourceCommit": "5559bbc4658b174d96b9d26023d449a26714a13c",
+    "tests": {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "total": 177,
+      "passed": 176,
+      "failed": 0,
+      "skipped": 1,
+      "durationMs": 190040.9389,
+      "skipReason": "POSIX vault permissions on Windows"
+    },
+    "checks": {
+      "buildIncludingThreeTypechecks": "PASS",
+      "lint": "PASS",
+      "pwa": "PASS_9_PUBLIC_ASSETS",
+      "docs": "PASS_27_ARTIFACTS",
+      "secrets": "PASS_149_TRACKED_FILES_NO_VALUES_PRINTED",
+      "whitespace": "PASS"
+    }
+  },
+  "previousBrowser": {
+    "sourceCommit": "5559bbc4658b174d96b9d26023d449a26714a13c",
+    "result": "PASS_FOCUSED_MOCK_WORKFLOW",
+    "cases": [
+      "360_TH",
+      "768_EN",
+      "1440_EN"
+    ],
+    "workflow": "login/settings/provider-selection/ten-ideas/one-selection/expansion/scenes/usage-provenance",
+    "liveCalls": false,
+    "serverStopped": true,
+    "fullLocaleViewportMatrixRerun": false,
+    "evidence": ".tmp/phase2-qa-evidence.json",
+    "latestPolicyCopyBrowserRerun": false
+  },
+  "previousUsageStop": {
+    "primaryUsedPercent": 99,
+    "remainingPercent": 1,
+    "secondaryUsedPercent": 59,
+    "checkpointStartedRemainingPercent": 7,
+    "automaticResume": false
+  },
+  "releaseVisualAcceptedSource": "3e9c1aaab0143f94581ddf3ed4f0b2046e60b137",
+  "browserPolicyBeforeRepair": {
+    "sourceCommit": "04ce46c95ff2c2ff8174aa2a52a2d460fb5543cd",
+    "interfaceLocale": "th",
+    "contentMode": "TH+EN",
+    "layoutCases": 18,
+    "horizontalOverflowCases": 0,
+    "workflow": "Normal synthetic login; missing Gemini key/OpenAI approval rejected409; Mock ten ideas, one saved selection, expansion, TH explanations/EN prompts3of3",
+    "finding": "Preview360 Drive guide compressed into three columns; Root repaired storage-panel notice to block at86dbbb5",
+    "limits": "Only Thai interface; not full TH/EN matrix. Fresh synthetic data, credentials cleared, no live calls; QA browser/server stopped."
+  },
+  "workerPresence": {
+    "readiness": "PREPARED_PURE_HELPER_ONLY",
+    "ttlMs": 90000,
+    "testsPassed": 10,
+    "jobLeaseRenewal": false,
+    "automaticPaidReplay": false,
+    "deployedPairing": false,
+    "waitingUi": false,
+    "activationGates": [
+      "authenticated hashed scoped revocable worker credentials",
+      "atomic durable presence CAS",
+      "owner-filtered atomic claims",
+      "frozen durable provider/model/provenance",
+      "verified media receipt and reconnect lookup"
+    ]
+  },
+  "geminiCanary": {
+    "readiness": "PREPARED_NO_LIVE_CALL",
+    "testsPassed": 14,
+    "ideasPostsPerNewCanary": 1,
+    "cachedResumeRegenerates": false,
+    "selectsOrExpands": false,
+    "apiKeyReadByVerifier": false,
+    "limits": [
+      "Owner Free Tier/Billing disabled confirmation required; key alone proves no tier",
+      "preflight/enqueue not atomic; OpenAI approval=false and no concurrent mode changes",
+      "resumed LIVE means observing previous job completion",
+      "timeout retains canary; no retry/delete/cancel"
+    ]
+  },
+  "modalBeforeFocusRepair": {
+    "sourceCommit": "5df1fa546ab7fb9b396cd6a2a26894bb0251cd84",
+    "cases": 12,
+    "passed": 10,
+    "failed": 2,
+    "failure": "Mobile picker return focus after hidden drawer opener",
+    "contrastRatio": 15.49,
+    "fix": "Visible original Menu/More fallback repaired; latest12/12 passed on de46284"
+  },
+  "latestModalRetake": {
+    "applicationSource": "de462843a2847e850334730c004f8b1d8f01e0b6",
+    "result": "PASS_12_OF_12",
+    "cases": [
+      {
+        "type": "settings",
+        "locale": "th",
+        "width": 360,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "picker",
+        "locale": "th",
+        "width": 360,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "settings",
+        "locale": "th",
+        "width": 768,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "picker",
+        "locale": "th",
+        "width": 768,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "settings",
+        "locale": "th",
+        "width": 1440,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "picker",
+        "locale": "th",
+        "width": 1440,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "settings",
+        "locale": "en",
+        "width": 360,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "picker",
+        "locale": "en",
+        "width": 360,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "settings",
+        "locale": "en",
+        "width": 768,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "picker",
+        "locale": "en",
+        "width": 768,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "settings",
+        "locale": "en",
+        "width": 1440,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      },
+      {
+        "type": "picker",
+        "locale": "en",
+        "width": 1440,
+        "headingOk": true,
+        "tabWrapped": true,
+        "escapeFocus": true,
+        "closeFocus": true,
+        "withinViewport": true,
+        "overflowX": false,
+        "overflowY": false,
+        "copyContrast": 15.49,
+        "closeContrast": 15.49
+      }
+    ],
+    "physicalPhone": false,
+    "liveCalls": false
+  },
+  "releaseLatestSource": "0b35cea82d7e7867e11c653df0d6d790a6b66f19",
+  "reusableModalRegression": {
+    "script": "tests/browser/modal-focus.js",
+    "executedVia": "Playwright CLI run-code on normally authenticated synthetic Mock fixtures",
+    "phase2Source": "de462843a2847e850334730c004f8b1d8f01e0b6",
+    "releaseSource": "0b35cea82d7e7867e11c653df0d6d790a6b66f19",
+    "phase2Passed": 12,
+    "releasePassed": 12,
+    "casesPerBranch": 12,
+    "ownerPort3006Refused": true,
+    "projectOrProviderMutation": false
+  },
+  "geminiOfficialContractReview": {
+    "result": "VALID_REQUEST_SCHEMA_AND_MODEL;_NO_ACCOUNT_OR_LIVE_VERIFICATION",
+    "urls": [
+      "https://ai.google.dev/api/generate-content",
+      "https://ai.google.dev/gemini-api/docs/logs-datasets",
+      "https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite",
+      "https://ai.google.dev/gemini-api/docs/pricing#gemini-3.5-flash-lite",
+      "https://ai.google.dev/gemini-api/docs/billing"
+    ],
+    "storeFalse": "Supported optional logging control, not zero-retention or Free Tier data-use exemption",
+    "freeTier": "Model supports Standard Free Tier; actual API project tier/access requires Owner verification"
+  },
+  "geminiActivationPreparation": {
+    "historical": true,
+    "supersededBy": "geminiLiveCheckpoint",
+    "date": "2026-10-10",
+    "baseCommit": "574fe5d3c8f13fd1bf8497dce291d0eaa729a0cc",
+    "status": "PAUSED_FOR_USAGE_RESET",
+    "sourceFileSha256": {
+      "scripts/gemini-local.ps1": "4386dd0ea2fc025723509eb96c8243b6ba25f5c87ebea289f711935e2e2ae6d5",
+      "scripts/start-gemini-local.mjs": "76b9035bca197961c865625413ca3d1dc22ee424abcd15511fd5547d6c9e0203",
+      "scripts/verify-gemini-live.mjs": "f459ce274219443cebe5f641a78f9d18cc029b8ec8bc87655723db6d727409c9",
+      "tests/gemini-local-setup.ps1": "1f071e46d2bbfaf704ef9a4b3152d7af7597d88334911037898aae41ff72bcbc",
+      "tests/gemini-live-verifier.test.ts": "b5f0ecfb1d95f476694f27015efabbbf73d44dc5ce39dbc24b8e2a6286ec706d"
+    },
+    "targeted": {
+      "command": "node --import tsx --test --test-concurrency=1 tests/gemini-live-verifier.test.ts tests/gemini-provider.test.ts tests/drive-live-verifier.test.ts tests/cloud.test.ts tests/worker-presence.test.ts",
+      "exitCode": 0,
+      "total": 74,
+      "passed": 74,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 5107.41,
+      "liveProviderCalls": 0
+    },
+    "windows": {
+      "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File tests/gemini-local-setup.ps1",
+      "exitCode": 0,
+      "checksPassed": 14,
+      "culture": "th-TH forced",
+      "runtime": "Windows PowerShell 5",
+      "syntheticOnly": true,
+      "ownerDataTouched": false,
+      "PS7PrePatch": "9/10; DateTime conversion/timezone ownership failure; preserved evidence",
+      "PS7PostPatch": "NOT_RUN; exact NEXT_TASK before live activation"
+    },
+    "checks": {
+      "threeTypechecks": "PASS",
+      "fullLint": "PASS",
+      "powershellAST": "PASS_BOTH_FILES",
+      "docs": "PASS",
+      "pwa": "PASS_PUBLIC_SHELL_ONLY",
+      "secretGuard": "PASS_TRACKED_FILES_NO_VALUES_PRINTED",
+      "whitespace": "PASS"
+    },
+    "independentReview": "ACCEPTED; auth/queue/canary, DPAPI/config, listener probe/timestamp, no actionable P1/P2; read-only source review",
+    "owner3006": {
+      "runtime": "RC/Mock",
+      "pid": 14548,
+      "httpIndex": 200,
+      "health": 200,
+      "authStatus": 200,
+      "anonymousProjects": 401,
+      "originalDataPreserved": true,
+      "databaseWrites": false,
+      "activeJobs": 0,
+      "cachedTenIdeas": true
+    },
+    "syntheticFixtureProcessesStopped": 4,
+    "liveGemini": "BLOCKED_OWNER_KEY_AND_FREE_TIER_CONFIRMATION",
+    "Drive": "PREPARED_OAUTH_CONSENT_AND_LIVE_ROUNDTRIP_PENDING",
+    "Cloud": "PREPARED_NO_DEPLOYED_OFFLINE_PROOF",
+    "remainingPercent": {
+      "fiveHour": 3,
+      "weekly": 26
+    },
+    "nextTask": "NEXT_TASK: หลังusage reset/Owner invocation ให้รัน pwsh -NoProfile -File tests/gemini-local-setup.ps1 เพื่อตรวจ PS7 th-TH หลัง timestamp DateTime/string และ bounded netstat fixes (WinPS5ล่าสุด14/14ผ่าน). เมื่อOwnerยืนยันprivateGEMINI_API_KEY+APIprojectFreeTier/Billingdisabledพร้อม จึงbuildPhase2/startfresh3013/normalcanaryaccount/verify-gemini-live --expand-first-ideaหนึ่งครั้ง (สูงสุดideas1+expand1 ไม่มีretry). ใช้UUIDเดิมอ่านสถานะหากtimeout;ไม่generateOwnerstoryเดิม. Owner3006activationต้องbackup/0active/schema check+preservesavedMock. Driveยังต้องOAuth+consent;Cloudต้องapprovedproject/HTTPS/schema/deploy. ห้ามmainmerge/publicdeploy/publish/billing."
+  },
+  "geminiLiveCheckpoint": {
+    "date": "2026-10-11",
+    "status": "LIVE_IDEAS_VERIFIED_EXPANSION_BLOCKED",
+    "baseSource": "74f5776cc0d80fb4f3a9b9b5ba92448056baf709",
+    "liveApplicationSource": "de462843a2847e850334730c004f8b1d8f01e0b6",
+    "freeTierAttestedByOwner": true,
+    "billingVerifiedByTool": false,
+    "provider": "gemini",
+    "model": "gemini-3.5-flash-lite",
+    "origin": "http://127.0.0.1:3013",
+    "pid": 7552,
+    "canaryProjectId": "cc629e54-668e-4ff1-82fe-c5904b4edbcc",
+    "ideasJobId": "3ddfc8e6-d53d-4472-8e0b-503aa2e1a57c",
+    "expansionJobId": "59245471-320e-4834-aa24-5e20ea1497a6",
+    "ideas": {
+      "status": "completed",
+      "count": 10,
+      "selectedCount": 1,
+      "usage": {
+        "inputTokens": 254,
+        "outputTokens": 1307,
+        "totalTokens": 1561
+      }
+    },
+    "expansion": {
+      "status": "failed",
+      "progress": 15,
+      "errorCode": "AI_REQUEST_FAILED",
+      "httpStatus": null,
+      "reason": null,
+      "usage": null,
+      "packagePresent": false,
+      "scenePromptsVerified": false
+    },
+    "maximumGenerationAttempts": 2,
+    "automaticRetries": 0,
+    "billingChanged": false,
+    "openaiRequests": 0,
+    "fallback": false,
+    "ownerDataTouched": false,
+    "fullRegression": {
+      "total": 217,
+      "passed": 216,
+      "failed": 0,
+      "skipped": 1,
+      "skippedReason": "POSIX vault permission test on Windows",
+      "durationMs": 92630.4809,
+      "kind": "INJECTED_SYNTHETIC_AND_REAL_LOCAL_FFMPEG",
+      "browserPlaybackRetested": false,
+      "responsiveRetested": false
+    },
+    "regression": {
+      "gemini": 42,
+      "aiIntegrationUsage": 10,
+      "driveCloudPresence": 34,
+      "totalPassed": 86,
+      "failed": 0,
+      "skipped": 0,
+      "kind": "INJECTED_SYNTHETIC"
+    },
+    "windows": {
+      "powerShell5": {
+        "passed": 14
+      },
+      "powerShell7": {
+        "passed": 14
+      },
+      "culture": "th-TH",
+      "liveRequests": 0
+    },
+    "commands": [
+      "node --import tsx --test --test-concurrency=1 tests/gemini-provider.test.ts tests/gemini-live-verifier.test.ts",
+      "node --import tsx --test --test-concurrency=1 tests/ai-integration.test.ts tests/ai-usage.test.ts",
+      "node --import tsx --test --test-concurrency=1 tests/drive-live-verifier.test.ts tests/cloud.test.ts tests/worker-presence.test.ts",
+      "powershell.exe -NoProfile -ExecutionPolicy Bypass -File tests/gemini-local-setup.ps1",
+      "pwsh -NoProfile -File tests/gemini-local-setup.ps1",
+      "npm run build",
+      "npm run lint",
+      "npm run validate:docs",
+      "npm run validate:pwa",
+      "npm run validate:secrets",
+      "npm test"
+    ],
+    "independentReview": "ACCEPTED_NO_P1_P2; Windows and private diagnostics; read-only review did not perform live requests",
+    "currentUsageRemaining": {
+      "primary": 77,
+      "secondary": 22
+    },
+    "report": "docs/GEMINI_LIVE_RESULT_20261011_TH.md",
+    "sourceHashes": {
+      "scripts/gemini-local.ps1": "098338cca5427bbee6a80f1fe1b0a3c4069164cbaa4a311745bd9260bb2a7c43",
+      "tests/gemini-local-setup.ps1": "bdcc743e950831fe2c8364e55dae02b0a23b984abedf88f74978e410922ac8ca",
+      "server/ai/gemini.ts": "d84780397b35679fadaa8684479f04ac10b7cd553f81ed622c03def15c18c3a9",
+      "server/ai/router.ts": "411da380f96a21f48edf28c158de54a1123f7110d5af7e1b7aa737bbc8d5b2d9",
+      "server/index.ts": "f27f38d84272a480234f5bf57a982479fd99593fac7513f98a4cb17969e3164d",
+      "tests/gemini-provider.test.ts": "a7087b34d2504a4acf146f9314dc7c210d05253555296fc6243eafbf26d66811"
+    },
+    "nextTask": "Owner approval for one Free Tier retry of existing canary expansion, no new ideas; activate updated diagnostics on same canary data after idle/backup/schema checks. Owner3006 activation only after complete isolated live proof.",
+    "historical": true,
+    "supersededBy": "approvedExpansionRetry"
+  },
+  "approvedExpansionRetry": {
+    "date": "2026-10-11",
+    "status": "LIVE_IDEAS_VERIFIED_EXPANSION_BLOCKED",
+    "liveApplicationSource": "bf276fb7e0d4a443057467bb8c8404ffa299b157",
+    "origin": "http://127.0.0.1:3013",
+    "pid": 17440,
+    "canaryProjectId": "cc629e54-668e-4ff1-82fe-c5904b4edbcc",
+    "previousExpansionJobId": "59245471-320e-4834-aa24-5e20ea1497a6",
+    "retryJobId": "599d80d9-7412-466f-9600-a0e62485e1e6",
+    "ownerAuthorizedAdditionalAttempts": 1,
+    "generationRetryPosts": 1,
+    "additionalBudgetRemaining": 0,
+    "cumulativeGenerationAttempts": {
+      "ideas": 1,
+      "expansion": 2,
+      "total": 3
+    },
+    "freeTierAttestedByOwner": true,
+    "billingVerifiedByTool": false,
+    "expansion": {
+      "status": "failed",
+      "progress": 15,
+      "errorCode": "AI_REQUEST_FAILED",
+      "phase": "http",
+      "httpStatus": 400,
+      "at": "2026-10-11T01:42:47.427Z",
+      "providerStatus": null,
+      "reason": null,
+      "rootCause": "UNKNOWN",
+      "usage": null,
+      "packagePresent": false,
+      "scenePromptsVerified": false
+    },
+    "ideasUsage": {
+      "inputTokens": 254,
+      "outputTokens": 1307,
+      "totalTokens": 1561
+    },
+    "preservation": {
+      "ideasPreserved": true,
+      "selectedPreserved": true,
+      "accountsPreserved": true,
+      "schemaPreserved": true,
+      "ideasCount": 10,
+      "packagePresent": false,
+      "activeJobs": 0,
+      "jobCount": 3,
+      "jobHistoryPreserved": true,
+      "databaseWrites": false
+    },
+    "logoutConfirmed": true,
+    "consistentBackupVerified": true,
+    "owner3006": {
+      "healthHttpStatus": 200,
+      "baselinePreserved": true,
+      "databaseWrites": false,
+      "mode": "mock",
+      "users": 1,
+      "projects": 1,
+      "jobs": 4,
+      "activeJobs": 0,
+      "clips": 0,
+      "exports": 0
+    },
+    "automaticRetries": 0,
+    "billingChanged": false,
+    "openaiRequests": 0,
+    "fallback": false,
+    "privateHelperOfflineTests": {
+      "passed": 11,
+      "failed": 0,
+      "kind": "INJECTED_SYNTHETIC",
+      "beforeLiveRetry": true,
+      "postRetryRerunPassed": 11,
+      "postRetryRerunFailed": 0,
+      "postRetryRerunDurationMs": 652.7076
+    },
+    "providerDiagnosticPreparation": {
+      "baseSource": "bf276fb7e0d4a443057467bb8c8404ffa299b157",
+      "activeInLiveRuntime": false,
+      "publicRequestSchemaModelBudgetChanged": false,
+      "retrospectiveRootCauseClaimed": false,
+      "independentReview": "READY_NO_P1_P2_SOURCE_ONLY",
+      "tests": {
+        "total": 54,
+        "passed": 54,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 11760.5499,
+        "kind": "INJECTED_SYNTHETIC"
+      },
+      "checks": {
+        "build": "PASSED",
+        "threeTypechecks": "PASSED",
+        "lint": "PASSED",
+        "docs": "PASSED_27_ARTIFACTS",
+        "pwa": "PASSED_PUBLIC_SHELL_PRIVATE_API_EXCLUSION",
+        "secrets": "PASSED_171_TRACKED_FILES_NO_VALUES_PRINTED",
+        "fullSuiteRerun": false,
+        "mp4Rerun": false,
+        "browserRerun": false
+      },
+      "sourceHashes": {
+        "server/ai/gemini.ts": "8f673fced5492ddd4173fabf1f3822f852be311327be4db25526858d0a56a78c",
+        "tests/gemini-provider.test.ts": "fe1821fb2d8f0697ecf26dd9f4b3e3624da0754e13dd286e0bf607f22d853711"
+      }
+    },
+    "commands": [
+      "node --import tsx --test --test-concurrency=1 tests/gemini-provider.test.ts tests/ai-provider-routing.test.ts tests/gemini-live-verifier.test.ts tests/ai-integration.test.ts tests/ai-usage.test.ts",
+      "npm.cmd run build",
+      "npm.cmd run lint",
+      "node .tmp/check-owner-phaseA.mjs (release-v1; read-only)",
+      "node --test .tmp/approved-retry-offline.test.mjs (post-retry; injected)",
+      "npm.cmd run validate:docs",
+      "npm.cmd run validate:pwa",
+      "npm.cmd run validate:secrets",
+      "git diff --check"
+    ],
+    "usageRemaining": {
+      "primary": 52,
+      "secondary": 18
+    },
+    "report": "docs/GEMINI_LIVE_RESULT_20261011_TH.md",
+    "nextTask": "Observe existing cached canary only. Any additional generation needs new explicit Owner authorization and a new bounded marker/preflight on unchanged data. Drive OAuth/live verification and approved Supabase/HTTPS/deployment remain external gates.",
+    "historicalCheckpoint": true,
+    "supersededBy": "geminiOfflineReview (current preparation/policy only; historical live result preserved)"
+  },
+  "geminiOfflineReview": {
+    "date": "2026-10-11",
+    "sourceBase": "2e3652036a738eb8fa4dc314e16cbd3a07966e0e",
+    "status": "OFFLINE_REVIEW_COMPLETE_LIVE_APPROVAL_PENDING",
+    "ownerDecision": {
+      "mode": "mock",
+      "additionalLiveRequestsAuthorized": 0
+    },
+    "liveGeminiRequests": 0,
+    "modelListingRequests": 0,
+    "rootCause": "NOT_PROVEN_RESPONSE_BODY_NOT_RETAINED",
+    "retrospectiveErrorBodyRecovered": false,
+    "googleErrorBody": null,
+    "officialContract": {
+      "model": "gemini-3.5-flash-lite",
+      "modelOutputLimit": 65536,
+      "apiVersion": "v1beta",
+      "method": "generateContent",
+      "generationFieldsPresentInReference": true,
+      "schemaKeywordsSupported": true,
+      "recommendedFormat": "responseFormat.text",
+      "usedFormat": "responseMimeType + responseJsonSchema",
+      "formatDriftProvesHistoricalFailure": false,
+      "modelListedFreeTier": true,
+      "currentAccountTierVerified": false,
+      "currentAccountRightsVerified": false,
+      "freeTierAttestedByOwnerPreviously": true,
+      "billingChanged": false,
+      "openaiRequests": 0,
+      "fallback": false
+    },
+    "sourceHashes": {
+      "server/ai/gemini.ts": "72f26909430db732484fab16fbb547adbdb4a44c2ec44ee02d0aa54c492ed09d",
+      "tests/gemini-provider.test.ts": "fd6ebe8b4198d09bd69099117a6dada751c0cb7a67c12af6f6642f0c7fcde492"
+    },
+    "diagnostics": {
+      "errorResponse": [
+        "PARSED_ERROR",
+        "INVALID_ENVELOPE",
+        "MALFORMED_JSON",
+        "BODY_READ_FAILED"
+      ],
+      "invalidField": [
+        "RESPONSE_SCHEMA",
+        "GENERATION_CONFIG",
+        "CONTENTS",
+        "SYSTEM_INSTRUCTION",
+        "MODEL",
+        "UNKNOWN"
+      ],
+      "providerMessageRetained": false,
+      "rawDescriptionsRetained": false,
+      "retrospectivelyRecovered": false,
+      "publicRequestSchemaModelBudgetChanged": false,
+      "liveRuntimeUpdated": false
+    },
+    "independentReview": {
+      "result": "READY_NO_P1_P2_SOURCE_ONLY",
+      "privateDataAccess": false,
+      "testsRunByReviewer": false
+    },
+    "tests": {
+      "command": "node --import tsx --test --test-concurrency=1 tests/gemini-provider.test.ts tests/ai-provider-routing.test.ts tests/gemini-live-verifier.test.ts tests/ai-integration.test.ts tests/ai-usage.test.ts",
+      "total": 56,
+      "passed": 56,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 13477.3983,
+      "kind": "INJECTED_SYNTHETIC",
+      "beforeSemanticsPreservingRegexLintFix": true
+    },
+    "postRegexTests": {
+      "command": "node --import tsx --test --test-concurrency=1 tests/gemini-provider.test.ts",
+      "total": 21,
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 6350.8717,
+      "kind": "INJECTED_SYNTHETIC"
+    },
+    "checks": {
+      "build": "PASSED_BEFORE_SEMANTICS_PRESERVING_REGEX_LINT_FIX",
+      "threeTypechecks": "PASSED_WITH_BUILD",
+      "firstLint": "FAILED_SIX_NO_USELESS_ESCAPE_DIAGNOSTIC_REGEX",
+      "postFixLint": "PASSED",
+      "docs": "PASSED_27_REQUIRED_ARTIFACTS",
+      "pwa": "PASSED_PUBLIC_SHELL_PRIVATE_API_EXCLUSION",
+      "secrets": "PASSED_173_TRACKED_FILES_NO_VALUES_PRINTED",
+      "whitespace": "PASSED_STAGED_DIFF_CHECK",
+      "fullSuiteRerun": false,
+      "browserRerun": false,
+      "responsiveRerun": false,
+      "mp4Rerun": false,
+      "publicOfflineEvidence": "PASSED_10_DOCUMENTS_94_LINKS_SOURCE_SCHEMA_HASHES_HISTORICAL_LIVE_EVIDENCE_UNCHANGED"
+    },
+    "requestAudit": {
+      "path": "docs/GEMINI_HTTP400_OFFLINE_AUDIT.json",
+      "scope": "OFFLINE_INJECTED_SCHEMA_ONLY",
+      "injectedTransportCalls": 2,
+      "privateKeyRead": false,
+      "keyHeader": "REDACTED",
+      "storyData": "OMITTED",
+      "liveRequest": false
+    },
+    "owner3006": {
+      "healthHttpStatus": 200,
+      "rootHttpStatus": 200,
+      "authStatusHttpStatus": 200,
+      "anonymousProjectsHttpStatus": 401,
+      "baselinePreserved": true,
+      "databaseWrites": false,
+      "mode": "mock",
+      "users": 1,
+      "projects": 1,
+      "jobs": 4,
+      "activeJobs": 0,
+      "clips": 0,
+      "exports": 0,
+      "projectsWithTenIdeas": 1,
+      "restart": false,
+      "uiChanged": false
+    },
+    "canary": {
+      "additionalGenerationRequests": 0,
+      "restart": false,
+      "sourceAtLastObservedRuntime": "bf276fb7e0d4a443057467bb8c8404ffa299b157",
+      "newDiagnosticsActiveInRuntime": false,
+      "cachedDataOrUsedMarkersChanged": false
+    },
+    "billingChanged": false,
+    "openaiRequests": 0,
+    "automaticRetries": 0,
+    "fallback": false,
+    "mainMerged": false,
+    "publiclyDeployed": false,
+    "usageRemaining": {
+      "primary": 33,
+      "secondary": 15
+    },
+    "report": "docs/GEMINI_HTTP400_OFFLINE_REVIEW_TH.md",
+    "nextTask": "Request fresh explicit Owner approval for exactly one selected-only Free Tier expansion on existing cached canary after reviewing offline evidence. Before approval: no generation/model-list/restarts/used-marker resets. After approval: reviewed source, consistent backup, idle/schema/pinned history, new one-attempt marker. Drive OAuth/live round trip and approved Supabase/HTTPS/deployment/offline proof remain external gates.",
+    "documentationReview": {
+      "result": "READY_NO_P1_P2_READ_ONLY",
+      "filesChangedByReviewer": false,
+      "testsOrGitOrNetworkOrProcessesRunByReviewer": false,
+      "privateDataRead": false
+    },
+    "evidenceHashes": {
+      "docs/GEMINI_HTTP400_OFFLINE_REVIEW_TH.md": "8d59efc05c7366b9a663b0e7284d4f19d347c1b613b7167df6b3f225cf9fadcf",
+      "docs/GEMINI_HTTP400_OFFLINE_AUDIT.json": "d917c8525883713aadd00afa2dbf24e6281d423cb4514813fead155cded42187"
+    },
+    "commands": [
+      "node --import tsx --test --test-concurrency=1 tests/gemini-provider.test.ts tests/ai-provider-routing.test.ts tests/gemini-live-verifier.test.ts tests/ai-integration.test.ts tests/ai-usage.test.ts",
+      "npm.cmd run build",
+      "npm.cmd run lint (initial lint failure and final passed)",
+      "node --import tsx --test --test-concurrency=1 tests/gemini-provider.test.ts",
+      "node --import tsx .tmp/capture-gemini-offline-audit.mjs (injected, no network)",
+      "node .tmp/check-owner-phaseA.mjs (release-v1; existing baseline; read-only)",
+      "GET Owner3006 / /api/health /api/auth/status /api/projects (status only)",
+      "npm.cmd run validate:docs",
+      "npm.cmd run validate:pwa",
+      "node .tmp/verify-gemini-offline-checkpoint.mjs",
+      "npm.cmd run validate:secrets",
+      "git diff --cached --check"
+    ],
+    "historicalCheckpoint": true,
+    "supersededBy": "approvedDiagnosticExpansion (current authorization/result only; historical offline tests and artifact retained)"
+  },
+  "approvedDiagnosticExpansion": {
+    "date": "2026-10-11",
+    "scope": "LIVE_GEMINI_OWNER_APPROVED_SINGLE_DIAGNOSTIC_EXPANSION",
+    "sourceCommit": "1538c58da2c7283b73d6fc2eedb50ec87acdadb5",
+    "projectId": "cc629e54-668e-4ff1-82fe-c5904b4edbcc",
+    "retryJobId": "3d7b6ca4-00e8-4523-8d7f-78fef2c1038c",
+    "ownerAuthorizedAdditionalGenerationRequests": 1,
+    "generationRetryPosts": 1,
+    "additionalAttemptsRemaining": 0,
+    "cumulativeGenerationAttempts": {
+      "ideas": 1,
+      "expansion": 3,
+      "total": 4
+    },
+    "outcome": {
+      "status": "FAILED",
+      "errorCode": "AI_REQUEST_FAILED",
+      "progress": 15,
+      "packagePresent": false,
+      "scenesAndPromptsVerified": false,
+      "expansionUsage": null
+    },
+    "normalizedGoogleDiagnostic": {
+      "event": "GEMINI_REQUEST_FAILED",
+      "at": "2026-10-11T02:51:33.284Z",
+      "provider": "gemini",
+      "operation": "expand",
+      "model": "gemini-3.5-flash-lite",
+      "errorCode": "AI_REQUEST_FAILED",
+      "phase": "http",
+      "runtimePid": 15272,
+      "sourceCommit": "1538c58da2c7283b73d6fc2eedb50ec87acdadb5",
+      "httpStatus": 400,
+      "providerStatus": "INVALID_ARGUMENT",
+      "errorResponse": "PARSED_ERROR",
+      "reason": null,
+      "invalidField": null,
+      "requestIssue": null
+    },
+    "diagnosis": {
+      "providerStatusNowObserved": "INVALID_ARGUMENT",
+      "specificParameterRootCause": "NOT_PROVEN",
+      "rawGoogleMessageOrBodyRetained": false,
+      "inferredQuotaOrSchemaOrModelOrRegionCause": false
+    },
+    "ideasUsage": [
+      {
+        "operation": "ideas",
+        "inputTokens": 254,
+        "outputTokens": 1307,
+        "totalTokens": 1561,
+        "jobId": "3ddfc8e6-d53d-4472-8e0b-503aa2e1a57c"
+      }
+    ],
+    "preservation": {
+      "activeJobs": 0,
+      "ideasCount": 10,
+      "jobCount": 4,
+      "ideasPreserved": true,
+      "selectedPreserved": true,
+      "accountsPreserved": true,
+      "schemaPreserved": true,
+      "priorJobHistoryPreserved": true,
+      "packagePresent": false,
+      "databaseWrites": false,
+      "jobId": "3d7b6ca4-00e8-4523-8d7f-78fef2c1038c",
+      "status": "failed",
+      "progress": 15,
+      "errorCode": "AI_REQUEST_FAILED",
+      "sourceCommit": "1538c58da2c7283b73d6fc2eedb50ec87acdadb5",
+      "generationRetryPosts": 1,
+      "logoutConfirmed": true,
+      "databaseWritesScope": "READ_ONLY_POST_REQUEST_VERIFICATION_ONLY"
+    },
+    "owner3006": {
+      "healthHttpStatus": 200,
+      "baselinePreserved": true,
+      "mode": "mock",
+      "databaseWrites": false,
+      "restarted": false,
+      "uiChanged": false,
+      "users": 1,
+      "projects": 1,
+      "jobs": 4,
+      "activeJobs": 0,
+      "clips": 0,
+      "exports": 0
+    },
+    "freeTierAttestedByOwner": true,
+    "billingVerifiedByTool": false,
+    "billingChanged": false,
+    "openaiRequests": 0,
+    "modelListingRequests": 0,
+    "automaticRetries": 0,
+    "fallback": false,
+    "consistentBackupAndIntegrityVerified": true,
+    "sourceSchemaMatchVerified": true,
+    "helperReview": "READY_NO_P1_P2_READ_ONLY",
+    "helperOfflineTests": {
+      "total": 12,
+      "passed": 12,
+      "failed": 0,
+      "durationMs": 4388.3664,
+      "kind": "INJECTED_SYNTHETIC"
+    },
+    "buildIncludingThreeTypechecks": "PASSED",
+    "newRuntimePid": 15272,
+    "previousCanaryPid": 17440,
+    "report": "docs/GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md",
+    "status": "LIVE_EXPANSION_INVALID_ARGUMENT_BLOCKED",
+    "checks": {
+      "build": "PASSED",
+      "threeTypechecks": "PASSED_WITH_BUILD",
+      "helperNodeSyntax": "PASSED",
+      "helperPowerShellSyntax": "PASSED",
+      "docs": "PASSED",
+      "pwa": "PASSED",
+      "secrets": "PASSED",
+      "whitespace": "PASSED",
+      "fullSuiteRerun": false,
+      "lintRerun": false,
+      "browserRerun": false,
+      "responsiveRerun": false,
+      "mp4Rerun": false,
+      "docsArtifacts": 27,
+      "secretsTrackedFiles": 175
+    },
+    "preparationInitialFailure": {
+      "cause": "PROJECT_NAME_IS_IN_INPUT_JSON_NOT_DIRECT_COLUMN",
+      "fixedBeforeAnyEvidenceCreationRestartOrLiveRequest": true,
+      "databaseWrites": false,
+      "additionalLiveRequests": 0
+    },
+    "sourceHashes": {
+      "server/ai/gemini.ts": "72f26909430db732484fab16fbb547adbdb4a44c2ec44ee02d0aa54c492ed09d",
+      "tests/gemini-provider.test.ts": "fd6ebe8b4198d09bd69099117a6dada751c0cb7a67c12af6f6642f0c7fcde492"
+    },
+    "commands": [
+      "npm.cmd run build",
+      "node .tmp/prepare-approved-diagnostic-expansion-20261011.mjs",
+      "node --check .tmp/gemini-private/diagnose-approved-expansion.mjs",
+      "node --check .tmp/gemini-private/start-approved-diagnostic-resume.mjs",
+      "node --test .tmp/approved-diagnostic-expansion-offline.test.mjs",
+      "PowerShell ParseFile for new restart/runner scripts",
+      "node .tmp/observe-approved-diagnostic-expansion-20261011.mjs --preflight-only",
+      "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .tmp/gemini-private/resume-approved-diagnostic-canary.ps1 -Action Start -Port 3013",
+      "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .tmp/gemini-private/run-approved-diagnostic-expansion.ps1 (used once)",
+      "node .tmp/observe-approved-diagnostic-expansion-20261011.mjs",
+      "node .tmp/capture-approved-diagnostic-expansion-20261011.mjs",
+      "node .tmp/check-owner-phaseA.mjs (release-v1; read-only)",
+      "GET Owner3006 /api/health (status only)",
+      "npm.cmd run validate:docs",
+      "npm.cmd run validate:pwa",
+      "node .tmp/verify-approved-diagnostic-checkpoint.mjs",
+      "npm.cmd run validate:secrets",
+      "git diff --cached --check"
+    ],
+    "usageRemaining": {
+      "primary": 19,
+      "secondary": 13
+    },
+    "nextTask": "Continue offline request/schema investigation and safe error-detail instrumentation. No further live generation/model-list probe/reset/rerun/new canary without fresh explicit Owner authorization; current budget0. Owner3006 remains Mock. Drive OAuth/live round trip and approved Supabase/HTTPS/deployment/offline proof remain external gates.",
+    "docsReview": {
+      "result": "READY_NO_P1_P2_READ_ONLY",
+      "scope": "Latest public result MD/JSON, current QA record, and PROJECT_STATUS/TASKS/HANDOFF. No private evidence, runtime, Git or live testing by reviewer."
+    },
+    "publicEvidenceVerification": {
+      "command": "node .tmp/verify-approved-diagnostic-checkpoint.mjs",
+      "result": "PASSED",
+      "documents": 11,
+      "linksChecked": 100,
+      "sourceHashes": "UNCHANGED",
+      "historicalEvidence": "UNCHANGED",
+      "privateDataRead": false,
+      "liveRequests": 0
+    },
+    "publicArtifactHashes": {
+      "docs/GEMINI_DIAGNOSTIC_RESULT_20261011.json": "998b5f62e0b46793e19c1ed7343ef0e5506c27a46f5c3616295b1be9d2790ad3",
+      "docs/GEMINI_DIAGNOSTIC_RESULT_20261011_TH.md": "e18eb1d973e2a1bbd17d935158df8db60028ba72fd7a12d7549bdc1c9c63c590"
+    }
+  },
+  "latestCheckpointKey": "geminiExpansionLiveAcceptance",
+  "rootRecordNote": "Top-level sourceCommit/tests/status are historical initial Phase2 evidence. Read latestCheckpointKey for the current source-specific checkpoint; prior live/QA records remain unchanged.",
+  "geminiExpansionReduction": {
+    "date": "2026-10-12",
+    "status": "OFFLINE_EXPANSION_FIX_VERIFIED_LIVE_APPROVAL_PENDING",
+    "releaseReadiness": "LOCAL_V1_MOCK_READY_GEMINI_EXPANSION_UNVERIFIED",
+    "sourceCommit": "921ce7b32b795defd41e784ff893b31df2588dfa",
+    "sourceBaseCommit": "c6dcc4249f40b5773ac62a7b20b383257e9cf351",
+    "sourceHashes": {
+      "server/ai/gemini.ts": "8caa14c59c3be510cf7340f440d28c48c25d77b1696a7f5268a9b1e6d49bb550",
+      "server/ai/gemini-expansion.ts": "1f3096109a6979e3bf923f87b77bed221af68e67b88b5cc8aea152bc9078390f",
+      "tests/gemini-provider.test.ts": "3cafc176d65a405b0e5730be4732be9b49d1435bfc5794103cd2ec01c01e5f1d",
+      "tests/gemini-expansion.test.ts": "e2f4369e3d179f332340a68ece39d4adedbedf87e431d47d820564f9f7c21845"
+    },
+    "scope": "OFFLINE_INJECTED_SYNTHETIC_PROVIDER_AND_LOCAL_VALIDATION_WITH_OWNER_MOCK_RESTORE",
+    "historicalRootCause": "NOT_PROVEN",
+    "historicalProviderStatus": "INVALID_ARGUMENT",
+    "schemaReduction": {
+      "before": {
+        "bytes": 2281,
+        "jsonContainers": 64,
+        "maxDepth": 8,
+        "schemaObjects": 11,
+        "schemaProperties": 36,
+        "arrayBoundPairs": 5,
+        "numericBoundPairs": 2,
+        "sha256": "60bad99120d5082eb81616adea3842d9142d4774fea5ee02269ee233602ce524"
+      },
+      "after": {
+        "bytes": 1568,
+        "jsonContainers": 42,
+        "maxDepth": 7,
+        "schemaObjects": 5,
+        "schemaProperties": 26,
+        "arrayBoundPairs": 0,
+        "numericBoundPairs": 0,
+        "sha256": "fe920b51b76576a13d6e1f912f37a9aae26fb0fefd2de764ee88a61a447b88b6"
+      },
+      "ideasWireSchemaUnchanged": true
+    },
+    "architecture": {
+      "providerRequestsPerExpansion": 1,
+      "stages": "LOCAL_A_B_C_D_VALIDATION_AND_ASSEMBLY",
+      "sharedStoryPackageUnchanged": true,
+      "apiUnchanged": true,
+      "databaseSchemaUnchanged": true,
+      "queueUnchanged": true,
+      "uiUnchanged": true,
+      "dependenciesUnchanged": true,
+      "fullContentAiAuthored": true,
+      "noOutputRepair": true
+    },
+    "tests": {
+      "targeted": {
+        "total": 62,
+        "passed": 62,
+        "failed": 0,
+        "skipped": 0,
+        "durationMs": 9502.4112,
+        "kind": "INJECTED_SYNTHETIC_LOOPBACK"
+      },
+      "full": {
+        "total": 227,
+        "passed": 226,
+        "failed": 0,
+        "skipped": 1,
+        "cancelled": 0,
+        "durationMs": 92240.5793,
+        "skipReason": "WINDOWS_POSIX_VAULT_PERMISSIONS",
+        "kind": "ISOLATED_SYNTHETIC_INJECTED_AND_FFMPEG_FFPROBE"
+      },
+      "addedExpansionRegressions": 6,
+      "automaticLiveRetries": 0
+    },
+    "checks": {
+      "build": "PASSED",
+      "threeTypechecks": "PASSED_WITH_BUILD",
+      "lint": "PASSED",
+      "docs": "PASSED_27_ARTIFACTS_AFTER_FINAL_CURRENT_DOC_UPDATE",
+      "pwa": "PASSED_AFTER_DOCUMENT_UPDATE",
+      "secrets": "PASSED_179_TRACKED_FILES",
+      "whitespace": "PASSED_STAGED_DIFF",
+      "browserRerun": false,
+      "responsiveRerun": false,
+      "actualPlaybackRerun": false,
+      "syntheticMp4Ffprobe": "PASSED_WITH_FULL_SUITE"
+    },
+    "independentSourceReview": {
+      "result": "READY_NO_P1_P2_READ_ONLY",
+      "files": [
+        "server/ai/gemini.ts",
+        "server/ai/gemini-expansion.ts",
+        "tests/gemini-provider.test.ts"
+      ],
+      "sourceHashesMatch": true,
+      "rootIntegrationReview": "READY"
+    },
+    "ownerRestoreHelperReview": {
+      "result": "READY_NO_P1_P2_READ_ONLY_AFTER_CLEANUP_AND_PID_GUARDS",
+      "sha256": "1c83485e106b9e62abfa27734e28bed61770db6e1ca42ede74dbf63afa2d58d3",
+      "initialP2Findings": 2,
+      "initialFindingsFixedBeforeExecution": true,
+      "exclusiveExecution": true,
+      "hiddenProcess": true,
+      "cleanEnvironment": true
+    },
+    "owner3006": {
+      "mode": "mock",
+      "restored": true,
+      "pid": 22544,
+      "source": "6a9386eac19719e25932d8485bae36cd5312b37a",
+      "port": 3006,
+      "healthHttpStatus": 200,
+      "routes": {
+        "/": 200,
+        "/api/auth/status": 200,
+        "/api/projects": 401
+      },
+      "counts": {
+        "users": 1,
+        "projects": 1,
+        "jobs": 4,
+        "clips": 0,
+        "exports": 0
+      },
+      "activeJobs": 0,
+      "databaseLogicalContentPreserved": true,
+      "mediaPreserved": true,
+      "schemaMatch": true,
+      "credentialsPassed": false,
+      "aiRequests": 0,
+      "paidServicesEnabled": false,
+      "uiChanged": false
+    },
+    "canary": {
+      "projectId": "cc629e54-668e-4ff1-82fe-c5904b4edbcc",
+      "ideas": 10,
+      "selected": 1,
+      "jobs": 4,
+      "activeJobs": 0,
+      "packagePresent": false,
+      "readOnlyInspection": true,
+      "allLogicalRowsAndSchemaUnchanged": true,
+      "directDatabaseMutation": false,
+      "runtimeStarted": false,
+      "runtimeReachableAtInitialObservation": false,
+      "port": 3013
+    },
+    "live": {
+      "geminiRequests": 0,
+      "modelsRequests": 0,
+      "openaiRequests": 0,
+      "billingChanges": 0,
+      "automaticRetries": 0,
+      "paidFallback": false,
+      "liveExpansionVerified": false,
+      "newOwnerApprovalRequired": true,
+      "priorApprovalBudgetRemaining": 0,
+      "plannedMaximumRequests": 1,
+      "proposedOperation": "SELECTED_ONLY_EXPANSION_EXISTING_CANARY",
+      "freeTierAttestationNotBillingTelemetry": true
+    },
+    "integrations": {
+      "drive": "PREPARED_OAUTH_AND_LIVE_ROUND_TRIP_REQUIRED",
+      "cloud": "PREPARED_APPROVED_SUPABASE_HTTPS_SCHEMA_DEPLOYMENT_AND_OFFLINE_PROOF_REQUIRED",
+      "owner3006GeminiActivation": false,
+      "mainMerge": false,
+      "pr2And3Merged": false,
+      "publicDeployment": false,
+      "contentPublish": false
+    },
+    "report": "docs/GEMINI_EXPANSION_FIX_TH.md",
+    "audit": "docs/GEMINI_EXPANSION_REDUCTION_AUDIT.json",
+    "commands": [
+      "node --import tsx --test --test-concurrency=1 tests/gemini-provider.test.ts tests/gemini-expansion.test.ts tests/ai-provider-routing.test.ts tests/ai-integration.test.ts tests/gemini-live-verifier.test.ts tests/ai-usage.test.ts",
+      "npm.cmd test",
+      "npm.cmd run build",
+      "npm.cmd run lint",
+      "node .tmp/capture-gemini-expansion-reduction.mjs (injected, used once)",
+      "node .tmp/check-gemini-expansion-offline-preservation.mjs (read-only)",
+      "node .tmp/check-owner-phaseA.mjs (release-v1; read-only)",
+      "node --check .tmp/restore-owner-mock-offline-20261011.mjs",
+      "node .tmp/restore-owner-mock-offline-20261011.mjs (reviewed, Mock-only, used once)",
+      "npm.cmd run validate:docs",
+      "npm.cmd run validate:pwa",
+      "npm.cmd run validate:secrets",
+      "git diff --cached --check"
+    ],
+    "usageRemaining": {
+      "primary": 73,
+      "secondary": 96,
+      "kind": "AUTHORITATIVE_ACCOUNT_SNAPSHOT"
+    },
+    "nextTask": "Await fresh explicit Owner approval for at most one Free Tier selected-expansion request. Before sending use reviewed source, consistent backup/schema/idle/history guards and NEW exclusive helper/marker; never reuse used diagnostic helpers. No ideas regeneration/Models probe/retry/OpenAI/Billing/Owner activation/main merge/deploy/publish. Drive/cloud external gates remain.",
+    "testsDate": "2026-10-11",
+    "publicEvidenceVerification": {
+      "command": "node .tmp/verify-gemini-expansion-fix-checkpoint.mjs",
+      "result": "PASSED",
+      "documents": 11,
+      "linksChecked": 105,
+      "sourceHashes": "UNCHANGED",
+      "historicalEvidence": "UNCHANGED",
+      "historicalQaRecords": "UNCHANGED",
+      "ownerLogicalData": "UNCHANGED",
+      "canaryLogicalData": "UNCHANGED",
+      "privateCredentialsRead": false,
+      "liveRequests": 0
+    },
+    "commandsScope": "All listed commands were executed in this task; source-scoped tests are injected/synthetic. Final docs/secrets/staged checks passed after documentation update. No live requests.",
+    "publicArtifactHashes": {
+      "docs/GEMINI_EXPANSION_FIX_TH.md": "4f91ea105a441bcf3f88b82b62201fe443ac5a1d06610d0ed241a924c836f7d6",
+      "docs/GEMINI_EXPANSION_REDUCTION_AUDIT.json": "ddfe3a7d1b21fbc0a036c569d1f9e216e75ef35e852691deb0915376f8e821cb"
+    },
+    "docsReview": {
+      "result": "READY_NO_P1_P2_READ_ONLY",
+      "initialP2Findings": 2,
+      "findingsFixedBeforeCheckpoint": true,
+      "scope": "Current public docs/source/artifact hashes and local links only; reviewer made no tests, helper, private data, Git, runtime or network calls."
+    }
+  },
+  "geminiExpansionLiveAcceptance": {
+    "verified": true,
+    "testedSourceCommit": "8f95c1640d461d6ddf8f47dbc778988b19f83c7c",
+    "atUtc": "2026-10-11T18:02:54.550Z",
+    "projectId": "cc629e54-668e-4ff1-82fe-c5904b4edbcc",
+    "jobId": "94d8afeb-66e7-4c7f-99b6-b15f1899e782",
+    "generationRequests": 1,
+    "automaticRetries": 0,
+    "newIdeasRequests": 0,
+    "modelsApiRequests": 0,
+    "openAiRequests": 0,
+    "billingChanged": false,
+    "freeTier": {
+      "observedUtc": "2026-10-11T17:58:19Z",
+      "dashboard": "https://aistudio.google.com/",
+      "projectTier": "FREE_TIER",
+      "keyTier": "FREE_TIER",
+      "billingAccount": "NONE",
+      "keyBindingMethod": "PRIVATE_MASKED_SUFFIX_COMPARISON",
+      "keyMatches": true,
+      "billingChanged": false,
+      "limitation": "Masked key suffix matched locally; no independent key identity API request."
+    },
+    "ideasCount": 10,
+    "selectedCount": 1,
+    "charactersCount": 2,
+    "locationsCount": 1,
+    "continuityRulesCount": 2,
+    "scenes": [
+      {
+        "id": "scene_1",
+        "order": 1,
+        "durationSeconds": 6,
+        "characterIds": [
+          "character_1"
+        ],
+        "locationId": "location_1",
+        "hasThaiExplanation": true,
+        "hasEnglishFlowPrompt": true
+      },
+      {
+        "id": "scene_2",
+        "order": 2,
+        "durationSeconds": 6,
+        "characterIds": [
+          "character_1"
+        ],
+        "locationId": "location_1",
+        "hasThaiExplanation": true,
+        "hasEnglishFlowPrompt": true
+      },
+      {
+        "id": "scene_3",
+        "order": 3,
+        "durationSeconds": 8,
+        "characterIds": [
+          "character_2"
+        ],
+        "locationId": "location_1",
+        "hasThaiExplanation": true,
+        "hasEnglishFlowPrompt": true
+      }
+    ],
+    "durationSeconds": 20,
+    "usage": [
+      {
+        "operation": "ideas",
+        "inputTokens": 254,
+        "outputTokens": 1307,
+        "totalTokens": 1561,
+        "jobId": "3ddfc8e6-d53d-4472-8e0b-503aa2e1a57c"
+      },
+      {
+        "operation": "expand",
+        "inputTokens": 624,
+        "outputTokens": 1291,
+        "totalTokens": 1915,
+        "jobId": "94d8afeb-66e7-4c7f-99b6-b15f1899e782"
+      }
+    ],
+    "estimatedCostUsd": null,
+    "billableAmountVerified": false,
+    "preservation": {
+      "schema": true,
+      "accounts": true,
+      "tenRealIdeas": true,
+      "selectedIdea": true,
+      "priorFourJobs": true,
+      "clips": true,
+      "exports": true,
+      "media": true,
+      "ownerLogicalData": true,
+      "ownerMedia": true
+    },
+    "owner3006": {
+      "health": 200,
+      "anonymousProjectsStatus": 401,
+      "changed": false
+    },
+    "canary3013": {
+      "health": 200,
+      "activeJobs": 0,
+      "jobs": 5
+    },
+    "logoutConfirmed": true,
+    "rawContentPublished": false,
+    "secretsPublished": false,
+    "historicalHttp400RootCause": "NOT_PROVEN",
+    "status": "LIVE_GEMINI_SELECTED_EXPANSION_VERIFIED",
+    "sourceImplementationCommit": "921ce7b32b795defd41e784ff893b31df2588dfa",
+    "sourceHashes": {
+      "server/ai/gemini.ts": "8caa14c59c3be510cf7340f440d28c48c25d77b1696a7f5268a9b1e6d49bb550",
+      "server/ai/gemini-expansion.ts": "1f3096109a6979e3bf923f87b77bed221af68e67b88b5cc8aea152bc9078390f",
+      "tests/gemini-provider.test.ts": "3cafc176d65a405b0e5730be4732be9b49d1435bfc5794103cd2ec01c01e5f1d",
+      "tests/gemini-expansion.test.ts": "e2f4369e3d179f332340a68ece39d4adedbedf87e431d47d820564f9f7c21845"
+    },
+    "report": "docs/GEMINI_EXPANSION_LIVE_RESULT_20261012_TH.md",
+    "sourceApplicationChangedThisTurn": false,
+    "runtime": {
+      "ownerPort": 3006,
+      "ownerPid": 22544,
+      "ownerMode": "mock",
+      "ownerRestarted": false,
+      "ownerUiChanged": false,
+      "canaryPort": 3013,
+      "canaryPid": 19484
+    },
+    "productionPromptValidation": {
+      "testedSourceCommit": "8f95c1640d461d6ddf8f47dbc778988b19f83c7c",
+      "generationRequests": 0,
+      "flowApiRequests": 0,
+      "actualCachedPackage": true,
+      "productionCompiler": "server/project-files.ts:flowPrompt",
+      "prompts": [
+        {
+          "sceneId": "scene_1",
+          "aspectRatio": "9:16",
+          "durationSeconds": 6,
+          "rawPromptPreserved": true,
+          "characterAppearanceIncluded": true,
+          "locationAppearanceIncluded": true,
+          "continuityIncluded": true,
+          "sceneFilenameIncluded": true,
+          "englishOnly": true
+        },
+        {
+          "sceneId": "scene_2",
+          "aspectRatio": "9:16",
+          "durationSeconds": 6,
+          "rawPromptPreserved": true,
+          "characterAppearanceIncluded": true,
+          "locationAppearanceIncluded": true,
+          "continuityIncluded": true,
+          "sceneFilenameIncluded": true,
+          "englishOnly": true
+        },
+        {
+          "sceneId": "scene_3",
+          "aspectRatio": "9:16",
+          "durationSeconds": 8,
+          "rawPromptPreserved": true,
+          "characterAppearanceIncluded": true,
+          "locationAppearanceIncluded": true,
+          "continuityIncluded": true,
+          "sceneFilenameIncluded": true,
+          "englishOnly": true
+        }
+      ],
+      "limitation": "Pure production compiler checked offline; no Flow clip generation or newly authenticated prompt-pack HTTP download."
+    },
+    "tests": {
+      "oneRequestHarness": {
+        "total": 15,
+        "passed": 15,
+        "failed": 0,
+        "live": false
+      },
+      "geminiScoped": {
+        "total": 62,
+        "passed": 62,
+        "failed": 0,
+        "live": false
+      },
+      "production": {
+        "total": 7,
+        "passed": 7,
+        "failed": 0,
+        "live": false
+      },
+      "driveCloud": {
+        "total": 69,
+        "passed": 68,
+        "failed": 0,
+        "skipped": 1,
+        "skipReason": "POSIX vault test skipped on Windows",
+        "live": false
+      },
+      "build": "PASSED_INCLUDES_THREE_TYPECHECKS",
+      "lint": "PASSED_ZERO_WARNINGS",
+      "powerShellParser": "PASSED",
+      "fullSuiteThisTurn": "NOT_RERUN_SOURCE_UNCHANGED",
+      "browserResponsiveMp4ThisTurn": "NOT_RERUN_UI_EDITOR_UNCHANGED",
+      "publicDocsValidation": "PASSED_27_REQUIRED_ARTIFACTS",
+      "pwaValidation": "PASSED_PUBLIC_SHELL_PRIVATE_API_EXCLUSION",
+      "secretsValidation": "PASSED_181_TRACKED_FILES_NO_SECRET_VALUES_PRINTED",
+      "stagedDiffCheck": "PASSED"
+    },
+    "review": {
+      "helperSafety": "READY_NO_P1_P2_READ_ONLY_INDEPENDENT_REVIEW",
+      "helperHashes": {
+        "execute-approved-compact-expansion.mjs": "e3c0da0638cf5c569d7732bcf223c27044e7ce916605eb9cdfcef1a8a84fc386",
+        "start-approved-compact-resume.mjs": "dc86d279e5a99466e06b273588d2ae14bca17860e8b2572c74322a34b3a92b1f",
+        "start-approved-compact-canary.ps1": "91bdbfb77bbe9eecb600fcbe9020922127bf74b51d891e4b29648a88088d65cc",
+        "run-approved-compact-expansion.ps1": "16f789d07e31236ed117c52b6c7984f473c74d2700b33bcfff68408e8b7ebca2"
+      },
+      "contentReviewedReadOnly": true,
+      "editorialNote": "Story Bible includes community restocking ending; generated scene list focuses on setup, mystery, revelation and does not have a separate ending shot. Owner editorial review needed before producing video.",
+      "documentation": {
+        "result": "READY_NO_P1_P2_READ_ONLY_INDEPENDENT_REVIEW",
+        "findingsFixedBeforeCheckpoint": true,
+        "scope": "Public latest status, immutable historical QA/source hashes and relative links only; no tests/network/runtime/private data/Git writes by reviewer."
+      }
+    },
+    "integrations": {
+      "geminiCanary": "VERIFIED",
+      "owner3006Gemini": "NOT_ACTIVATED_OWNER_POLICY",
+      "flowVideo": "ASSISTED_OWNER_OPERATED_NO_LIVE_CLIPS",
+      "drive": "PREPARED_OAUTH_AND_LIVE_PROOF_REQUIRED",
+      "cloud": "PREPARED_APPROVED_DEPLOYMENT_AND_DISCONNECTED_DEVICE_TEST_REQUIRED",
+      "mainMerge": false,
+      "publicDeploy": false,
+      "contentPublish": false
+    },
+    "approval": {
+      "maximum": 1,
+      "consumed": 1,
+      "remaining": 0,
+      "lateConfirmation": "SAME_AUTHORIZATION_NOT_ADDITIONAL_REQUEST"
+    },
+    "usageRemaining": {
+      "primary": 51,
+      "secondary": 92,
+      "kind": "AUTHORITATIVE_ACCOUNT_SNAPSHOT"
+    },
+    "commands": [
+      "node --test .tmp/approved-compact-expansion-offline.test.mjs",
+      "node --import tsx --test --test-concurrency=1 tests/gemini-provider.test.ts tests/gemini-expansion.test.ts tests/gemini-live-verifier.test.ts tests/ai-integration.test.ts tests/ai-usage.test.ts",
+      "node --import tsx --test --test-concurrency=1 tests/production.test.ts",
+      "node --import tsx --test --test-concurrency=1 tests/drive.test.ts tests/drive-project.test.ts tests/drive-live-verifier.test.ts tests/drive-abort.test.ts tests/cloud.test.ts tests/worker-presence.test.ts",
+      "npm.cmd run build",
+      "npm.cmd run lint",
+      "powershell.exe -NoProfile -File .tmp/gemini-private/start-approved-compact-canary.ps1 -Action Start -Port 3013 (reviewed, used once, zero generation)",
+      "powershell.exe -NoProfile -File .tmp/gemini-private/run-approved-compact-expansion.ps1 (reviewed, used once, EXACTLY ONE approved generation)",
+      "node .tmp/verify-approved-compact-expansion-result.mjs --review-content (read-only, used once)",
+      "node .tmp/check-compact-flow-production.mjs (offline, used once)",
+      "npm.cmd run validate:docs",
+      "npm.cmd run validate:pwa",
+      "npm.cmd run validate:secrets",
+      "git diff --cached --check",
+      "node .tmp/verify-compact-expansion-live-checkpoint.mjs"
+    ],
+    "nextTask": "รักษา cached real package และตรวจ PR2/PR3 ต่อโดยไม่ merge/deploy; budget รอบนี้เหลือ0 ห้าม rerun/reset used helpers/markers หรือส่ง Gemini/Models/OpenAI เพิ่มโดยไม่มีapprovalใหม่ Owner3006ยังMockตามข้อห้ามเปลี่ยนแอป การactivateต้องอนุญาตขั้นถัดไป DriveรอOAuth/consent/live roundtrip/approvedrestore CloudรอapprovedSupabase/HTTPS/hosting/schema/deployment/notebook-offlineproof",
+    "publicEvidenceVerification": {
+      "command": "node .tmp/verify-compact-expansion-live-checkpoint.mjs",
+      "result": "PASSED",
+      "documents": 11,
+      "sourceHashes": "UNCHANGED",
+      "historicalEvidenceAndQa": "UNCHANGED",
+      "currentPublicEvidence": "CONSISTENT",
+      "liveRequestsMadeByCheck": 0
+    },
+    "reportSha256": "e5a962a75d695d105610dc2f14fae268095c19e6e904420deac4b0da5b2fcc38"
+  }
+}

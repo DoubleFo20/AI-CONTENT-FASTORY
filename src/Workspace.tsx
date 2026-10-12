@@ -1,4 +1,5 @@
 import { useCallback, useState, type FormEvent, type KeyboardEvent } from 'react';
+import type { AiUsageReceipt } from '../shared/ai';
 import type { Clip, Job, Locale, Project, Scene } from '../shared/contracts';
 import Modal from './Modal';
 import { CopyButton, formatDate, isActive, JobDetails, WorkerStatus, type WorkerRuntimeStatus } from './components';
@@ -18,7 +19,7 @@ interface Props {
   videoError: () => void;
   ai: AiRuntimeStatus | null; modeBlocked: boolean;
   worker: WorkerRuntimeStatus | null;
-  setAiMode: (mode: 'mock' | 'openai') => void;
+  setAiMode: (mode: 'mock' | 'openai' | 'gemini') => void;
   retry: (id: string) => void; cancel: (id: string) => void;
   csrf: string | null; onError: (error: unknown) => void;
 }
@@ -69,6 +70,7 @@ export default function Workspace({ project, jobs, locale, contentMode, section,
   const selected = project.ideas.find((idea) => idea.id === project.selectedIdeaId);
   const active = jobs.some(isActive);
   const blocked = disabled || active;
+  const aiModeBlocked = modeBlocked || ai?.modeChangeLocked === true;
   const pack = project.package;
   const displayedChoice = pack ? project.selectedIdeaId : choice;
 
@@ -109,12 +111,23 @@ export default function Workspace({ project, jobs, locale, contentMode, section,
       <JobDetails job={latestJob} locale={locale} m={m} disabled={disabled} active={active} retry={retry} cancel={cancel} />
       {quotaFailure && <div className="notice quota-recovery">
         <p>{m.quotaRecovery}</p>
-        {ai?.mode === 'mock' ? <p role="status">{m.mockSelected}</p> : <div className="actions"><button className="secondary" disabled={disabled || modeBlocked || !ai} onClick={() => setAiMode('mock')}>{m.useMockMode}</button></div>}
+        {ai?.mode === 'mock' ? <p role="status">{m.mockSelected}</p> : <div className="actions"><button className="secondary" disabled={disabled || aiModeBlocked || !ai} onClick={() => setAiMode('mock')}>{m.useMockMode}</button></div>}
         {!ai && <p className="muted">{m.modeUnavailable}</p>}
-        {modeBlocked && <p className="muted">{m.modeBlocked}</p>}
+        {aiModeBlocked && <p className="muted">{ai?.modeChangeLocked ? m.cloudModeLocked : m.modeBlocked}</p>}
       </div>}
     </section>}
-    {((activeSection === 'ideas' && project.ideas.length > 0) || ((activeSection === 'bibles' || activeSection === 'scenes') && pack)) && <p className="notice content-source"><strong>{m.resultSource}:</strong> {source === 'mock' ? m.sourceMock : source === 'openai' ? m.sourceOpenai : m.sourceUnknown}</p>}
+    {((activeSection === 'ideas' && project.ideas.length > 0) || ((activeSection === 'bibles' || activeSection === 'scenes') && pack)) && <p className="notice content-source"><strong>{m.resultSource}:</strong> {source === 'mock' ? m.sourceMock : source === 'openai' ? m.sourceOpenai : source === 'gemini' ? m.sourceGemini : m.sourceUnknown}</p>}
+    {!!project.aiUsage?.length && <details className="card" aria-label={m.aiUsage}>
+      <summary>{m.aiUsage}</summary>
+      <p className="muted">{m.estimatedNotInvoice}</p>
+      <div className="stack">{project.aiUsage.map((receipt: AiUsageReceipt) => <article className="notice" key={`${receipt.jobId}-${receipt.recordedAt}`}>
+        <p><strong>{receipt.provider === 'gemini' ? m.sourceGemini : m.sourceOpenai}</strong> · {receipt.operation === 'ideas' ? m.usageIdeas : m.usageExpand} · {receipt.model}</p>
+        <p>{m.inputTokens}: {new Intl.NumberFormat(locale).format(receipt.inputTokens)} · {m.outputTokens}: {new Intl.NumberFormat(locale).format(receipt.outputTokens)} · {m.totalTokens}: {new Intl.NumberFormat(locale).format(receipt.totalTokens)}</p>
+        {(receipt.cachedInputTokens !== undefined || receipt.reasoningTokens !== undefined) && <p>{receipt.cachedInputTokens !== undefined && <>{m.cachedInputTokens}: {new Intl.NumberFormat(locale).format(receipt.cachedInputTokens)} </>}{receipt.reasoningTokens !== undefined && <>{m.reasoningTokens}: {new Intl.NumberFormat(locale).format(receipt.reasoningTokens)}</>}</p>}
+        <p>{receipt.estimatedCostUsd === null ? m.usageUnknownCost : `${m.estimatedCost}: ${new Intl.NumberFormat(locale, { style: 'currency', currency: 'USD', maximumFractionDigits: 6 }).format(receipt.estimatedCostUsd)}`} · {formatDate(receipt.recordedAt, locale)}</p>
+        {receipt.rateVerifiedAt && <p className="small">{m.rateVerified}: {formatDate(receipt.rateVerifiedAt, locale)}</p>}
+      </article>)}</div>
+    </details>}
 
     {activeSection === 'brief' && <section tabIndex={-1} id="workspace-brief" className="card glass">
       <h2>{m.brief}</h2><p className="preserve">{project.brief}</p>

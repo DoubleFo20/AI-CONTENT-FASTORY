@@ -24,7 +24,7 @@ const brief = { name: 'แม่หมาป่าผู้ปกป้องล
 async function fixture(t: TestContext) {
   await mkdir(resolve('.tmp'), { recursive: true }); const dir = await mkdtemp(join(resolve('.tmp'), 'production-test-'));
   let paidCalls = 0;
-  const ai = createConfiguredAiProvider({ mode: 'openai', apiKey: 'synthetic-test-only', stateFile: join(dir, 'settings', 'mode.json'), openai: { ...createMockProvider(), async generateIdeas() { paidCalls++; throw new AiProviderError('AI_QUOTA_EXCEEDED'); } } });
+  const ai = createConfiguredAiProvider({ openaiApproved: true, mode: 'openai', apiKey: 'synthetic-test-only', stateFile: join(dir, 'settings', 'mode.json'), openai: { ...createMockProvider(), async generateIdeas() { paidCalls++; throw new AiProviderError('AI_QUOTA_EXCEEDED'); } } });
   const application = createApplication({ dataDir: dir, provider: ai.provider, startWorker: false, allowedOrigins: [origin], integrations: { aiStatus: ai.status, setAiMode: ai.setMode } });
   const server = createServer(application.app); await new Promise<void>(yes => server.listen(0, '127.0.0.1', yes));
   const address = server.address(); assert.ok(address && typeof address !== 'string'); const base = `http://127.0.0.1:${address.port}/api`;
@@ -114,7 +114,7 @@ test('audio upload validates real media and stores owner-scoped metadata without
 });
 test('explicit mode persists across router restart without reading or writing API keys', async t => {
   const f = await fixture(t); f.ai.setMode('mock');
-  const restarted = createConfiguredAiProvider({ mode: 'openai', apiKey: '', stateFile: join(f.dir, 'settings', 'mode.json') }); assert.equal(restarted.status().active, 'mock');
+  const restarted = createConfiguredAiProvider({ openaiApproved: true, mode: 'openai', apiKey: '', stateFile: join(f.dir, 'settings', 'mode.json') }); assert.equal(restarted.status().active, 'mock');
   assert.throws(() => restarted.setMode('openai'), { code: 'AI_NOT_CONFIGURED' });
 });
 test('mock honors variable story durations and preserves exactly one selected idea', async () => {

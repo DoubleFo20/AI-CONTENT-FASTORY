@@ -14,7 +14,7 @@ import { RequestLifecycle } from './request-lifecycle.js';
 
 export interface IntegrationOptions {
   aiStatus?: () => AiRuntimeStatus;
-  setAiMode?: (mode: 'mock' | 'openai') => AiRuntimeStatus;
+  setAiMode?: (mode: 'mock' | 'openai' | 'gemini') => AiRuntimeStatus;
   drive?: DriveIntegration;
   cloudRepository?: CloudRepository | null;
 }
@@ -82,7 +82,7 @@ export function registerIntegrations(app: Express, store: Store, auth: Auth, opt
   };
   app.get('/api/integrations/capabilities', async (_req, res) => {
     const capabilities: RuntimeCapabilities = {
-      ai: options.aiStatus?.() ?? { mode: 'openai', active: 'openai', fallbackReason: null },
+      ai: { ...(options.aiStatus?.() ?? { mode: 'openai', active: 'openai', fallbackReason: null }), ...(options.cloudRepository ? { modeChangeLocked: true } : {}) },
       video: { primary: 'google_flow', integration: 'manual', supporting: 'meta_ai', supportingAvailable: false },
       storage: options.drive ? await driveAction(() => options.drive!.status(owner(res))) : driveUnavailable,
       structuredData: { active: 'sqlite', cloudTarget: 'supabase_postgres', configured: Boolean(options.cloudRepository) },

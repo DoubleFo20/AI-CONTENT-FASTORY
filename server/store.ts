@@ -5,12 +5,14 @@ import { join, resolve } from 'node:path';
 import type { Clip, ExportArtifact, Idea, Job, JobType, Project, ProjectInput, ProjectSummary, StoryPackage, User, ErrorCode } from '../shared/contracts.js';
 import { INITIAL_SCHEMA, SCHEMA_VERSION } from './schema.js';
 import { AppError } from './errors.js';
+import { AiUsageSchema, AiUsageReceiptSchema, type AiUsage, type AiUsageReceipt } from '../shared/ai.js';
+import { estimateAiCost } from './ai/usage.js';
 
 type Row = Record<string, string | number | null>;
 const now = () => new Date().toISOString();
 const parse = <T>(value: string | number | null): T => JSON.parse(String(value)) as T;
-type GenerationSource = 'mock' | 'openai';
-type StoredInput = ProjectInput & { _generation?: ProjectSummary['generation'] };
+type GenerationSource = 'mock' | 'openai' | 'gemini';
+type StoredInput = ProjectInput & { _generation?: ProjectSummary['generation']; _aiUsage?: AiUsageReceipt[] };
 export interface StoreOptions { resumeQueuedMock?: boolean }
 
 function openApplicationLock(path: string): number {
@@ -126,11 +128,14 @@ export class Store {
     const generation: NonNullable<ProjectSummary['generation']> = {};
     for (const key of ['ideas', 'expansion'] as const) {
       const source = input._generation?.[key];
-      if (source === 'mock' || source === 'openai') generation[key] = source;
+      if (source === 'mock' || source === 'openai' || source === 'gemini') generation[key] = source;
     }
+    const aiUsage = (Array.isArray(input._aiUsage) ? input._aiUsage : []).slice(-50)
+      .flatMap(value => { const parsed = AiUsageReceiptSchema.safeParse(value); return parsed.success ? [parsed.data] : []; });
     return { name: input.name, brief: input.brief, genre: input.genre, audience: input.audience, aspectRatio: input.aspectRatio,
       ...(input.targetDurationSeconds !== undefined ? { targetDurationSeconds: input.targetDurationSeconds } : {}),
       ...(Object.keys(generation).length ? { generation } : {}),
+      ...(aiUsage.length ? { aiUsage } : {}),
       id: String(row.id), status: row.status as ProjectSummary['status'], createdAt: String(row.created_at), updatedAt: String(row.updated_at) };
   }
   listProjects(ownerId: string): ProjectSummary[] {
@@ -244,6 +249,22 @@ export class Store {
     const input = parse<StoredInput>(row.input_json);
     input._generation = { ...input._generation, [key]: source };
     this.db.prepare('UPDATE projects SET input_json=? WHERE id=?').run(JSON.stringify(input), projectId);
+  }
+  recordAiUsage(ownerId: string, job: Job, value: AiUsage): boolean {
+    const parsed = AiUsageSchema.safeParse(value);
+    if (!parsed.success || parsed.data.operation !== job.type) return false;
+    return this.transaction(() => {
+      const row = this.db.prepare("SELECT p.input_json FROM projects p JOIN jobs j ON j.project_id=p.id WHERE p.id=? AND p.owner_id=? AND j.id=? AND j.owner_id=? AND j.type=? AND j.status='running'")
+        .get(job.projectId, ownerId, job.id, ownerId, job.type) as Row | undefined;
+      if (!row) return false;
+      const input = parse<StoredInput>(row.input_json);
+      const previous = Array.isArray(input._aiUsage) ? input._aiUsage : [];
+      if (previous.some(receipt => receipt.jobId === job.id)) return false;
+      const receipt = AiUsageReceiptSchema.parse({ ...parsed.data, jobId: job.id, recordedAt: now(), ...estimateAiCost(parsed.data) });
+      input._aiUsage = [...previous, receipt].slice(-50);
+      this.db.prepare('UPDATE projects SET input_json=? WHERE id=? AND owner_id=?').run(JSON.stringify(input), job.projectId, ownerId);
+      return true;
+    });
   }
   private completeJob(job: Job): boolean {
     return this.db.prepare("UPDATE jobs SET status='completed',progress=100,error_code=NULL,updated_at=? WHERE id=? AND project_id=? AND type=? AND status='running'").run(now(), job.id, job.projectId, job.type).changes > 0;

@@ -1,0 +1,242 @@
+{
+  "date": "2026-10-13",
+  "sourceBase": "aadf62d7a791f09bf8b6da8fd0ceb4f2cc04f158",
+  "rollbackSource": "6a9386eac19719e25932d8485bae36cd5312b37a",
+  "owner3006": {
+    "status": "RUNNING_MOCK_GEMINI_CONFIGURED_NO_GENERATION",
+    "startedThisCheckpoint": true,
+    "dataPreserved": true,
+    "accounts": 1,
+    "projects": 1,
+    "jobs": 4,
+    "clips": 0,
+    "exports": 0,
+    "activeJobs": 0,
+    "savedMode": "mock",
+    "passwordLogin": "OWNER_CHECK_REQUIRED_AFTER_APPROVED_START",
+    "pid": 10944,
+    "health": 200,
+    "authStatus": 200,
+    "anonymousProjects": 401,
+    "staticAssetHashesMatch": true
+  },
+  "backup": {
+    "consistentSqlite": true,
+    "integrity": "ok",
+    "restoredCopyCompared": true,
+    "allExistingStorageFilesCopied": true,
+    "sidecarAndMediaFiles": 1,
+    "actualClipExportMediaFiles": 0,
+    "ntfsAcl": "CURRENT_USER_ONLY_VERIFIED",
+    "privateLocator": ".tmp/owner-gemini-activation-20261012.location.json"
+  },
+  "copyApi": {
+    "port": 3014,
+    "mode": "mock",
+    "providerCredentialsPassed": false,
+    "anonymousProjects": 401,
+    "csrfRejected": 403,
+    "logoutRevoked": true,
+    "authenticatedSyntheticCopiedSession": true,
+    "ownerPasswordLogin": false,
+    "staticAssetsMatch": true,
+    "processStopped": true,
+    "originalAndCopiedLogicalDataAndSidecarsUnchanged": true
+  },
+  "activation": {
+    "sourceReview": "READY_AFTER_ACL_EXITCODE_FIX",
+    "runtimeExecuted": true,
+    "trustedOwnerReceiptRequired": true,
+    "initialMode": "mock",
+    "sameCurrentStorage": true,
+    "automaticDatabaseRestore": false,
+    "previousLiveBudgetRemaining": 0,
+    "runtimeOwnerApproval": "EXPLICIT_HUMAN_APPROVAL_RECORDED",
+    "startupVerified": true,
+    "dataPreservedAtStartup": true,
+    "geminiBackendKeyConfigured": true,
+    "geminiFreeTierConfirmationSource": "EXISTING_OWNER_PRIVATE_DPAPI_ATTESTATION",
+    "billingIndependentlyRecheckedAtStartup": false,
+    "newAiRequests": 0,
+    "actualRollbackExecuted": false
+  },
+  "flow": {
+    "status": "PREPARED",
+    "cachedRealIdeas": 10,
+    "selectedIdeas": 1,
+    "cachedScenes": 3,
+    "durationSeconds": 20,
+    "sceneDurations": [
+      6,
+      6,
+      8
+    ],
+    "canonicalFilenameMatchingVerified": true,
+    "originalDatabaseChanged": false,
+    "liveCallsThisCheckpoint": 0,
+    "referenceAssets": "OWNER_REQUIRED",
+    "realClips": "MISSING_3",
+    "verifiedCreditRate": null
+  },
+  "syntheticVideo": {
+    "text": "MOCK_TEXT",
+    "media": "SYNTHETIC_MEDIA",
+    "durationSeconds": 20.021029,
+    "width": 1280,
+    "height": 720,
+    "videoCodec": "h264",
+    "audioCodec": "aac",
+    "sha256": "8e5affc7c7c39a17babddf606a18d3419bd28fb396b041a911df16b72566cce4",
+    "reopenedDownloadBytesEqual": true,
+    "browserPlayback": "NOT_VERIFIED_THIS_CHECKPOINT_CUA_KERNEL_ASSETS_ERROR"
+  },
+  "drive": {
+    "status": "PREPARED",
+    "credentialsFoundInProcessOrUser": false,
+    "ownerOauth": "BLOCKED",
+    "liveUploadDownloadRestoreChecksum": false,
+    "localMediaDeletion": false,
+    "primaryStorageCutover": false,
+    "privateSetupHelper": "PREPARED_STATUS_CONFIGURE_ONLY",
+    "privateHelperTests": {
+      "total": 9,
+      "pass": 9,
+      "fail": 0,
+      "skip": 0,
+      "runtime": "WindowsPowerShell5.1 th-TH",
+      "rootRerun": true,
+      "finalDurationMs": 35934.4059
+    },
+    "realLocalConfigurationPresent": false,
+    "ownerPreparingConfiguration": true,
+    "helperDecryptsInStatus": false,
+    "approvedRuntimeLoader": "NOT_IMPLEMENTED",
+    "review": {
+      "status": "READY",
+      "p1": 0,
+      "p2": "existingDirectoryInheritanceFlagsNotExplicitlyAsserted_newDirectoriesAndFilesExplicitPrivate"
+    },
+    "secretGuardUnchanged": true,
+    "testFixtureMarkerAdjustedForSecretGuard": true,
+    "finalHelperSourceSha256": "0be53074593360a88c08ed53163104b99bbbdb8d639eb38b573847d20458e4f4",
+    "finalTestSourceSha256": "d154e36311300be3dd88ef33e9ff64bf2b0d35aa6b404d4d237ec5ac62127b53"
+  },
+  "cloud": {
+    "status": "PREPARED",
+    "approvedAppSupabaseProject": false,
+    "unrelatedProjectsModified": false,
+    "deployedHttps": false,
+    "actualNotebookOfflineTest": false,
+    "workerPresence": "INJECTED_TRANSITIONS_ONLY",
+    "workerBrokerAndMediaBridge": "NOT_IMPLEMENTED",
+    "connectedProjectsListedReadOnly": true
+  },
+  "publishing": {
+    "status": "PREPARED",
+    "executionAllowed": false,
+    "unitTests": "SYNTHETIC_ONLY",
+    "youtubeTransportOAuthScheduler": "NOT_IMPLEMENTED",
+    "facebookCurrentContract": "BLOCKED_OFFICIAL_DOCS_UNVERIFIED",
+    "externalWrites": 0,
+    "privateBilingualCaptionDraftsPrepared": true,
+    "captionDraftsOwnerReviewRequired": true,
+    "captionDraftSource": "SELECTED_CANARY_CACHE_ONLY_NO_NEW_AI"
+  },
+  "externalActions": {
+    "geminiRequests": 0,
+    "modelsRequests": 0,
+    "openaiRequests": 0,
+    "flowCreditsSpent": false,
+    "driveUpload": false,
+    "published": false,
+    "billingChanged": false,
+    "deployed": false,
+    "merged": false
+  },
+  "localPrivateHelpers": [
+    {
+      "path": ".tmp/prepare-owner-gemini-activation-20261012.mjs",
+      "sha256": "4b7d20740675d4b2f2bf8f9a657358a6f43d2f5dd1d39a04f14613a4ca049e04"
+    },
+    {
+      "path": ".tmp/test-owner-gemini-restored-copy-20261013.mjs",
+      "sha256": "9e98fb76203b01595c0ed88a61bf9ba92c2ad099c1cfc2ea114355b7f6662e81"
+    },
+    {
+      "path": ".tmp/assert-owner-activation-private-acl.ps1",
+      "sha256": "9599562fbca1bb8cee1b75aaaced509bc29524ac0e5b4c741490fdb668033c77"
+    },
+    {
+      "path": ".tmp/assert-owner-copy-listener.ps1",
+      "sha256": "7b27962074a7cb77a3054e15c982bee55bff2ed02be06f22507711f970501320"
+    },
+    {
+      "path": ".tmp/start-approved-owner3006.mjs",
+      "sha256": "2401937341bc99a6b368f3ad82c5788edcd5569f6723e371a47483756c504f31"
+    },
+    {
+      "path": ".tmp/start-approved-owner3006.ps1",
+      "sha256": "33058cd41b06223500c5a5a719464265f7bdd58008a50eb222e5787e3342de08"
+    },
+    {
+      "path": ".tmp/assert-owner3006-listener.ps1",
+      "sha256": "b89e00cfb050207747d453abeefe7252efe6fe62ba1a83797e99abbf88344ca8"
+    }
+  ],
+  "verification": {
+    "fullFinal": {
+      "total": 250,
+      "pass": 249,
+      "fail": 0,
+      "skip": 1
+    },
+    "lint": true,
+    "buildAndThreeTypechecks": true,
+    "pwaPublicAssets": 9,
+    "postFilenameFixLintAndTestsTypecheck": true,
+    "sourceOnlyOpenerSyntax": true,
+    "liveAiRequests": 0,
+    "privateDriveHelperScoped": {
+      "total": 9,
+      "pass": 9,
+      "fail": 0,
+      "skip": 0
+    },
+    "fullFinalIncludesDriveLocalHelper": false
+  },
+  "cachedGeminiSyntheticPortrait": {
+    "text": "REAL_GEMINI_CACHED_PACKAGE",
+    "media": "SYNTHETIC_MEDIA",
+    "realFlowVerified": false,
+    "newAiRequests": 0,
+    "ownerAppChanged": false,
+    "sourceSnapshotUnchanged": true,
+    "durationSeconds": 20.021029,
+    "width": 720,
+    "height": 1280,
+    "videoCodec": "h264",
+    "audioCodec": "aac",
+    "sceneDurations": [
+      6,
+      6,
+      8
+    ],
+    "thaiSubtitleEncodingCompleted": true,
+    "subtitleVisualReadability": "NOT_VERIFIED",
+    "musicAndSfx": true,
+    "normalizationEnabled": true,
+    "finalMusicSfxLoudnessMeasured": false,
+    "ffmpegDecode": true,
+    "browserPlayback": "NOT_VERIFIED",
+    "sha256": "e849acaf9478444b086f4358ce969daccec1783557db19bea4442be7f46467c5"
+  },
+  "development": {
+    "status": "PAUSED_FOR_USAGE_RESET",
+    "authoritativeRemaining": {
+      "fiveHourPercent": 7,
+      "weeklyPercent": 76
+    },
+    "automaticResumeConfigured": false,
+    "ownerAppIntentionallyRemainsRunning": true
+  }
+}

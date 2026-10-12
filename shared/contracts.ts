@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { AiUsageReceipt } from './ai.js';
 
 export const LocalizedTextSchema = z.strictObject({ th: z.string().min(1).max(8000), en: z.string().min(1).max(8000) });
 export type LocalizedText = z.infer<typeof LocalizedTextSchema>;
@@ -59,7 +60,8 @@ export interface Clip {
 export interface ExportArtifact { id: string; projectId: string; aspectRatio: z.infer<typeof AspectRatioSchema>; createdAt: string }
 export interface ProjectSummary extends ProjectInput {
   id: string; status: ProductionStatus; createdAt: string; updatedAt: string;
-  generation?: { ideas?: 'mock' | 'openai'; expansion?: 'mock' | 'openai' };
+  generation?: { ideas?: 'mock' | 'openai' | 'gemini'; expansion?: 'mock' | 'openai' | 'gemini' };
+  aiUsage?: AiUsageReceipt[];
 }
 export interface Project extends ProjectSummary {
   ideas: Idea[]; selectedIdeaId: string | null; package: StoryPackage | null;
@@ -79,7 +81,7 @@ export const ERROR_CODES = [
   'CONFLICT', 'SELECTION_REQUIRED', 'IDEAS_REQUIRED', 'INVALID_SELECTION',
   'PACKAGE_REQUIRED', 'CLIPS_REQUIRED', 'INVALID_MEDIA', 'FILE_TOO_LARGE',
   'AI_NOT_CONFIGURED', 'AI_REQUEST_FAILED', 'AI_INVALID_OUTPUT', 'AI_REFUSED',
-  'AI_TIMEOUT', 'AI_QUOTA_EXCEEDED', 'AI_RATE_LIMITED', 'AI_ACCESS_DENIED',
+  'AI_TIMEOUT', 'AI_QUOTA_EXCEEDED', 'AI_RATE_LIMITED', 'AI_ACCESS_DENIED', 'AI_MODE_LOCKED', 'AI_PROVIDER_NOT_APPROVED',
   'DRIVE_NOT_CONFIGURED', 'DRIVE_NOT_CONNECTED', 'DRIVE_AUTH_FAILED', 'DRIVE_ACCESS_DENIED',
   'DRIVE_REQUEST_FAILED', 'DRIVE_TIMEOUT', 'DRIVE_INVALID_OUTPUT', 'DRIVE_VAULT_FAILED',
   'MEDIA_TOOL_MISSING', 'EXPORT_FAILED', 'INTERRUPTED', 'JOB_CANCELLED', 'JOB_TIMEOUT', 'WORKER_UNAVAILABLE', 'INTERNAL_ERROR',
