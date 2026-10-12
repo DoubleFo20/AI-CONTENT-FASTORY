@@ -1,6 +1,6 @@
 # AI Content Factory — master context
 
-Updated: 2026-10-12 (Asia/Bangkok). This is an existing local application with an opt-in cloud target in
+Updated: 2026-10-13 (Asia/Bangkok). This is an existing local application with an opt-in cloud target in
 `D:\xampp\htdocs\Ai-content-factory`, not a PHP application merely because XAMPP hosts
 the directory. Node 24.18.0, npm 11.16.0, Git 2.51.1 and FFmpeg 8.1.1 were discovered.
 
@@ -96,3 +96,7 @@ in docs/UI_SPEC.md and docs/DESIGN_SYSTEM.md through Antigravity's owned worktre
 270 prototype layout checks do not accept the future implemented app. UI work can proceed
 without live API access. Real Flow creative acceptance remains a separate external gate.
 See PROJECT_STATUS.md and HANDOFF.md for actual checks and next actions.
+
+## Production checkpoint — 2026-10-13
+
+Owner3006 is currently offline; approved runtime start is pending. Frozen aadf62d + rollback6a9386e and verified original-data backup/restoredcopy are prepared without activating Gemini. Local250tests/249passes/1skip and synthetic20s H.264/AAC render/persistence passed. FlowCLI exports cachedrealtext privately with canonical clipnames; ownerrefs/clips missing. Publishing is pure PREPARED planning only, executionAllowed=false, noOAuth/HTTP/durablejob/scheduler. Drive/cloud remain externally gated; no approved app-specific Supabase project/HTTPS deployment. See PROJECT_STATUS and HANDOFF for current gates; old running PIDs are historical evidence only. No new AI calls or reuse of spent canary approval.

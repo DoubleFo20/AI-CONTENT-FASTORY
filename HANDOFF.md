@@ -1,5 +1,46 @@
 # Handoff
 
+STATUS: OWNER_ACTIVATION_PREPARED_PRODUCTION_EXTERNAL_GATES_PENDING
+RELEASE_READINESS: LOCAL_PIPELINE_VERIFIED_GEMINI_CANARY_VERIFIED_OWNER3006_OFFLINE_APPROVAL_PENDING
+Updated: 2026-10-13 (Asia/Bangkok)
+
+เตรียมเปิด Owner3006 จาก frozen PR3 source aadf62d แล้ว ยังไม่เปิด/เปลี่ยนแอปเพราะรอ explicit Owner approval ปัจจุบันไม่พบ listener เดิม ไม่ใช้สถานะ online ของรอบก่อนเป็นหลักฐานใหม่ สำรอง Owner SQLite/storage แบบ consistent + checksums/schema/integrity/user-only NTFS ACL และคืนสำเนาเทียบข้อมูลทุกตารางผ่าน ต้นฉบับ 1owner/1project/4jobs/0active/0clips/0exports/savedMock คงเดิม
+
+Candidate บน restored-copy3014 แบบ credential-free ผ่าน authstatus/setupfalse, synthetic copied-session/history, anonymous401, missingCSRF403, logout และ Premium static asset hashes หยุด child แล้ว DB/sidecar/media ทั้ง copy/original ไม่เปลี่ยน ยังไม่ได้ทดสอบ Owner password login Prepare opener/rollback source review READY หลังแก้ hardlink/listener ownership/ACL ExitCode guard; ไม่ได้รัน opener ไม่มี receipt/attempt สำหรับ Owner3006 และ previous Gemini test budget เหลือ0
+
+เพิ่ม offline Flow handoff CLI + pure publishing planner + 20s API/FFmpeg/persistence acceptance ใช้ isolated Mock/synthetic เท่านั้น CLI รักษา scene ID filename ให้ตรง canonical prompt และ matchClip หลัง Root พบ mismatch ใช้ cached real Gemini package เดิมสร้าง private Flow bundle3scenes/6+6+8s โดยไม่สร้าง AI/เปลี่ยน canary DB ภาพอ้างอิง/Flow clipsจริง3ฉาก/credit rate/editorial review ยังต้อง Owner
+
+Actual final npm.cmd test: 250total/249pass/0fail/1Windows POSIXskip; lint/build/สามtypechecks/PWAผ่าน Postfilenamefix narrowlint/tests typecheckผ่าน MP4 synthetic20.021029s/1280x720/H.264/AAC มี music/SFX/order/THsubtitles/authdownload/reopen bytesเท่ากัน Browserใหม่ NOT_VERIFIED เพราะ CUA kernel assets os error3 หลัง reset จึงไม่อ้าง playback/responsive ใหม่ Antigravity PASSเดิมยังผูก3e9c1aa UI source/src/public/shared/deps/schema/AI/editor ไม่เปลี่ยน
+
+Drive credentials/OAuthยังไม่พบ Cloud Supabase inventoryไม่มี approved app-specific project ไม่แตะ unrelated INACTIVE projects/schema/hosting Publishing executionAllowed=false/noHTTP/OAuth/upload/scheduler; YouTube official planเตรียมแล้ว Facebook currentcontractยังunverified ทุก live integrationแยกจาก Mock proof ไม่ merge/deploy/publish/Billing/paidfallback/AIเพิ่ม
+
+[แผนเปิดและ rollback](docs/OWNER3006_ACTIVATION_TH.md), [ผลตรวจและ readiness matrix](docs/release/PRODUCTION_READINESS_20261013_TH.md), [สิ่งที่ Owner ต้องทำ](docs/PRODUCTION_OWNER_ACTIONS_TH.md)
+
+Usage authoritative ล่าสุดเหลือ34%/80% (5hr/week), สูงกว่า7% ไม่มี resetcredit/scheduler/automaticresume
+
+NEXT_TASK: รอคำตอบ Owner สำหรับ OPEN_OWNER3006_PRESERVE_MOCK จาก frozen aadf62d/dataเดิม/0AIcalls หากอนุมัติให้ตรวจใหม่แล้วเขียน trusted one-attempt receipt ที่ผูก planSha256/source/storage/port/approvedAt ก่อนเปิดตาม prepared launcher; ห้ามใช้สิทธิ์ทดสอบ Gemini เก่า เริ่มจาก Mock/ไม่ส่ง OpenAI key หากไม่อนุมัติให้คง runtimeปิดและทำเฉพาะงานไม่พึ่งสิทธิ์นั้น DriveรอprivateOAuthsetup/Ownerconsent/live canary+restore; Flowรอrefs/3realclips/Ownercredits+editorial; Cloudรอapprovedproject/HTTPS/schema/workerbridge/liveofflineproof; PublishingรอofficialMeta contract/credentials/scopes/durableapproval+idempotency/transportและOwner first-publication approval PR2/3คง Draft/unmerged
+
+## ตำแหน่ง private สำหรับเปิดต่ออย่างตรวจสอบได้
+
+- integration worktree: D:\xampp\htdocs\Ai-content-factory\.worktrees\phase2-real-integrations
+- locator: .tmp/owner-gemini-activation-20261012.location.json → stage/activation-plan.private.json
+- stage มี backup/, restored-copy/, candidate/, rollback/, copy-verification.private.json ตรวจผ่านแล้ว เก็บไว้ ห้าม overwrite/remove
+- opener source (reviewed + syntaxchecked, NOT EXECUTED): .tmp/start-approved-owner3006.ps1, .mjs และ .tmp/assert-owner3006-listener.ps1
+- fresh receipt: stage/owner-runtime-approval.private.json ต้อง Root สร้างจาก human approval จริงเท่านั้น: action OPEN_OWNER3006_PRESERVE_MOCK, source aadf62d7a791f09bf8b6da8fd0ceb4f2cc04f158, SHA256 ของ plan, dataDirectory ตรง plan, port3006, approvedByHuman=true, approvedAt UTC ภายใน24h, aiGenerationApproved=false, billingChangesApproved=false
+- หลัง receipt/preflight ที่อนุมัติ รัน prepared PS opener จาก integration cwd; keyอ่านจาก existing DPAPI .tmp/gemini-private/credentials.local เฉพาะ backend ไม่บันทึก/pิมพ์ key
+- exclusive activation-attempt.private.json บล็อก reuse; failure/timeout ต้องตรวจ retained launcher + owner3006.spawn.private.json identity ก่อน recovery ห้าม killเดาPID/retry/restoreDBเอง
+- rollback code 6a9386e ใช้ SAME CURRENT OWNER STORAGE ไม่เอา backupทับ; savedGemini ต้อง separately approved resetMock และ omit OPENAI_API_KEYจริง
+- private Flow bundle ล่าสุด: .tmp/production-acceptance/cached-gemini-20s-20261013-v2; ชุดไม่ลงท้ายv2เก็บไว้พร้อมSUPERSEDED_TH.md ห้ามใช้ชุดเก่า
+- retained synthetic preview: .tmp/production-video-proof-2ypKOf/SYNTHETIC_MEDIA.mp4 (MOCK_TEXT/SYNTHETIC_MEDIA ONLY)
+- actual logs: .tmp/npm-test-owner-activation-aadf.log (227/226/1), npm-test-production-readiness.log (249/248/1), npm-test-production-final.log (250/249/1)
+- source hashes/privatedata-free evidence: docs/release/OWNER3006_PREPARATION_EVIDENCE.json
+
+ไม่มี browser playback ใหม่/tool runtimeพร้อมใช้งาน, background scheduler, approval หรือ live generation budget ที่อนุมานได้เอง
+
+---
+
+## Previous checkpoint — historical (aadf62d)
+
 STATUS: LIVE_GEMINI_SELECTED_EXPANSION_VERIFIED
 RELEASE_READINESS: LOCAL_V1_MOCK_READY_GEMINI_CANARY_VERIFIED_OWNER_ACTIVATION_PENDING
 Updated: 2026-10-12 (Asia/Bangkok)

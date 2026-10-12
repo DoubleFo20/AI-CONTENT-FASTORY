@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-13 — safe Owner activation และ production preparation
+
+- Verified original SQLite/storage backup + restored-copy3014 API checks; Owner3006 ยัง offline/pendingapproval คง savedMock ไม่มี AI/runtimechange
+- Prepared frozen aadf62d activation +6a9386e rollback; independentreviewแก้ hardlink/listener/ACL guard ไม่ restoreDBอัตโนมัติ
+- Added offline private Flow handoff with canonical scene-ID filenames and no regeneration; cached Gemini20s3scenes/refs+realclips pending
+- Added synthetic20s API/reference/clip/audio/editor/export/download/reopen regression and pure YouTube/FB publishingplanner (executionAllowed=false)
+- Final250tests/249pass/0fail/1WindowsPOSIXskip; build/typechecks/lintผ่าน Browserใหม่ยังunverified(CUAkernelassets error) Drive/cloud/publishing livegates pending PR2/3unmerged
+
+
 ## 2026-10-12 — Gemini Free Tier selected expansion ผ่าน live หนึ่งคำขอ
 
 - Latest PR3 source8f95c16/implementation921ce7b ขยายselectedcanaryสำเร็จ 3scenes/20sec/2characters/1location/2rules; input624/output1291 tokens มีไทย/อังกฤษครบ ใช้10ideas/selectionเดิม ไม่เปลี่ยนOwner3006
