@@ -95,3 +95,7 @@ Owner อนุมัติ [แผนเปิด 3006](../OWNER3006_ACTIVATION
 เพิ่ม Status/Configure helper เข้ารหัสOwnerOAuthแบบlocalเฉพาะ2sourcefiles ไม่มีloader/start/restart/network. Rootscopedtests9/9 WindowsPS5.1/th-TH/narrowlint/teststypecheckผ่าน; full250/249/1ด้านบนเป็นก่อนเพิ่มhelper ไม่สมมติfull259. Source reviewREADY/noP1; P2directoryinheritanceassertiondocumentedพร้อมexplicitprivatefiles. Real Statusconfigabsent. OwnerกำลังเตรียมWebclient/privateinputsตาม [คู่มือ](../DRIVE_LOCAL_SETUP_TH.md) ยังไม่consent/liveverify
 
 CachedrealGemini package render9:16/6+6+8sบนsyntheticmediaผ่าน720x1280/H.264/AAC20.021029s/FFprobe/fullFFmpegdecode musicSFX/THsubtitleencodingenabled ไม่วัดfinalLoudness/visualreadability/browserplayback ไม่ใช่Flowrealclips ไม่มีAI/DB/Ownerappwrites ไม่เปลี่ยนreadinessของliveFlow/Drive/cloud/publishing
+
+## Usage checkpoint
+
+หยุดการพัฒนาที่authoritativeremaining7%/76% ตามOwnerpolicy Owner3006เปิดMockต่อโดยไม่เปลี่ยนapp/privatekeys ข้อมูลและcacheคงอยู่ PrivateTH/ENcaptiondraftจากselectedcacheเตรียมแล้ว แต่ไม่publish/newAI; DriveOwnerpreparingcredentials/Flowrefs+realclips/Cloud+Publishingexternalgatesยังpending ไม่claimV1firstrealvideoacceptanceครบ ไม่มีautomaticresume

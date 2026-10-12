@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-13 — usage safety checkpoint
+
+- Authoritative remaining7%/76% (5hr/week): STATUS PAUSED_FOR_USAGE_RESET, stopnewfeatures/spawns, safeunit/docs/push only; noautomaticresume/resetcredit
+- Owner3006 approved+pinnedAADF/dataเดิม/Mockยังเปิด; noAI/Flowcredits/Billing/merge/deploy/publication
+- privatebilingualcaptiondraftจากcachedselectionเตรียมแบบdeterministic/noAI/nonpublished; realFlowrefs/clipsและDriveOAuthยังpending พร้อมexactNEXT_TASK
+
+
 ## 2026-10-13 — Drive private setup และ cached portrait smoke
 
 - เพิ่ม2files Status/Configure privateDPAPIWebclient/vaultkey helper ไม่มีnetwork/loader/runtimechange; Root9/9PS5.1th-TH/narrowlint/teststypecheckผ่าน independentreviewREADY/knownP2documented

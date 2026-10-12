@@ -1,5 +1,25 @@
 # Project status
 
+STATUS: PAUSED_FOR_USAGE_RESET
+RELEASE_READINESS: OWNER3006_RUNNING_MOCK_GEMINI_CONFIGURED_REAL_PRODUCTION_EXTERNAL_GATES_PENDING
+Updated: 2026-10-13 (Asia/Bangkok)
+
+Authoritative Codex usage ล่าสุด used93%/24% = remaining7%/76% (5hr/week) ถึงstopthresholdแล้ว หยุดnewfeatures/spawns หลังsmallestsafeunit ไม่มีresetcredit/scheduler/automaticresume Developmentพัก แต่Owner3006ที่Ownerอนุมัติแล้วคงเปิดpinnedAADF/PID10944/originalstorage/Mockไว้ ไม่หยุดแอปหรือเปลี่ยนmode
+
+งานverified: originalconsistentbackup/restorecopy/NTFSACL; approvedstartup200/401/staticassets/data-preservation; full250/249pass/1WindowsPOSIXskipก่อนprivateDrivehelper; finalhelper9/9 PS5.1th-TH/narrowlint/teststypecheck; docs/PWA/secret194files checks; Mock20s API/import/audio/export/download/reopen and cachedrealGemini20s portrait→SYNTHETIC_MEDIA→H.264/AAC/FFprobe/fulldecode ยืนยันencodingเท่านั้นไม่ใช่Flowreal/browser/readability/loudnessQA
+
+Safe code checkpoint b437796 published PR3; docs final checkpoint follows. OwnerกำลังเตรียมDriveWebOAuthprivateconfiguration ไม่ถือready/consent LoaderยังNOT_IMPLEMENTED/noOwnerrestart/noOAuth/network. Geminiพร้อมเฉพาะbackend/Mockยังactive Rootรอบนี้AI/Models/OpenAI/Flowcredits0 ไม่มีBilling/DBmigration/deploy/publish/mainmerge
+
+จบsmallunitเพิ่มprivateTH/ENcaptiondraftจากselectedcanarycacheเดิมด้วยdeterministiccopy ตรวจNTFSACL/bytebounds ไม่เรียกAI/ไม่เผยแพร่/ไม่เขียนOwnerDB: .tmp/production-acceptance/cached-gemini-20s-20261013-v2/CAPTION_DRAFTS.private.json (OWNER_REVIEW_REQUIRED; mediaยังขาดrealFlowclips)
+
+NEXT_TASK: เมื่อusage resetและมีexternalnewinvocation/proceed ให้ตรวจusage/Git/Owner3006/currentmode+queue/preservationก่อนทำงาน รอOwnerDriveconfigurationready; prepare/reviewDPAPIapprovedloader, รักษาvaultkeyเดิมและขอrestartapprovalใหม่ก่อนโหลดเข้าสู่Owner3006 แล้วOwnerOAuthconsent + separately approved livecanaryupload/download/checksum/restore ใช้localstorageต่อ ไม่ลบmedia/cutover หากDriveยังblockedให้ช่วยOwnerlogin/productionFlowrefs/clips/creditbudget+editorialและrealMP4acceptanceโดยไม่regeneratecanary/ใช้spentAItestbudget (remaining0) CloudรอapprovedappSupabase/HTTPS/workerbridge/disconnectedproof; publishingรอscopes/durableapproval/idempotency/transport/firstpublicationapproval PR2/3คงDraft/unmerged
+
+[Owner app/rollback](docs/OWNER3006_ACTIVATION_TH.md), [Drive setup](docs/DRIVE_LOCAL_SETUP_TH.md), [readiness matrix](docs/release/PRODUCTION_READINESS_20261013_TH.md)
+
+---
+
+## Previous checkpoint — historical (b437796)
+
 STATUS: OWNER3006_RUNNING_MOCK_DRIVE_PRIVATE_SETUP_PREPARED
 RELEASE_READINESS: LOCAL_OWNER_APP_READY_FOR_LOGIN_REAL_FLOW_AND_LIVE_STORAGE_PENDING
 Updated: 2026-10-13 (Asia/Bangkok)

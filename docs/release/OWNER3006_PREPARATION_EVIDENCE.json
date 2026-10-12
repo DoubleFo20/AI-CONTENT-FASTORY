@@ -137,7 +137,10 @@
     "unitTests": "SYNTHETIC_ONLY",
     "youtubeTransportOAuthScheduler": "NOT_IMPLEMENTED",
     "facebookCurrentContract": "BLOCKED_OFFICIAL_DOCS_UNVERIFIED",
-    "externalWrites": 0
+    "externalWrites": 0,
+    "privateBilingualCaptionDraftsPrepared": true,
+    "captionDraftsOwnerReviewRequired": true,
+    "captionDraftSource": "SELECTED_CANARY_CACHE_ONLY_NO_NEW_AI"
   },
   "externalActions": {
     "geminiRequests": 0,
@@ -226,5 +229,14 @@
     "ffmpegDecode": true,
     "browserPlayback": "NOT_VERIFIED",
     "sha256": "e849acaf9478444b086f4358ce969daccec1783557db19bea4442be7f46467c5"
+  },
+  "development": {
+    "status": "PAUSED_FOR_USAGE_RESET",
+    "authoritativeRemaining": {
+      "fiveHourPercent": 7,
+      "weeklyPercent": 76
+    },
+    "automaticResumeConfigured": false,
+    "ownerAppIntentionallyRemainsRunning": true
   }
 }
