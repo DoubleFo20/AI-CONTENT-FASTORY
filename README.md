@@ -11,20 +11,20 @@ acceptance remain separate release gates.
 Current release adds labelled/persisted Mock AI, safe job recovery, production/editor settings,
 private audio/images and Drive project-media index with verified uploads/cache restore.
 The Supabase cloud project/queue API is opt-in and prepared; hosting/pairing are unverified.
-See [core integration handoff](docs/CORE_INTEGRATION_HANDOFF.md). Live OpenAI generation with the authorized
-existing key is blocked by insufficient_quota until the Owner resolves the API project's
-credits/access. This does not prevent setup, project management or local clip editing.
+See [core integration handoff](docs/CORE_INTEGRATION_HANDOFF.md). Gemini Free Tier is the authorized primary text provider; backend key and explicit Free Tier confirmation are required. OpenAI calls remain blocked until new Owner approval. This does not prevent setup, project management or local clip editing.
 
 The [readiness matrix](docs/release/V1_READINESS.md) separates verified local behavior from
 Mock-only content and live integration gates. The [design packet](ANTIGRAVITY_HANDOFF.md)
 and [reference](docs/design/README.md) are visual references; they do not replace testing
 the actual integrated release.
 
+CHABU local candidate: [verified scope and limits](docs/release/CHABU_STUDIO_20261023_TH.md). Its prompts are deterministic; manual video production does not call an invented Flow/Meta API.
+
 ## Requirements
 
 - Node.js 24.12+ (24.x) and npm 11+.
 - FFmpeg and FFprobe on PATH for clip import/editing. Both already exist on this machine.
-- OPENAI_API_KEY in the server process environment for live text generation.
+- GEMINI_API_KEY and ACF_GEMINI_FREE_TIER_CONFIRMED=true in the private backend environment for authorized Gemini Free Tier text generation.
 - Set ACF_AI_MODE=mock for labelled synthetic generation without API credits.
 - The creator's own Google Flow access for video generation. No Flow API/account automation.
 

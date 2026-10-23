@@ -1,6 +1,29 @@
 # Handoff
 
 STATUS: PAUSED_FOR_USAGE_RESET
+RELEASE_READINESS: CHABU_STUDIO_LOCAL_CANDIDATE_VERIFIED
+
+Authoritative usage used94%/15% = remaining6%/85% (5hr/week). ถึงเกณฑ์<=7%แล้ว: หยุดspawns/features เหลือเฉพาะdocs/checkpoint/secret checks/push ไม่มีresetcredit/scheduler/automaticresume. Canary3017และแท็บที่สร้างเพื่อทดสอบปิดแล้ว Owner3006ยังไม่ได้เปิดหรือเปลี่ยนข้อมูล ต้องexternalinvocationใหม่หลังusageพอจึงดำเนินNEXT_TASK
+Updated: 2026-10-23 (Asia/Bangkok)
+
+Owner อนุญาต CHABU Studio เพิ่มใน V1 แล้ว งานนี้อยู่บน `codex/chabu-studio-mvp` จาก `193e8b4` ไม่เปลี่ยน main/PR2/PR3 หรือ Owner3006 ซึ่งเชื่อมต่อไม่ได้ตั้งแต่ baseline และไม่ได้ restart รอบนี้
+
+ส่งมอบ character/product versions + pinned refs, deterministic 4x10s prompts/TH narration/captions/AI disclosure, Flow primary/Meta supporting manual adapter, durable local episode state/recovery/cancellation, clip validation และ editor/MP4 เดิม โดยไม่ migrate DB หรือเรียก AI ใหม่ ซ่อน internal reference library และห้าม AI jobs ใน library
+
+แก้ export freshness หลังเปลี่ยน editor settings, mobile dialog focus/Escape/return-focus, safe areas และ notice translation keys. Independent high-risk review ไม่พบ P0/P1 ในขอบเขตที่ตรวจ
+
+ตรวจจริง final `npm test`: 273 total /272 pass /0 fail /1 Windows POSIX skip; typecheck/lint/build PASS. Synthetic 40s 720x1280 H.264/AAC full decode/reopen passed. Browser login/ref upload/char/product/episode/4 prompt copies/reload/6 TH-EN layouts/actual playbackถึง40.021333s/download hashตรงAPIผ่าน. คลิป4ไฟล์นำเข้าผ่านAPI; mobile clip chooserครบทั้ง4ยังNOT_VERIFIED. ไม่อ้างว่า synthetic คือ real Flow video
+
+Code checkpoint `5c9fb6e` pushed; Draft PR #4 https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/4 stacked on PR3; no merge/deploy. Final secret scan211files/docs/PWA passed.
+
+NEXT_TASK: เมื่อมี invocation ถัดไปให้ตรวจusage/Git/Owner3006ก่อน; เตรียม fresh backup/restore-copy/frozen activation/rollback ก่อนขอ Owner approval ใหม่สำหรับ3006ข้อมูลเดิม/Mock ห้ามใช้startupreceiptเก่าหรือAIcanarybudgetเดิมซ้ำ Ownerต้องให้real references/claims/Flow credit approvalสำหรับreal acceptance. Drive authoritative StatusยังABSENT; เตรียมloaderตามhandoffโดยไม่decryptเงินจริง/เปิดOAuthจนอนุมัติ. Cloudรอapproved appSupabase/HTTPS/pairing/disconnected proof; publishingยังprepared. ตรวจusageก่อนspawn/newfeature; <=7%ให้PAUSED_FOR_USAGE_RESETและหยุด ไม่มีautoresume
+
+รายงานครบทีม/skills/ไฟล์/ข้อจำกัด/คำสั่งและreadiness: [CHABU_STUDIO_20261023_TH](docs/release/CHABU_STUDIO_20261023_TH.md)
+
+## Checkpoint ก่อนหน้า — historical
+
+
+STATUS: PAUSED_FOR_USAGE_RESET
 RELEASE_READINESS: OWNER3006_RUNNING_MOCK_GEMINI_CONFIGURED_REAL_PRODUCTION_EXTERNAL_GATES_PENDING
 Updated: 2026-10-13 (Asia/Bangkok)
 

@@ -119,7 +119,7 @@ section { scroll-margin-top: var(--space-6); }
 .bottom-nav { 
   display: none; position: fixed; bottom: 0; left: 0; right: 0;
   background: rgba(8, 11, 18, 0.92); backdrop-filter: blur(12px);
-  border-top: 1px solid var(--border); z-index: 30; padding: var(--space-2);
+  border-top: 1px solid var(--border); z-index: 30; padding: var(--space-2); padding-bottom: calc(var(--space-2) + env(safe-area-inset-bottom));
 }
 .bottom-nav a, .bottom-nav button {
   flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -229,10 +229,40 @@ progress::-moz-progress-bar { background: var(--accent); }
 .drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 40; }
 .drawer-content { display: none; position: fixed; top: 0; left: 0; bottom: 0; width: 280px; background: var(--surface); z-index: 50; padding: var(--space-4); flex-direction: column; overflow-y: auto; }
 .drawer-overlay.drawer-open, .drawer-content.drawer-open { display: flex; }
+.modal.drawer-modal { position: fixed; inset: 0 auto 0 0; margin: 0; width: min(360px, calc(100vw - 32px)); height: 100dvh; max-height: 100dvh; border-radius: 0 var(--radius-lg) var(--radius-lg) 0; }
+.modal.drawer-modal::backdrop { background: rgba(0, 0, 0, 0.6); }
+
+/* CHABU Studio */
+.chabu-page { min-width: 0; display: grid; gap: var(--space-5); }
+.chabu-heading { align-items: flex-start; }
+.chabu-heading h1 { margin: var(--space-2) 0; }
+.chabu-heading p { max-width: 68ch; }
+.chabu-metrics { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 0; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.chabu-metric { min-width: 0; padding: var(--space-3); }
+.chabu-metric dt { color: var(--muted); font-size: 0.85rem; }
+.chabu-metric dd { margin: 0; font-size: 1.5rem; font-weight: 650; font-variant-numeric: tabular-nums; }
+.chabu-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); align-items: start; }
+.chabu-grid > .card, .chabu-page > .card { min-width: 0; }
+.chabu-page .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+.chabu-page .form-grid .full { grid-column: 1 / -1; }
+.chabu-ref-picker { display: grid; gap: var(--space-2); }
+.chabu-ref-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(120px, 0.55fr); gap: var(--space-3); align-items: center; }
+.chabu-ref-check { display: flex; flex-direction: row; align-items: center; gap: var(--space-2); min-height: 44px; }
+.chabu-ref-check input[type="checkbox"] { width: 24px; min-width: 24px; height: 24px; min-height: 24px; accent-color: var(--accent); }
+.chabu-ref-check img { width: 56px; height: 56px; flex: 0 0 56px; object-fit: cover; border-radius: var(--radius-sm); }
+.chabu-images { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--space-3); padding: 0; margin: 0; }
+.chabu-images img { display: block; width: 100%; height: 160px; object-fit: contain; background: var(--surface-raised); border-radius: var(--radius-sm); }
+.chabu-episode { border-color: var(--control-border); }
+.chabu-scene { display: grid; gap: var(--space-3); min-width: 0; }
+.chabu-scene textarea { font-family: inherit; overflow-wrap: anywhere; }
+.chabu-versions, .chabu-jobs { padding-left: var(--space-5); margin: var(--space-2) 0; }
+.chabu-pinned-refs ul { list-style: none; padding: 0; display: grid; gap: var(--space-2); }
+.chabu-pinned-refs li { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-2); overflow-wrap: anywhere; }
+.chabu-pinned-refs img { width: 64px; height: 64px; object-fit: cover; background: var(--surface-raised); border-radius: var(--radius-sm); }
 
 /* Responsive */
 @media (max-width: 767px) {
-  .app.signed-in { padding-bottom: 70px; /* space for bottom nav */ }
+  .app.signed-in { padding-bottom: calc(70px + env(safe-area-inset-bottom)); /* space for bottom nav */ }
   .signed-in .sidebar { display: none; }
   .menu-toggle { display: inline-flex; }
   .bottom-nav { display: flex; }
@@ -241,6 +271,10 @@ progress::-moz-progress-bar { background: var(--accent); }
   .top-actions button { padding: var(--space-2); min-height: 36px; }
   main { padding: var(--space-4) var(--space-3); }
   section[id^="workspace-"] { scroll-margin-top: 128px; }
+  .chabu-grid { grid-template-columns: minmax(0, 1fr); }
+  .chabu-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .chabu-page .form-grid { grid-template-columns: minmax(0, 1fr); }
+  .chabu-ref-row { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (min-width: 768px) and (max-width: 1199px) {
@@ -255,6 +289,7 @@ progress::-moz-progress-bar { background: var(--accent); }
   .sidebar-section { display: none; }
   main { padding: var(--space-5); }
   .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .chabu-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (min-width: 1200px) {

@@ -20,6 +20,7 @@ import { ProjectFiles, flowPrompt } from './project-files.js';
 import { ProjectStorage } from './storage/projects.js';
 import { ensureCached, projectMedia, registerProjectStorage } from './project-storage.js';
 import { RequestLifecycle } from './request-lifecycle.js';
+import { registerChabu } from './chabu.js';
 
 export interface ApplicationOptions {
   dataDir: string;
@@ -136,11 +137,12 @@ export function createApplication(options: ApplicationOptions) {
   });
   app.post('/api/auth/logout', (req, res) => { empty(req); auth.logout(req, res); res.json({ ok: true }); });
   app.get('/api/dashboard', (_req, res) => {
-    const projects = store.listProjects(owner(res));
+    const projects = store.listProjects(owner(res), false);
     res.json({ projectsCount: projects.length, completedCount: projects.filter(project => project.status === 'exported').length,
       activeJobsCount: store.listJobs(owner(res)).filter(job => ['queued', 'running'].includes(job.status)).length, recentProjects: projects.slice(0, 5) });
   });
-  app.get('/api/projects', (_req, res) => res.json({ projects: store.listProjects(owner(res)) }));
+  const chabu = registerChabu(app, store, projectFiles);
+  app.get('/api/projects', (_req, res) => res.json({ projects: store.listProjects(owner(res), false) }));
   app.post('/api/projects', (req, res) => res.status(201).json({ project: store.createProject(owner(res), ProjectInputSchema.parse(req.body)) }));
   app.get('/api/projects/:id', (req, res) => res.json({ project: store.project(owner(res), id(req.params.id)) }));
   app.post('/api/projects/:id/ideas', (req, res) => { empty(req); const projectId = id(req.params.id); worker.assertAvailable(owner(res), projectId); res.status(202).json({ job: store.enqueue(owner(res), projectId, 'ideas') }); });
@@ -163,6 +165,7 @@ export function createApplication(options: ApplicationOptions) {
       const fields = ClipFieldsSchema.parse(req.body);
       if (!req.file) throw new AppError('INVALID_MEDIA');
       const media = await probeMedia(req.file.path, lifecycle.signal); lifecycle.guard();
+      chabu.validateClip(owner(res), project.id, fields.sceneId, { duration: media.duration, width: media.width, height: media.height });
       const clip = store.addClip(owner(res), project.id, fields.sceneId, req.file.filename, basename(req.file.originalname), media.duration);
       res.status(201).json({ clip });
     } catch (failure) {
@@ -170,11 +173,11 @@ export function createApplication(options: ApplicationOptions) {
       throw lifecycle.signal.aborted ? new AppError('INTERRUPTED', 503) : failure;
     }
   });
-  app.post('/api/projects/:id/export', (req, res) => { empty(req); const projectId = id(req.params.id); worker.assertAvailable(owner(res), projectId); res.status(202).json({ job: store.enqueue(owner(res), projectId, 'export') }); });
+  app.post('/api/projects/:id/export', (req, res) => { empty(req); const projectId = id(req.params.id); chabu.assertExportable(owner(res), projectId); worker.assertAvailable(owner(res), projectId); res.status(202).json({ job: store.enqueue(owner(res), projectId, 'export') }); });
   app.get('/api/jobs', (_req, res) => res.json({ jobs: store.listJobs(owner(res)) }));
   app.get('/api/queue/status', (_req, res) => res.json({ worker: worker.status(owner(res)) }));
   app.post('/api/jobs/:id/cancel', (req, res) => { empty(req); res.json({ job: worker.cancel(owner(res), id(req.params.id)) }); });
-  app.post('/api/jobs/:id/retry', (req, res) => { empty(req); const jobId = id(req.params.id); const job = store.job(owner(res), jobId); worker.assertAvailable(owner(res), job.projectId); res.status(202).json({ job: store.retry(owner(res), jobId) }); });
+  app.post('/api/jobs/:id/retry', (req, res) => { empty(req); const jobId = id(req.params.id); const job = store.job(owner(res), jobId); if (job.type === 'export') chabu.assertExportable(owner(res), job.projectId); worker.assertAvailable(owner(res), job.projectId); res.status(202).json({ job: store.retry(owner(res), jobId) }); });
   for (const kind of ['clips', 'exports'] as const) {
     app.get(`/api/${kind}/:id/file`, async (req, res, next) => {
       const media = store.media(owner(res), id(req.params.id), kind);

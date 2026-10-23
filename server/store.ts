@@ -2,7 +2,8 @@ import { DatabaseSync } from 'node:sqlite';
 import { randomUUID } from 'node:crypto';
 import { mkdirSync, openSync, closeSync, unlinkSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import type { Clip, ExportArtifact, Idea, Job, JobType, Project, ProjectInput, ProjectSummary, StoryPackage, User, ErrorCode } from '../shared/contracts.js';
+import { z } from 'zod';
+import { ProjectInputSchema, validateStoryPackage, type Clip, type ExportArtifact, type Idea, type Job, type JobType, type Project, type ProjectInput, type ProjectSummary, type StoryPackage, type User, type ErrorCode } from '../shared/contracts.js';
 import { INITIAL_SCHEMA, SCHEMA_VERSION } from './schema.js';
 import { AppError } from './errors.js';
 import { AiUsageSchema, AiUsageReceiptSchema, type AiUsage, type AiUsageReceipt } from '../shared/ai.js';
@@ -12,7 +13,7 @@ type Row = Record<string, string | number | null>;
 const now = () => new Date().toISOString();
 const parse = <T>(value: string | number | null): T => JSON.parse(String(value)) as T;
 type GenerationSource = 'mock' | 'openai' | 'gemini';
-type StoredInput = ProjectInput & { _generation?: ProjectSummary['generation']; _aiUsage?: AiUsageReceipt[] };
+type StoredInput = ProjectInput & { _generation?: ProjectSummary['generation']; _aiUsage?: AiUsageReceipt[]; _internalLibrary?: true };
 export interface StoreOptions { resumeQueuedMock?: boolean }
 
 function openApplicationLock(path: string): number {
@@ -138,8 +139,9 @@ export class Store {
       ...(aiUsage.length ? { aiUsage } : {}),
       id: String(row.id), status: row.status as ProjectSummary['status'], createdAt: String(row.created_at), updatedAt: String(row.updated_at) };
   }
-  listProjects(ownerId: string): ProjectSummary[] {
-    return (this.db.prepare('SELECT * FROM projects WHERE owner_id=? ORDER BY updated_at DESC,rowid DESC').all(ownerId) as Row[]).map(row => this.summary(row));
+  listProjects(ownerId: string, includeInternal = true): ProjectSummary[] {
+    return (this.db.prepare('SELECT * FROM projects WHERE owner_id=? ORDER BY updated_at DESC,rowid DESC').all(ownerId) as Row[])
+      .filter(row => includeInternal || parse<StoredInput>(row.input_json)._internalLibrary !== true).map(row => this.summary(row));
   }
   project(ownerId: string, projectId: string): Project {
     const row = this.db.prepare('SELECT * FROM projects WHERE id=? AND owner_id=?').get(projectId, ownerId) as Row | undefined;
@@ -151,10 +153,27 @@ export class Store {
     return { ...this.summary(row), ideas: parse<Idea[]>(row.ideas_json), selectedIdeaId: row.selected_idea_id as string | null,
       package: row.package_json ? parse<StoryPackage>(row.package_json) : null, clips: [...latest.values()], export: output ? this.exportArtifact(output) : null };
   }
-  createProject(ownerId: string, input: ProjectInput): Project {
+  createProject(ownerId: string, input: ProjectInput, internal?: 'chabu-library'): Project {
     const id = randomUUID(); const timestamp = now();
-    this.db.prepare('INSERT INTO projects(id,owner_id,input_json,created_at,updated_at) VALUES(?,?,?,?,?)').run(id, ownerId, JSON.stringify(input), timestamp, timestamp);
+    const stored: StoredInput = { ...input, ...(internal === 'chabu-library' ? { _internalLibrary: true } : {}) };
+    this.db.prepare('INSERT INTO projects(id,owner_id,input_json,created_at,updated_at) VALUES(?,?,?,?,?)').run(id, ownerId, JSON.stringify(stored), timestamp, timestamp);
     return this.project(ownerId, id);
+  }
+  createPreparedProject(ownerId: string, input: ProjectInput, pack: StoryPackage, projectId: string): Project {
+    const parsed = ProjectInputSchema.parse(input);
+    const story = validateStoryPackage(pack);
+    z.uuid().parse(projectId);
+    return this.transaction(() => {
+      const existing = this.db.prepare('SELECT owner_id,input_json,package_json FROM projects WHERE id=?').get(projectId);
+      if (existing) {
+        if (existing.owner_id !== ownerId || existing.input_json !== JSON.stringify(parsed) || existing.package_json !== JSON.stringify(story)) throw new AppError('CONFLICT', 409);
+        return this.project(ownerId, projectId);
+      }
+      const timestamp = now();
+      this.db.prepare("INSERT INTO projects(id,owner_id,input_json,package_json,status,created_at,updated_at) VALUES(?,?,?,?,'expanded',?,?)")
+        .run(projectId, ownerId, JSON.stringify(parsed), JSON.stringify(story), timestamp, timestamp);
+      return this.project(ownerId, projectId);
+    });
   }
   assertIdle(projectId: string) {
     if (this.db.prepare("SELECT 1 FROM jobs WHERE project_id=? AND status IN ('queued','running')").get(projectId)) throw new AppError('CONFLICT', 409);
@@ -170,6 +189,8 @@ export class Store {
     });
   }
   prerequisites(project: Project, type: JobType) {
+    const row = this.db.prepare('SELECT input_json FROM projects WHERE id=?').get(project.id) as Row;
+    if (parse<StoredInput>(row.input_json)._internalLibrary) throw new AppError('CONFLICT', 409);
     if (type === 'ideas' && (project.ideas.length === 10 || project.selectedIdeaId || project.package)) throw new AppError('CONFLICT', 409);
     if (type === 'expand') {
       if (project.package) throw new AppError('CONFLICT', 409);
@@ -299,6 +320,15 @@ export class Store {
       this.db.prepare('INSERT INTO exports VALUES(?,?,?,?,?)').run(randomUUID(), job.projectId, filename, ratio, now());
       this.db.prepare("UPDATE projects SET status='exported',updated_at=? WHERE id=?").run(now(), job.projectId);
       return true;
+    });
+  }
+  invalidateExport(ownerId: string, projectId: string): void {
+    this.transaction(() => {
+      const project = this.project(ownerId, projectId); this.assertIdle(projectId);
+      if (!project.export) return;
+      this.db.prepare('DELETE FROM exports WHERE project_id=?').run(projectId);
+      const ready = project.package?.scenes.every(scene => project.clips.some(clip => clip.sceneId === scene.id));
+      this.db.prepare('UPDATE projects SET status=?,updated_at=? WHERE id=?').run(ready ? 'clips_ready' : project.status === 'exported' ? 'expanded' : project.status, now(), projectId);
     });
   }
   media(ownerId: string, id: string, kind: 'clips' | 'exports'): { filename: string; projectId: string; originalName?: string; sceneId?: string } {

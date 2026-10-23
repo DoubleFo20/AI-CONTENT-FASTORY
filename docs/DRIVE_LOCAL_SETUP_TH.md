@@ -19,7 +19,7 @@ Owner3006 ไม่ restart แอป ไม่เริ่ม OAuth/upload แ�
 
 ```powershell
 Set-Location -LiteralPath 'D:\xampp\htdocs\Ai-content-factory\.worktrees\phase2-real-integrations'
-powershell.exe -NoProfile -File scripts\drive-local.ps1 -Action Configure
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\drive-local.ps1 -Action Configure
 ```
 
 โปรแกรมถาม client ID และ client secret ด้วย hidden input ทั้งสองค่า
@@ -37,7 +37,7 @@ helper ไม่แก้ ACL ของ shared directory เดิม หาก�
 ตรวจสถานะโดยไม่ decrypt หรือส่ง network:
 
 ```powershell
-powershell.exe -NoProfile -NonInteractive -File scripts\drive-local.ps1 -Action Status
+powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File scripts\drive-local.ps1 -Action Status
 ```
 
 ผลแจ้งเฉพาะ presence booleans และ callback; `oauthVerifiedByThisTool=false`
@@ -82,3 +82,7 @@ Root รันทดสอบซ้ำหลังรวม และราย�
 Review P2: existing-directory validator ไม่บังคับ CI/OI inheritance โดยตรง
 directory ใหม่ตั้ง inheritance ครบ และไฟล์สร้างด้วย explicit private ACL จึงไม่มี
 การเปิดเผยจากช่องว่างนี้ใน behavior ปัจจุบัน ต้องทบทวนก่อนเพิ่ม loader/ไฟล์ชนิดอื่น
+
+## ข้อจำกัดของ PowerShell และ sandbox
+
+`-ExecutionPolicy Bypass` ในคำสั่งข้างต้นมีผลเฉพาะ process ที่รัน local helper ที่ตรวจแล้ว ไม่เปลี่ยน policy ของเครื่องหรือ registry หาก helper ปฏิเสธ ACL ให้ตรวจว่าเปิดด้วยบัญชี Windows Owner เดิม: sandbox อาจใช้ SID ต่างกัน ห้ามแก้ ACL ให้กว้างขึ้นหรือสร้าง credentials ซ้ำเพื่อข้ามการตรวจ สถานะ absent ต้องยืนยันด้วย Status ภายใต้บัญชี Owner; Status ไม่ decrypt และไม่ยืนยัน OAuth
