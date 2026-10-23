@@ -2,6 +2,8 @@
 
 ## A. สรุปสำหรับ Owner
 
+สถานะ execution: PAUSED_FOR_USAGE_RESET (authoritative remaining6%/85%, ถึง<=7% หยุดfeatures/spawnsและไม่มีautomaticresume). Canaryทดสอบ3017ปิดแล้ว
+
 สถานะ: Local Release Candidate สำหรับตรวจรับ ไม่ใช่การยืนยันทั้งโครงการพร้อม production
 สร้าง CHABU ภายใน React/Vite + Express/SQLite เดิม รักษา Premium Cinematic V2
 ไม่เปลี่ยน architecture, dependencies, lockfile หรือ schema ของฐานข้อมูลเดิม
@@ -90,6 +92,8 @@ Owner3006 เชื่อมต่อไม่ได้ตั้งแต่ต�
 | Root synthetic 40s video acceptance | PASS import/export/FFprobe/full decode/reopen/auth download; 0 provider calls |
 | Browser | login, reference upload, character/product/episode creation, copy 4 prompts, reload, navigation, 6 layouts, preview playback และ MP4 download ผ่าน |
 
+หลัง full suite เปลี่ยนเฉพาะ metric markup/CSS แล้วตรวจ build/สามtypechecks/lint/6browserlayouts ซ้ำ ไม่อ้างว่ารันfull273ใหม่หลังcosmetic change
+
 Baseline ใน worktree เก่าเคย fail จาก sandbox EPERM สร้าง `.tmp`; worktree ใหม่รัน serialized suite ได้
 การรัน narrow ครั้งแรกค้างหลัง failure; หยุด runner ของงานนี้และรันซ้ำแบบ bounded/serialized แล้วผ่าน รวมถึง final full suite ข้างต้น
 Browser file chooser และ download tool บางครั้งใช้เวลาหลายนาที มี click timeout ที่ภายหลังตรวจพบว่าบันทึกสำเร็จ จึงไม่ส่งซ้ำสุ่ม
@@ -109,7 +113,7 @@ Browser file chooser และ download tool บางครั้งใช้�
 
 ## G. Git, data และ deployment
 
-Branch แยกจาก PR3; PR2/PR3 ยังคง Draft/unmerged ไม่ merge main, force-push หรือ deploy
+Code checkpoint `5c9fb6e` push แล้ว [Draft PR4](https://github.com/DoubleFo20/AI-CONTENT-FASTORY/pull/4) stacked บน PR3. Branch แยกจาก PR3; PR2/PR3 ยังคง Draft/unmerged ไม่ merge main, force-push หรือ deploy
 ตรวจ original Owner storage แบบ read-only; เทียบ private manifest ก่อน/หลัง: 5 ไฟล์ 139,292 bytes และ SHA256 ของทุกไฟล์ตรงกัน ไม่มี migration/reset/delete
 ก่อนเริ่ม Owner3006 ใหม่ต้องเตรียม fresh backup/frozen build/rollback และ Owner approval ใหม่; receipt startup เดิมใช้แล้ว
 Production hosting, Supabase migration และ Drive storage cutover ยังไม่ได้รับอนุมัติ
