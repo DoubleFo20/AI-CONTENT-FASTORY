@@ -1,0 +1,53 @@
+import type { Locale } from '../shared/contracts';
+
+export const chabuText = {
+  th: {
+    referencesRequired: 'เพิ่มภาพอ้างอิงให้เวอร์ชันตัวละครและสินค้าที่เลือกก่อนสร้างตอน', title: 'CHABU Studio', subtitle: 'สร้างวิดีโอแนะนำสินค้าอย่างมีข้อมูลอ้างอิงและตรวจสอบได้',
+    localOnly: 'พื้นที่นี้ทำงานในเครื่อง ขณะนี้ยังไม่เชื่อมต่อ Cloud Control Plane', safety: 'ไม่มีการสร้างภาพอัตโนมัติและไม่มีการยืนยันตัวตนจากภาพอ้างอิง',
+    refresh: 'โหลดข้อมูลใหม่', loading: 'กำลังโหลด…', loadError: 'โหลดข้อมูล CHABU ไม่สำเร็จ', retry: 'ลองอีกครั้ง', recoverEpisodes: 'กู้คืนตอนที่บันทึกไว้',
+    counts: 'ข้อมูลจริงในคลัง', characters: 'ตัวละคร', products: 'สินค้า', episodes: 'ตอน', jobs: 'งานที่กำลังทำ', clips: 'คลิป', draftEpisodes: 'ตอนฉบับร่าง', awaitingFlowEpisodes: 'รอสร้างใน Flow', awaitingUploadEpisodes: 'รออัปโหลด', completedEpisodes: 'ตอนที่นำเข้าครบ', importedClips: 'คลิปที่นำเข้าแล้ว', failedJobs: 'งานที่ไม่สำเร็จ',
+    character: 'ตัวละคร', product: 'สินค้า', episode: 'สร้างตอน', library: 'คลังภาพอ้างอิง',
+    name: 'ชื่อ', model: 'รุ่นสินค้า', variant: 'ตัวเลือกสินค้า', descriptionEn: 'คำอธิบายภาษาอังกฤษ',
+    identityRules: 'กฎคงอัตลักษณ์ (หนึ่งข้อต่อบรรทัด)', verifiedSpecifications: 'ข้อมูลที่ยืนยันแล้ว (หนึ่งข้อต่อบรรทัด)',
+    unverifiedClaims: 'คำกล่าวอ้างที่ยังไม่ยืนยัน (หนึ่งข้อต่อบรรทัด)', prohibitedClaims: 'คำกล่าวอ้างที่ห้ามใช้ (หนึ่งข้อต่อบรรทัด)',
+    affiliateUrl: 'ลิงก์ Affiliate (HTTPS)', references: 'ภาพอ้างอิง', selectImages: 'เลือกภาพจากคลัง', uploadImages: 'เพิ่มภาพอ้างอิง',
+    angles: 'มุมกล้อง (หนึ่งข้อต่อภาพ)', noImages: 'ยังไม่มีภาพในคลัง เริ่มจากเพิ่มภาพอ้างอิง', uploadFirst: 'อัปโหลดภาพอ้างอิงก่อนบันทึกเวอร์ชัน', missingAsset: 'ไม่พบภาพเดิม แต่ยังคงข้อมูลอ้างอิงเดิม',
+    createCharacter: 'สร้างตัวละคร', createProduct: 'สร้างสินค้า', appendCharacterVersion: 'บันทึกเวอร์ชันตัวละครใหม่', appendProductVersion: 'บันทึกเวอร์ชันสินค้าใหม่',
+    existingCharacter: 'เลือกตัวละครเดิม', existingProduct: 'เลือกสินค้าเดิม', versionHistory: 'ประวัติเวอร์ชัน', noEntities: 'ยังไม่มีข้อมูล ลองเพิ่มรายการแรก',
+    templateChabu: 'เติมข้อมูล CHABU', templateChabung: 'เติมข้อมูล CHABUNG', templateNote: 'ปุ่มเติมข้อมูลจะใส่ข้อความในฟอร์มเท่านั้น ยังไม่บันทึกเป็นตัวละครจริง และยังไม่มีภาพอ้างอิงจากเจ้าของเพื่อยืนยันสัดส่วน',
+    brief: 'โจทย์วิดีโอ', episodeName: 'ชื่อตอน', characterVersion: 'เวอร์ชันตัวละคร', productVersion: 'เวอร์ชันสินค้า',
+    clipCount: 'จำนวนคลิป', clipDuration: 'ความยาวต่อคลิป (วินาที)', aspectRatio: 'อัตราส่วนภาพ', createEpisode: 'สร้างแผนตอน',
+    episodeCreated: 'บันทึกตอนแล้ว', noEpisodes: 'ยังไม่มีตอน', stage: 'สถานะขั้นตอน', stageDraft: 'ร่าง', stageFlow: 'รอผู้ใช้สร้างวิดีโอใน Google Flow', stageUpload: 'รออัปโหลดคลิป', stageCancelled: 'ยกเลิกแล้ว',
+    setStage: 'บันทึกสถานะ', openStory: 'เปิดโปรเจกต์และนำเข้าคลิป', scenes: 'ฉากและพรอมป์ต์', flowPrompt: 'พรอมป์ต์สำหรับ Google Flow (ภาษาอังกฤษ)', explanation: 'คำอธิบายฉาก (ภาษาไทย)', copy: 'คัดลอกพรอมป์ต์ภาษาอังกฤษ', copied: 'คัดลอกแล้ว',
+    openFlow: 'เปิด Google Flow ด้วยตนเอง', openMetaAi: 'เปิด Meta AI ด้วยตนเอง (ตัวช่วยรอง)', metaAssist: 'Meta AI เป็นตัวช่วยรองสำหรับวางพรอมป์ต์ด้วยตนเอง ไม่มีการเชื่อมต่ออัตโนมัติ', manualOnly: 'เลือกคัดลอกพรอมป์ต์และสร้างวิดีโอด้วยตนเอง ไม่มีการเชื่อมต่อหรือสร้างวิดีโออัตโนมัติ',
+    promptPreview: 'พรอมป์ต์ภาษาอังกฤษอาจมีบทพูดภาษาไทยที่ระบุไว้อย่างชัดเจน ตัวอย่างนี้ไม่เรียก AI', noIdentity: 'ภาพอ้างอิงไม่ใช่การยืนยันตัวตน', save: 'บันทึก', saved: 'บันทึกแล้ว', error: 'ดำเนินการไม่สำเร็จ ตรวจข้อความแจ้งข้อผิดพลาดและข้อมูลก่อนลองใหม่', validationError: 'ตรวจช่องที่จำเป็นและแก้ช่องแรกที่โฟกัสก่อนบันทึก', copyFailed: 'คัดลอกไม่สำเร็จ เลือกข้อความพรอมป์ต์แล้วคัดลอกด้วยตนเอง',
+    imageCount: 'จำนวนภาพอ้างอิง', storageUsageUnknown: 'ยังไม่ได้วัดปริมาณพื้นที่จัดเก็บ', downloadOriginal: 'ดาวน์โหลดไฟล์ต้นฉบับ', pinnedReferences: 'ภาพอ้างอิงของเวอร์ชันที่ใช้กับตอนนี้', capacityExceeded: 'คลังภาพรองรับได้สูงสุด 50 ภาพ ลดยอดที่เลือกแล้วลองอีกครั้ง',
+    requestId: 'รหัสคำขอจะคงเดิมเมื่อส่งซ้ำเพื่อป้องกันการสร้างซ้ำ', manualStatus: 'สถานะการทำงาน', current: 'รายการล่าสุด', queued: 'รอคิว', running: 'กำลังทำงาน', completed: 'เสร็จแล้ว', failed: 'ไม่สำเร็จ', ideasJob: 'สร้างไอเดีย', expandJob: 'ขยายเรื่อง', exportJob: 'ประกอบวิดีโอ', clipImported: 'นำเข้าคลิปแล้ว',
+  },
+  en: {
+    referencesRequired: 'Add reference images to both selected character and product versions before creating an episode.', title: 'CHABU Studio', subtitle: 'Build product videos with traceable source references.',
+    localOnly: 'This workspace runs locally and is not connected to the Cloud Control Plane.', safety: 'No automatic image generation or identity verification from reference images.',
+    refresh: 'Refresh data', loading: 'Loading…', loadError: 'Could not load CHABU data', retry: 'Retry', recoverEpisodes: 'Recover saved episodes',
+    counts: 'Saved workspace data', characters: 'Characters', products: 'Products', episodes: 'Episodes', jobs: 'Active jobs', clips: 'clips', draftEpisodes: 'Draft episodes', awaitingFlowEpisodes: 'Waiting for Flow', awaitingUploadEpisodes: 'Waiting for upload', completedEpisodes: 'Fully imported episodes', importedClips: 'Imported clips', failedJobs: 'Failed jobs',
+    character: 'Character', product: 'Product', episode: 'Create episode', library: 'Reference image library',
+    name: 'Name', model: 'Product model', variant: 'Product variant', descriptionEn: 'Description in English',
+    identityRules: 'Identity rules (one per line)', verifiedSpecifications: 'Verified specifications (one per line)',
+    unverifiedClaims: 'Unverified claims (one per line)', prohibitedClaims: 'Prohibited claims (one per line)',
+    affiliateUrl: 'Affiliate URL (HTTPS)', references: 'Reference images', selectImages: 'Choose library images', uploadImages: 'Add reference images',
+    angles: 'Camera angles (one per image)', noImages: 'No images in the library yet. Add reference images to begin.', uploadFirst: 'Upload reference images before saving this version.', missingAsset: 'Existing image is unavailable; its saved reference is retained.',
+    createCharacter: 'Create character', createProduct: 'Create product', appendCharacterVersion: 'Save new character version', appendProductVersion: 'Save new product version',
+    existingCharacter: 'Choose existing character', existingProduct: 'Choose existing product', versionHistory: 'Version history', noEntities: 'No saved entries yet. Add the first one.',
+    templateChabu: 'Prefill CHABU details', templateChabung: 'Prefill CHABUNG details', templateNote: 'These buttons only fill the form and do not save a character. No owner reference images were provided to verify proportions.',
+    brief: 'Video brief', episodeName: 'Episode name', characterVersion: 'Character version', productVersion: 'Product version',
+    clipCount: 'Clip count', clipDuration: 'Duration per clip (seconds)', aspectRatio: 'Aspect ratio', createEpisode: 'Create episode plan',
+    episodeCreated: 'Episode saved', noEpisodes: 'No episodes yet', stage: 'Production stage', stageDraft: 'Draft', stageFlow: 'Waiting for creator-operated Google Flow', stageUpload: 'Waiting for clip upload', stageCancelled: 'Cancelled',
+    setStage: 'Save stage', openStory: 'Open project and import clips', scenes: 'Scenes and prompts', flowPrompt: 'Google Flow prompt (English)', explanation: 'Scene explanation (Thai)', copy: 'Copy English prompt', copied: 'Copied',
+    openFlow: 'Open Google Flow manually', openMetaAi: 'Open Meta AI manually (supporting option)', metaAssist: 'Meta AI is a supporting option for manually pasting prompts. No automatic integration is available.', manualOnly: 'Copy prompts and create videos yourself. No integration or automatic video generation is available.',
+    promptPreview: 'English prompts may contain clearly marked Thai dialogue. This preview does not call AI.', noIdentity: 'Reference images do not verify identity', save: 'Save', saved: 'Saved', error: 'Action failed. Review the error message and input before trying again.', validationError: 'Check the required fields and correct the first focused field before saving.', copyFailed: 'Could not copy. Select the prompt text and copy it manually.',
+    imageCount: 'Reference images', storageUsageUnknown: 'Storage usage has not been measured', downloadOriginal: 'Download original', pinnedReferences: 'References pinned to this episode version', capacityExceeded: 'The library supports up to 50 images. Remove some selected files and retry.',
+    requestId: 'The request ID stays the same on retry to prevent duplicate episodes.', manualStatus: 'Execution status', current: 'Latest entries', queued: 'Queued', running: 'Running', completed: 'Completed', failed: 'Failed', ideasJob: 'Generate ideas', expandJob: 'Expand story', exportJob: 'Assemble video', clipImported: 'Clip imported',
+  },
+} satisfies Record<Locale, Record<string, string>>;
+
+export type ChabuMessages = typeof chabuText.en;
+export const chabuMessages = (locale: Locale): ChabuMessages => chabuText[locale];

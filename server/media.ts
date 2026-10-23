@@ -39,7 +39,7 @@ function execute(command: string, args: string[], timeoutMs: number, signal?: Ab
   });
 }
 
-export async function probeMedia(path: string, signal?: AbortSignal): Promise<{ duration: number; hasAudio: boolean }> {
+export async function probeMedia(path: string, signal?: AbortSignal): Promise<{ duration: number; hasAudio: boolean; width: number; height: number }> {
   let raw: string;
   try {
     raw = await execute('ffprobe', ['-v', 'error', '-protocol_whitelist', 'file,pipe', '-show_entries', 'format=duration:stream=codec_type,width,height', '-of', 'json', path], 30_000, signal);
@@ -52,7 +52,7 @@ export async function probeMedia(path: string, signal?: AbortSignal): Promise<{ 
     const duration = Number(info.format.duration);
     const video = info.streams.find(stream => stream.codec_type === 'video');
     if (!video || !video.width || !video.height || video.width > 8192 || video.height > 8192 || !Number.isFinite(duration) || duration <= 0 || duration > 3600) throw new Error();
-    return { duration, hasAudio: info.streams.some(stream => stream.codec_type === 'audio') };
+    return { duration, width: video.width, height: video.height, hasAudio: info.streams.some(stream => stream.codec_type === 'audio') };
   } catch { throw new AppError('INVALID_MEDIA'); }
 }
 

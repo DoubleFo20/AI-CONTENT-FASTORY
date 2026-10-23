@@ -24,7 +24,7 @@ export function registerProduction(app: Express, store: Store, worker: Worker, f
   });
   app.post('/api/projects/:id/production', (req, res) => {
     const value = project(res, req.params.id); store.assertIdle(value.id); worker.assertAvailable(owner(res), value.id);
-    const state = files.update(value, owner(res), req.body);
+    const state = files.update(value, owner(res), req.body, () => store.invalidateExport(owner(res), value.id));
     res.json({ state, estimate: creditEstimate(value, state) });
   });
   app.post('/api/projects/:id/clip-match', (req, res) => {

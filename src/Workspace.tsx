@@ -9,6 +9,7 @@ import ProductionPanel, { ClipMatcher, type ProductionResponse } from './Product
 import EditorPanel from './EditorPanel';
 import StoragePanel from './StoragePanel';
 import { RequestError } from './api';
+import { chabuMessages } from './chabu-i18n';
 
 type Operation = 'ideas' | 'expand' | 'export';
 interface Props {
@@ -81,7 +82,8 @@ export default function Workspace({ project, jobs, locale, contentMode, section,
   }
   const missing = pack?.scenes.filter((scene) => !currentClips.has(scene.id)) ?? [];
 
-  const sections = ['brief', 'ideas', 'bibles', 'scenes', 'clips', 'preview'] as const;
+  const preparedChabu = project.genre === 'CHABU Studio' && !!pack;
+  const sections = (['brief', 'ideas', 'bibles', 'scenes', 'clips', 'preview'] as const).filter(value => !preparedChabu || value !== 'ideas');
   const activeSection = sections.find((value) => value === section) ?? 'brief';
   const orderedJobs = [...jobs].sort((first, second) => second.createdAt.localeCompare(first.createdAt) || second.updatedAt.localeCompare(first.updatedAt));
   const latestJob = orderedJobs.find(isActive) ?? orderedJobs.find((job) => activeSection === 'brief' || (activeSection === 'ideas' ? job.type === 'ideas' || job.type === 'expand' : activeSection === 'bibles' || activeSection === 'scenes' ? job.type === 'expand' : job.type === 'export'));
@@ -94,7 +96,7 @@ export default function Workspace({ project, jobs, locale, contentMode, section,
         <span className="badge active">{stageLabels[locale][project.status]}</span>
         <h1 className="hero-title">{project.name}</h1>
       </div>
-      <a className="button secondary" href="#stories">{m.stories}</a>
+      <a className="button secondary" href={preparedChabu ? '#chabu' : '#stories'}>{preparedChabu ? chabuMessages(locale).title : m.stories}</a>
     </header>
 
     <nav className="workspace-nav" aria-label={m.status}>
@@ -116,7 +118,7 @@ export default function Workspace({ project, jobs, locale, contentMode, section,
         {aiModeBlocked && <p className="muted">{ai?.modeChangeLocked ? m.cloudModeLocked : m.modeBlocked}</p>}
       </div>}
     </section>}
-    {((activeSection === 'ideas' && project.ideas.length > 0) || ((activeSection === 'bibles' || activeSection === 'scenes') && pack)) && <p className="notice content-source"><strong>{m.resultSource}:</strong> {source === 'mock' ? m.sourceMock : source === 'openai' ? m.sourceOpenai : source === 'gemini' ? m.sourceGemini : m.sourceUnknown}</p>}
+    {((activeSection === 'ideas' && project.ideas.length > 0) || ((activeSection === 'bibles' || activeSection === 'scenes') && pack)) && <p className="notice content-source"><strong>{m.resultSource}:</strong> {preparedChabu ? chabuMessages(locale).promptPreview : source === 'mock' ? m.sourceMock : source === 'openai' ? m.sourceOpenai : source === 'gemini' ? m.sourceGemini : m.sourceUnknown}</p>}
     {!!project.aiUsage?.length && <details className="card" aria-label={m.aiUsage}>
       <summary>{m.aiUsage}</summary>
       <p className="muted">{m.estimatedNotInvoice}</p>

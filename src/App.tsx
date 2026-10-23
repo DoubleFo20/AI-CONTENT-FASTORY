@@ -7,6 +7,8 @@ import Workspace from './Workspace';
 import Modal from './Modal';
 import { FACTORY_MODULES } from '../shared/modules';
 import type { AiRuntimeStatus, DriveStatus, RuntimeCapabilities } from '../shared/integrations';
+import ChabuStudio from './ChabuStudio';
+import { chabuMessages } from './chabu-i18n';
 
 type ContentMode = 'th' | 'en' | 'th+en';
 function readContentMode(): ContentMode {
@@ -16,13 +18,13 @@ function readContentMode(): ContentMode {
   } catch { return 'th'; }
 }
 
-interface Route { page: 'dashboard' | 'stories' | 'queue' | 'story'; projectId?: string; section?: string }
+interface Route { page: 'dashboard' | 'stories' | 'queue' | 'story' | 'chabu'; projectId?: string; section?: string }
 function readRoute(): Route {
   const parts = window.location.hash.slice(1).split('/');
   if (parts[0] === 'story' && parts[1]) {
     try { return { page: 'story', projectId: decodeURIComponent(parts[1]), section: parts[2] }; } catch { return { page: 'dashboard' }; }
   }
-  return { page: parts[0] === 'stories' || parts[0] === 'queue' ? parts[0] : 'dashboard' };
+  return { page: parts[0] === 'stories' || parts[0] === 'queue' || parts[0] === 'chabu' ? parts[0] : 'dashboard' };
 }
 function readLocale(): Locale {
   try { return window.localStorage.getItem('acf-locale') === 'en' ? 'en' : 'th'; } catch { return 'th'; }
@@ -297,6 +299,7 @@ export default function App() {
         <a href="#dashboard" aria-label={m.dashboard} title={m.dashboard} aria-current={route.page === 'dashboard' ? 'page' : undefined}><span className="nav-icon" aria-hidden="true">⌂</span><span className="nav-label">{m.dashboard}</span></a>
         <a href="#stories" aria-label={m.storyFactory} title={m.storyFactory} aria-current={route.page === 'stories' || route.page === 'story' ? 'page' : undefined}><span className="nav-icon" aria-hidden="true">✦</span><span className="nav-label">{m.storyFactory}</span></a>
         <a href="#queue" aria-label={m.queue} title={m.queue} aria-current={route.page === 'queue' ? 'page' : undefined}><span className="nav-icon" aria-hidden="true">≡</span><span className="nav-label">{m.queue}</span></a>
+        <a href="#chabu" aria-label={chabuMessages(locale).title} title={chabuMessages(locale).title} aria-current={route.page === 'chabu' ? 'page' : undefined}><span className="nav-icon" aria-hidden="true">◈</span><span className="nav-label">{chabuMessages(locale).title}</span></a>
         <div className="sidebar-section">{m.tools}</div>
         <button type="button" className="secondary nav-action" aria-label={m.editorTool} title={m.editorTool} onClick={() => setPickerOpen(true)}><span className="nav-icon" aria-hidden="true">▤</span><span className="nav-label">{m.editorTool}</span></button>
         <div className="sidebar-section">{m.other}</div>
@@ -309,23 +312,19 @@ export default function App() {
         <a href="#queue" aria-current={route.page === 'queue' ? 'page' : undefined}>{m.queue}</a>
         <button type="button" aria-haspopup="dialog" aria-expanded={drawerOpen} onClick={(event) => { drawerOpener.current = event.currentTarget; setDrawerOpen(true); }}>{m.more}</button>
       </nav>
-      <div className={`drawer-overlay ${drawerOpen ? 'drawer-open' : ''}`} onClick={() => setDrawerOpen(false)} aria-hidden="true" />
-      <div id="navigation-drawer" className={`drawer-content ${drawerOpen ? 'drawer-open' : ''}`} role="dialog" aria-modal="true" aria-label={m.navigation}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-          <h2 style={{ marginBottom: 0 }}>{m.navigation}</h2>
-          <button className="secondary" onClick={() => setDrawerOpen(false)}>{m.closeDialog}</button>
-        </div>
+      {drawerOpen && <Modal title={m.navigation} closeLabel={m.closeDialog} className="drawer-modal" fallbackFocus={drawerOpener} onClose={() => setDrawerOpen(false)}>
         <nav className="stack" aria-label={m.navigation}>
           <a className="button secondary" href="#dashboard" onClick={() => setDrawerOpen(false)}>{m.dashboard}</a>
           <a className="button secondary" href="#stories" onClick={() => setDrawerOpen(false)}>{m.storyFactory}</a>
           <a className="button secondary" href="#queue" onClick={() => setDrawerOpen(false)}>{m.queue}</a>
+          <a className="button secondary" href="#chabu" aria-current={route.page === 'chabu' ? 'page' : undefined} onClick={() => setDrawerOpen(false)}>{chabuMessages(locale).title}</a>
           <h3>{m.tools}</h3>
           <button className="secondary" onClick={() => { setDrawerOpen(false); setPickerOpen(true); }}>{m.editorTool}</button>
           <h3>{m.other}</h3>
           {FACTORY_MODULES.filter((module) => module.state === 'planned').map((module) => <button key={module.id} className="secondary" disabled>{module.name[locale]} · {m.planned}</button>)}
           <button className="secondary" disabled={disabled} onClick={() => { setDrawerOpen(false); void logout(); }} style={{ marginTop: 'auto' }}>{m.logout}</button>
         </nav>
-      </div>
+      </Modal>}
       {pickerOpen && <Modal title={m.projectPicker} closeLabel={m.closeDialog} fallbackFocus={drawerOpener} onClose={() => setPickerOpen(false)}>
         <p>{m.editorPickerInfo}</p>
         {baseLoading ? <p role="status">{m.loading}</p> : projects.length ? <div className="stack">{projects.map((item) => <a key={item.id} className="button secondary picker-project" href={`#story/${encodeURIComponent(item.id)}/clips`} onClick={() => setPickerOpen(false)}><span>{item.name}</span><span className="badge">{stageLabels[locale][item.status]}</span></a>)}</div> : <><p>{m.noProjectsForEditor}</p><a className="button" href="#stories" onClick={() => setPickerOpen(false)}>{m.createStory}</a></>}
@@ -343,13 +342,13 @@ export default function App() {
       {authLoading ? <p role="status">{m.loading}</p> : !userId ? auth ? <AuthForm key={String(auth.setupRequired)} setup={auth.setupRequired} m={m} disabled={disabled} submit={signIn} /> : <button disabled={!online} onClick={reload}>{m.retry}</button> : <>
 
         {baseLoading && <p role="status">{m.loading}</p>}
-        <aside className="capability-info" aria-label={m.capabilities}>
+        {route.page !== 'chabu' && <aside className="capability-info" aria-label={m.capabilities}>
           {capabilities ? <><p><strong>{m.aiProvider}:</strong> {capabilities.ai.active === 'mock' ? m.mockContent : capabilities.ai.active === 'gemini' ? m.geminiProvider : m.openaiProvider} <span className="muted">({m.aiMode}: {capabilities.ai.mode})</span></p>
             {capabilities.ai.fallbackReason && <p className="muted">{m.aiFallback}: {capabilities.ai.fallbackReason === 'quota' ? m.fallbackQuota : capabilities.ai.fallbackReason === 'access' ? m.fallbackAccess : m.fallbackNotConfigured}</p>}
           </> : <p>{m.capabilitiesUnknown}</p>}
           <p>{m.storageLocal} · {drive ? drive.state === 'connected' && drive.connected ? m.driveGrantConnected : drive.state === 'failed' ? m.driveFailed : m.noDriveConnection : m.driveUnknown}</p>
           <button type="button" className="secondary" onClick={() => setSettingsOpen(true)}>{m.settings}</button>
-        </aside>
+        </aside>}
         {route.page === 'dashboard' && <>
           <section className="hero">
             <div className="hero-copy">
@@ -401,6 +400,7 @@ export default function App() {
           <WorkerStatus worker={worker} locale={locale} m={m} />
           {!baseLoading && <Jobs jobs={jobs} locale={locale} m={m} disabled={disabled} retry={retryJob} cancel={cancelJob} />}
         </>}
+        {route.page === 'chabu' && <ChabuStudio locale={locale} csrf={auth?.csrfToken ?? null} disabled={disabled} onError={handleError} openStory={(id, section) => { window.location.hash = `story/${encodeURIComponent(id)}/${section}`; }} downloadFile={downloadFile} />}
         {route.page === 'story' && (projectLoading ? <p role="status">{m.loading}</p> : project && project.id === projectId ? <Workspace key={project.id} project={project} contentMode={contentMode} section={route.section} jobs={jobs.filter((job) => job.projectId === project.id)} locale={locale} m={m} disabled={disabled} ai={capabilities?.ai ?? null} worker={worker} modeBlocked={activeJobs || worker?.state === 'running'} setAiMode={setAiMode} retry={retryJob} cancel={cancelJob} csrf={auth?.csrfToken ?? null} onError={handleError} operate={operate} select={selectIdea} upload={upload} download={downloadFile} videoError={videoError} /> : <button disabled={disabled} onClick={reload}>{m.refresh}</button>)}
       </>}
     </main>

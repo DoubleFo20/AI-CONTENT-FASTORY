@@ -157,3 +157,12 @@ HTTPS and approved origin/cookie configuration are required before non-loopback 
 - [Vite guide](https://vite.dev/guide/): Node support and React/TypeScript build workflow.
 - [Express security](https://expressjs.com/en/advanced/best-practice-security/): input and cookie protection.
 - [OpenAI models](https://developers.openai.com/api/docs/models): configurable text model choices.
+
+
+## CHABU local module — 2026-10-23
+
+Owner-approved scope expansion reuses the local Store/ProjectFiles/Worker/media lane. Owner-scoped `settings/chabu/<ownerId>.json` stores bounded append-only resource versions and episode snapshots; no populated SQLite schema migration. Episode metadata is saved before prepared-project materialization. Stable request replay reuses a cached package; explicit authenticated CSRF-protected `/api/chabu/recover` repairs only missing prepared projects.
+
+CHABU does not fabricate ten ideas: prepared projects have ideas=[] and selectedIdeaId=null. Story Factory retains its ten/one-selection invariant. Reference-library projects use a trusted internal JSON flag, are excluded from public lists and cannot enqueue generation/export. Existing unmarked projects are untouched.
+
+Durable existing jobs remain SQLite local records; `shared/chabu-status.ts` separates manual waits from queued/processing/completed/failed projections. This is not notebook-offline cloud execution. Flow is primary and Meta supports manual handoff only. Existing FFmpeg import/export validates CHABU durations/ratio; no provider call or new dependency is introduced.

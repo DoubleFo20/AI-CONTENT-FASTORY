@@ -1,4 +1,4 @@
-import { existsSync, lstatSync, mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, lstatSync, mkdirSync, readFileSync, renameSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
@@ -45,19 +45,22 @@ export class ProjectFiles {
     if (value.ownerId !== ownerId || value.projectId !== project.id) throw new AppError('NOT_FOUND', 404);
     return value;
   }
-  private save(project: Project, ownerId: string, value: StoredState) {
+  private save(project: Project, ownerId: string, value: StoredState, beforeCommit?: () => void) {
     const path = this.path(project, ownerId); mkdirSync(dirname(path), { recursive: true });
     const temporary = `${path}.${randomUUID()}.tmp`;
     const json = JSON.stringify(StateSchema.parse(value));
     if (Buffer.byteLength(json) > 512 * 1024) throw new AppError('INVALID_INPUT');
-    writeFileSync(temporary, json, { mode: 0o600, flag: 'wx' });
-    renameSync(temporary, path);
+    try {
+      writeFileSync(temporary, json, { mode: 0o600, flag: 'wx' });
+      beforeCommit?.();
+      renameSync(temporary, path);
+    } finally { if (existsSync(temporary)) unlinkSync(temporary); }
   }
   state(project: Project, ownerId: string): ProductionState {
     const value = this.load(project, ownerId);
     return { flow: value.flow, editor: value.editor, scenes: value.scenes, audio: value.audio.map(({ filename: _private, ...publicAsset }) => { void _private; return publicAsset; }), images: value.images.map(({ filename: _private, ...publicAsset }) => { void _private; return publicAsset; }) };
   }
-  update(project: Project, ownerId: string, input: unknown): ProductionState {
+  update(project: Project, ownerId: string, input: unknown, beforeEditorChange?: () => void): ProductionState {
     const patch = ProductionPatchSchema.parse(input); const current = this.load(project, ownerId);
     const sceneIds = project.package?.scenes.map(scene => scene.id) ?? [];
     if (patch.scenes && (Object.keys(patch.scenes).length > 12 || Object.keys(patch.scenes).some(id => !sceneIds.includes(id)))) throw new AppError('INVALID_INPUT');
@@ -66,7 +69,9 @@ export class ProjectFiles {
       if (settings.sceneOrder.length && (settings.sceneOrder.length !== sceneIds.length || new Set(settings.sceneOrder).size !== sceneIds.length || settings.sceneOrder.some(id => !sceneIds.includes(id)))) throw new AppError('INVALID_INPUT');
       if ((settings.musicAssetId && !current.audio.some(asset => asset.id === settings.musicAssetId)) || settings.soundEffects.some(effect => !sceneIds.includes(effect.sceneId) || !current.audio.some(asset => asset.id === effect.assetId))) throw new AppError('INVALID_INPUT');
     }
-    this.save(project, ownerId, { ...current, ...patch, scenes: { ...current.scenes, ...patch.scenes } });
+    // Invalidate first: a crash must never advertise an export with different settings.
+    const editorChanged = patch.editor && JSON.stringify(patch.editor) !== JSON.stringify(current.editor);
+    this.save(project, ownerId, { ...current, ...patch, scenes: { ...current.scenes, ...patch.scenes } }, editorChanged ? beforeEditorChange : undefined);
     return this.state(project, ownerId);
   }
   addAudio(project: Project, ownerId: string, asset: StoredAudio) {

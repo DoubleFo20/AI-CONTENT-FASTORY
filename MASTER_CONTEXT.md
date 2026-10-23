@@ -1,5 +1,10 @@
 # AI Content Factory — master context
 
+## Current scope — 2026-10-23
+
+Owner explicitly promoted CHABU Studio into the current local scope. The isolated `codex/chabu-studio-mvp` candidate retains React/Vite + Express/SQLite/Premium Cinematic V2, adds versioned character/product references, deterministic episode prompts and the existing media/editor lane. No populated-schema migration or Owner3006 restart occurred. Product Review, Kids & Toy, Investment and Publish remain Planned. See docs/release/CHABU_STUDIO_20261023_TH.md and current HANDOFF for actual proof and external gates. Earlier statements below are historical.
+
+
 Updated: 2026-10-13 (Asia/Bangkok). This is an existing local application with an opt-in cloud target in
 `D:\xampp\htdocs\Ai-content-factory`, not a PHP application merely because XAMPP hosts
 the directory. Node 24.18.0, npm 11.16.0, Git 2.51.1 and FFmpeg 8.1.1 were discovered.

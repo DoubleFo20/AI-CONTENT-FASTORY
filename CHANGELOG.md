@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-23 — CHABU local candidate
+
+- Added versioned character/product libraries, pinned episodes, deterministic Flow/Meta manual handoff, explicit recovery/cancellation, local queue projections and reused clip/editor/MP4 workflow.
+- Fixed stale exports after editor changes, mobile drawer keyboard focus and persistent translated notices. Internal reference projects cannot consume AI jobs.
+- Verified 273 tests:272 pass/1 Windows POSIX skip; build/typecheck/lint, 6 TH/EN responsive cases and synthetic40s MP4 playback/download. No live AI requests, schema migration, Owner restart, deployment or publication.
+
+
 ## 2026-10-13 — usage safety checkpoint
 
 - Authoritative remaining7%/76% (5hr/week): STATUS PAUSED_FOR_USAGE_RESET, stopnewfeatures/spawns, safeunit/docs/push only; noautomaticresume/resetcredit

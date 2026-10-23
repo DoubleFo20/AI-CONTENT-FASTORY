@@ -90,6 +90,24 @@ test('selected expansion produces Thai explanations, English continuity prompts 
   assert.match(project.package!.scenes[0].explanationTh, /[\u0E00-\u0E7F]/);
   const pack = await (await f.call(`/projects/${id}/prompt-pack`)).json(); assert.equal(pack.scenes[0].flowPromptEn, data.scenes[0].promptEn);
 });
+test('editor changes invalidate the current export while identical settings and Flow notes preserve it', async t => {
+  const f = await fixture(t); const project = await ready(f); const store = f.application.store;
+  const ownerId = store.credentials('synthetic_owner')!.user.id;
+  for (const scene of project.package!.scenes) store.addClip(ownerId, project.id, scene.id, `${scene.id}.mp4`, `${scene.id}.mp4`, scene.durationSeconds);
+  store.enqueue(ownerId, project.id, 'export'); const claimed = store.claim(); assert.ok(claimed);
+  assert.equal(store.completeExport(claimed.job, 'synthetic-export.mp4', '9:16'), true);
+  const exported = store.project(ownerId, project.id).export; assert.ok(exported);
+  const path = `/projects/${project.id}/production`;
+  const state = (await (await f.call(path)).json()).state;
+  assert.equal((await f.call(path, 'POST', { editor: state.editor })).status, 200);
+  assert.equal((await f.call(path, 'POST', { scenes: { [project.package!.scenes[0].id]: { notes: 'Only planning notes' } } })).status, 200);
+  assert.equal(store.project(ownerId, project.id).export?.id, exported.id);
+  assert.equal((await f.call(path, 'POST', { editor: { ...state.editor, sceneOrder: project.package!.scenes.map(scene => scene.id).reverse() } })).status, 200);
+  assert.equal(store.project(ownerId, project.id).export, null);
+  assert.equal(store.project(ownerId, project.id).status, 'clips_ready');
+  assert.equal(store.listJobs(ownerId).filter(job => job.type === 'export').length, 1);
+});
+
 test('production settings and filename matching reject foreign scenes, invalid order and unauthenticated access', async t => {
   const f = await fixture(t); const project = await ready(f); const path = `/projects/${project.id}/production`;
   assert.equal((await f.call(path, 'GET', undefined, false)).status, 401);

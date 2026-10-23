@@ -85,3 +85,8 @@ Auth setup ลงชื่อเข้าใช้ owner ใหม่ทัน�
 Shared source of truth: `shared/contracts.ts`, `shared/production.ts`, `shared/integrations.ts`; route implementations: `server/app.ts`, `server/production.ts`, `server/project-storage.ts`, `server/integrations.ts`.
 
 Setup/login ใช้ allowed Origin และ strict JSON แต่ยังไม่ต้องมี session/CSRF เพราะเป็นเส้นทางเข้าใช้งาน หลัง login mutations ต้องใช้ CSRF ทุกครั้ง. HTTP shutdown ปฏิเสธ admission ด้วย INTERRUPTED503, cancel probes, track actual handlers/parser cleanup และ fence ทุก post-await Store/catalog commit. New application option requestDrainMs ใช้เฉพาะ tests/operations (default5000ms) ไม่เป็น client input.
+
+
+## CHABU local endpoints
+
+Owner-only `/api/chabu` routes and exact validated payloads are defined in `shared/chabu.ts`, implemented after the existing auth/CSRF/origin middleware. See [endpoint table and recovery/ownership semantics](release/CHABU_STUDIO_20261023_TH.md). Manual waiting states do not enqueue generation; deterministic episode creation never calls a text/video provider. These are local APIs, not a claim of cloud availability.
